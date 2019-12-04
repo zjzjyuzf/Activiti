@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityPolicy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti :: Spring Security Policies</a> &gt; <a href="index.source.html" class="el_package">org.activiti.core.common.spring.security.policies</a> &gt; <span class="el_source">SecurityPolicy.java</span></div><h1>SecurityPolicy.java</h1><pre class="source lang-java linenums">package org.activiti.core.common.spring.security.policies;
+
+import java.util.List;
+
+<span class="nc" id="L5">public class SecurityPolicy {</span>
+    private String name;
+    private List&lt;String&gt; groups;
+    private List&lt;String&gt; users;
+    private String serviceName;
+    private SecurityPolicyAccess access;
+    private List&lt;String&gt; keys;
+
+    public String getName() {
+<span class="nc" id="L14">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="nc" id="L18">        this.name = name;</span>
+<span class="nc" id="L19">    }</span>
+
+    public List&lt;String&gt; getGroups() {
+<span class="nc" id="L22">        return groups;</span>
+    }
+
+    public void setGroups(List&lt;String&gt; groups) {
+<span class="nc" id="L26">        this.groups = groups;</span>
+<span class="nc" id="L27">    }</span>
+
+    public List&lt;String&gt; getUsers() {
+<span class="nc" id="L30">        return users;</span>
+    }
+
+    public void setUsers(List&lt;String&gt; users) {
+<span class="nc" id="L34">        this.users = users;</span>
+<span class="nc" id="L35">    }</span>
+
+    public String getServiceName() {
+<span class="nc" id="L38">        return serviceName;</span>
+    }
+
+    public void setServiceName(String serviceName) {
+<span class="nc" id="L42">        this.serviceName = serviceName;</span>
+<span class="nc" id="L43">    }</span>
+
+    public SecurityPolicyAccess getAccess() {
+<span class="nc" id="L46">        return access;</span>
+    }
+
+    public void setAccess(SecurityPolicyAccess access) {
+<span class="nc" id="L50">        this.access = access;</span>
+<span class="nc" id="L51">    }</span>
+
+    public List&lt;String&gt; getKeys() {
+<span class="nc" id="L54">        return keys;</span>
+    }
+
+    public void setKeys(List&lt;String&gt; keys) {
+<span class="nc" id="L58">        this.keys = keys;</span>
+<span class="nc" id="L59">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

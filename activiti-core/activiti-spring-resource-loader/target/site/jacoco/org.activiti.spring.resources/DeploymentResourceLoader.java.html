@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DeploymentResourceLoader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti :: Spring Resource Loader</a> &gt; <a href="index.source.html" class="el_package">org.activiti.spring.resources</a> &gt; <span class="el_source">DeploymentResourceLoader.java</span></div><h1>DeploymentResourceLoader.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2019 Alfresco, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.activiti.spring.resources;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.activiti.engine.RepositoryService;
+
+<span class="fc" id="L29">public class DeploymentResourceLoader&lt;T&gt; {</span>
+
+    private RepositoryService repositoryService;
+
+<span class="fc" id="L33">    private Map&lt;String, List&lt;T&gt;&gt; loadedResources = new HashMap&lt;&gt;();</span>
+
+    public List&lt;T&gt; loadResourcesForDeployment(String deploymentId, ResourceReader&lt;T&gt; resourceLoaderDescriptor) {
+<span class="fc" id="L36">        List&lt;T&gt; resources = loadedResources.get(deploymentId);</span>
+<span class="pc bpc" id="L37" title="1 of 2 branches missed.">        if (resources != null) {</span>
+<span class="nc" id="L38">            return resources;</span>
+        }
+
+<span class="fc" id="L41">        List&lt;String&gt; resourceNames = repositoryService.getDeploymentResourceNames(deploymentId);</span>
+
+<span class="pc bpc" id="L43" title="2 of 4 branches missed.">        if (resourceNames != null &amp;&amp; !resourceNames.isEmpty()) {</span>
+
+<span class="fc" id="L45">            List&lt;String&gt; selectedResources = resourceNames.stream()</span>
+<span class="fc" id="L46">                    .filter(resourceLoaderDescriptor.getResourceNameSelector())</span>
+<span class="fc" id="L47">                    .collect(Collectors.toList());</span>
+
+<span class="fc" id="L49">            resources = loadResources(deploymentId,</span>
+                    resourceLoaderDescriptor,
+                    selectedResources);
+<span class="fc" id="L52">        } else {</span>
+<span class="nc" id="L53">            resources = new ArrayList&lt;&gt;();</span>
+        }
+<span class="fc" id="L55">        loadedResources.put(deploymentId, resources);</span>
+<span class="fc" id="L56">        return resources;</span>
+    }
+
+    private List&lt;T&gt; loadResources(String deploymentId,
+                                  ResourceReader&lt;T&gt; resourceReader,
+                                  List&lt;String&gt; selectedResources) {
+<span class="fc" id="L62">        List&lt;T&gt; resources = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        for (String name : selectedResources) {</span>
+<span class="fc" id="L64">            try (InputStream resourceAsStream = repositoryService.getResourceAsStream(deploymentId,</span>
+                    name)) {
+<span class="fc" id="L66">                T resource = resourceReader.read(resourceAsStream);</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">                if (resource != null) {</span>
+<span class="fc" id="L68">                    resources.add(resource);</span>
+                }
+<span class="nc" id="L70">            } catch (IOException e) {</span>
+<span class="nc" id="L71">                throw new IllegalStateException(&quot;Unable to read process extension&quot;, e);</span>
+<span class="fc" id="L72">            }</span>
+<span class="fc" id="L73">        }</span>
+<span class="fc" id="L74">        return resources;</span>
+    }
+
+    public void setRepositoryService(RepositoryService repositoryService) {
+<span class="fc" id="L78">        this.repositoryService = repositoryService;</span>
+<span class="fc" id="L79">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

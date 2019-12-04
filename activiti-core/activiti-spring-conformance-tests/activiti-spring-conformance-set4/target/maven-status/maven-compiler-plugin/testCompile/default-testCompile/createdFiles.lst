@@ -1,0 +1,7 @@
+org/activiti/spring/conformance/set4/BasicExclusiveGatewayErrorTest.class
+org/activiti/spring/conformance/set4/ConformanceBasicProcessRuntimeTest.class
+org/activiti/spring/conformance/set4/Application.class
+org/activiti/spring/conformance/set4/BasicParallelGatewayTest.class
+org/activiti/spring/conformance/set4/BasicInclusiveGatewayTest.class
+org/activiti/spring/conformance/set4/BasicParallelGatewayGroupAssignmentsTest.class
+org/activiti/spring/conformance/set4/BasicExclusiveGatewayTest.class

@@ -1,0 +1,5 @@
+org/activiti/spring/conformance/set5/BasicCallActivityAndServiceTaskTest.class
+org/activiti/spring/conformance/set5/BasicCallActivityTest.class
+org/activiti/spring/conformance/set5/ConformanceBasicProcessRuntimeTest.class
+org/activiti/spring/conformance/set5/Set5RuntimeTestConfiguration.class
+org/activiti/spring/conformance/set5/Application.class

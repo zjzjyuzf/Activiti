@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseSecurityPoliciesManagerImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti :: Spring Security Policies</a> &gt; <a href="index.source.html" class="el_package">org.activiti.core.common.spring.security.policies</a> &gt; <span class="el_source">BaseSecurityPoliciesManagerImpl.java</span></div><h1>BaseSecurityPoliciesManagerImpl.java</h1><pre class="source lang-java linenums">package org.activiti.core.common.spring.security.policies;
+
+import org.activiti.api.runtime.shared.security.SecurityManager;
+import org.activiti.core.common.spring.security.policies.conf.SecurityPoliciesProperties;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public abstract class BaseSecurityPoliciesManagerImpl implements SecurityPoliciesManager {
+
+    protected SecurityManager securityManager;
+
+    protected SecurityPoliciesProperties securityPoliciesProperties;
+
+    public BaseSecurityPoliciesManagerImpl(SecurityManager securityManager,
+<span class="nc" id="L20">                                           SecurityPoliciesProperties securityPoliciesProperties) {</span>
+<span class="nc" id="L21">        this.securityManager = securityManager;</span>
+<span class="nc" id="L22">        this.securityPoliciesProperties = securityPoliciesProperties;</span>
+<span class="nc" id="L23">    }</span>
+
+    public boolean arePoliciesDefined() {
+<span class="nc bnc" id="L26" title="All 2 branches missed.">        return !securityPoliciesProperties.getPolicies().isEmpty();</span>
+    }
+
+    @Override
+    public Map&lt;String, Set&lt;String&gt;&gt; getAllowedKeys(SecurityPolicyAccess... securityPoliciesAccess) {
+
+<span class="nc" id="L32">        String authenticatedUserId = securityManager.getAuthenticatedUserId();</span>
+<span class="nc" id="L33">        List&lt;SecurityPolicy&gt; policies = securityPoliciesProperties.getPolicies();</span>
+<span class="nc" id="L34">        Map&lt;String, Set&lt;String&gt;&gt; definitionKeysAllowedByPolicy = new HashMap&lt;&gt;();</span>
+
+<span class="nc" id="L36">        List&lt;String&gt; groups = null;</span>
+
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        if (authenticatedUserId != null) {</span>
+<span class="nc" id="L39">            groups = securityManager.getAuthenticatedUserGroups();</span>
+        }
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        for (SecurityPolicy ssp : policies) {</span>
+<span class="nc" id="L42">            definitionKeysAllowedByPolicy.computeIfAbsent(ssp.getServiceName(),</span>
+<span class="nc" id="L43">                                                          k -&gt; new HashSet&lt;&gt;());</span>
+
+            // I need to check that the user is listed in the user lists or that at least one of the user groups is in the group list
+<span class="nc bnc" id="L46" title="All 4 branches missed.">            if (isUserInPolicy(ssp, authenticatedUserId) || isGroupInPolicy(ssp, groups)) {</span>
+
+                // Here if securityPolicyAccess is READ, it should also include WRITES, if it is NONE nothing, and if it is WRITE only WRITE
+<span class="nc" id="L49">                List&lt;SecurityPolicyAccess&gt; securityPolicyAccesses = Arrays.asList(securityPoliciesAccess);</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">                if (securityPolicyAccesses.contains(SecurityPolicyAccess.WRITE)) {</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">                    if (ssp.getAccess().equals(SecurityPolicyAccess.WRITE)) {</span>
+<span class="nc" id="L52">                        definitionKeysAllowedByPolicy.get(ssp.getServiceName()).addAll(ssp.getKeys());</span>
+                    }
+
+<span class="nc bnc" id="L55" title="All 2 branches missed.">                } else if (securityPolicyAccesses.contains(SecurityPolicyAccess.READ)) {</span>
+<span class="nc bnc" id="L56" title="All 4 branches missed.">                    if (ssp.getAccess().equals(SecurityPolicyAccess.READ) || ssp.getAccess().equals(SecurityPolicyAccess.WRITE)) {</span>
+<span class="nc" id="L57">                        definitionKeysAllowedByPolicy.get(ssp.getServiceName()).addAll(ssp.getKeys());</span>
+                    }
+                }
+
+
+            }
+<span class="nc" id="L63">        }</span>
+<span class="nc" id="L64">        return definitionKeysAllowedByPolicy;</span>
+    }
+
+
+    private boolean isUserInPolicy(SecurityPolicy ssp, String userId) {
+<span class="nc bnc" id="L69" title="All 6 branches missed.">        return (ssp.getUsers() != null &amp;&amp; !ssp.getUsers().isEmpty() &amp;&amp; ssp.getUsers().contains(userId));</span>
+    }
+
+    private boolean isGroupInPolicy(SecurityPolicy ssp, List&lt;String&gt; groups) {
+<span class="nc bnc" id="L73" title="All 4 branches missed.">        if (ssp.getGroups() != null &amp;&amp; groups != null) {</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">            for (String g : ssp.getGroups()) {</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">                if (groups.contains(g)) {</span>
+<span class="nc" id="L76">                    return true;</span>
+                }
+
+<span class="nc" id="L79">            }</span>
+        }
+<span class="nc" id="L81">        return false;</span>
+    }
+
+    @Override
+    public boolean canRead(String processDefinitionKey,
+                           String appName) {
+<span class="nc" id="L87">        return hasPermission(processDefinitionKey,</span>
+                SecurityPolicyAccess.READ,
+                appName);
+    }
+
+
+    @Override
+    public boolean canWrite(String processDefinitionKey,
+                            String appName) {
+<span class="nc" id="L96">        return hasPermission(processDefinitionKey, SecurityPolicyAccess.WRITE, appName);</span>
+    }
+
+
+    public boolean hasPermission(String processDefinitionKey,
+                                 SecurityPolicyAccess securityPolicyAccess,
+                                 String appName) {
+
+        // No security policies defined, allowed to see everything
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        if (securityPoliciesProperties.getPolicies().isEmpty()) {</span>
+<span class="nc" id="L106">            return true;</span>
+        }
+
+        // If you are an admin you can see everything , @TODO: make it more flexible
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (securityManager.getAuthenticatedUserRoles().contains(&quot;ACTIVITI_ADMIN&quot;)) {</span>
+<span class="nc" id="L111">            return true;</span>
+        }
+
+<span class="nc" id="L114">        Set&lt;String&gt; keys = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L115">        Map&lt;String, Set&lt;String&gt;&gt; policiesMap = getAllowedKeys(securityPolicyAccess);</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (policiesMap.get(appName) != null) {</span>
+<span class="nc" id="L117">            keys.addAll(policiesMap.get(appName));</span>
+        }
+        //also factor for case sensitivity and hyphens (which are stripped when specified through env var)
+<span class="nc bnc" id="L120" title="All 4 branches missed.">        if (appName != null &amp;&amp; policiesMap.get(appName.replaceAll(&quot;-&quot;, &quot;&quot;).toLowerCase()) != null) {</span>
+<span class="nc" id="L121">            keys.addAll(policiesMap.get(appName.replaceAll(&quot;-&quot;, &quot;&quot;).toLowerCase()));</span>
+        }
+
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        return anEntryInSetStartsKey(keys,</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">                processDefinitionKey) || keys.contains(securityPoliciesProperties.getWildcard());</span>
+    }
+
+    //startsWith logic supports the case of audit where only definition id might be available and it would start with the key
+    //protected scope means we can override where exact matching more appropriate (consider keys ProcessWithVariables and ProcessWithVariables2)
+    //even for audit would be better if we had a known separator which cant be part of key - this seems best we can do for now
+    protected boolean anEntryInSetStartsKey(Set&lt;String&gt; keys, String processDefinitionKey) {
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        for (String key : keys) {</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">            if (processDefinitionKey.startsWith(key)) {</span>
+<span class="nc" id="L134">                return true;</span>
+            }
+<span class="nc" id="L136">        }</span>
+<span class="nc" id="L137">        return false;</span>
+    }
+
+    protected SecurityPoliciesProperties getSecurityPoliciesProperties() {
+<span class="nc" id="L141">        return securityPoliciesProperties;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

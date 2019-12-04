@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AsyncPropertyValidator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti :: Spring Boot Starter</a> &gt; <a href="index.source.html" class="el_package">org.activiti.spring.boot.process.validation</a> &gt; <span class="el_source">AsyncPropertyValidator.java</span></div><h1>AsyncPropertyValidator.java</h1><pre class="source lang-java linenums">package org.activiti.spring.boot.process.validation;
+
+import java.util.List;
+
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.Event;
+import org.activiti.bpmn.model.FlowElement;
+import org.activiti.bpmn.model.FlowElementsContainer;
+import org.activiti.bpmn.model.FlowNode;
+import org.activiti.bpmn.model.Process;
+import org.activiti.bpmn.model.SignalEventDefinition;
+import org.activiti.bpmn.model.TimerEventDefinition;
+import org.activiti.validation.ValidationError;
+import org.activiti.validation.validator.Problems;
+import org.activiti.validation.validator.ProcessLevelValidator;
+
+<span class="fc" id="L17">public class AsyncPropertyValidator extends ProcessLevelValidator {</span>
+
+    @Override
+    protected void executeValidation(BpmnModel bpmnModel, Process process, List&lt;ValidationError&gt; errors) {
+<span class="fc" id="L21">        validateFlowElementsInContainer(process, errors, process);</span>
+<span class="fc" id="L22">    }</span>
+
+    protected void validateFlowElementsInContainer(FlowElementsContainer container, List&lt;ValidationError&gt; errors, Process process) {
+<span class="fc bfc" id="L25" title="All 2 branches covered.">        for (FlowElement flowElement : container.getFlowElements()) {</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">            if (flowElement instanceof FlowElementsContainer) {</span>
+<span class="fc" id="L27">                FlowElementsContainer subProcess = (FlowElementsContainer) flowElement;</span>
+<span class="fc" id="L28">                validateFlowElementsInContainer(subProcess, errors, process);</span>
+            }
+
+<span class="fc bfc" id="L31" title="All 4 branches covered.">            if ((flowElement instanceof FlowNode) &amp;&amp; ((FlowNode) flowElement).isAsynchronous()) {</span>
+<span class="fc" id="L32">                addWarning(errors, Problems.FLOW_ELEMENT_ASYNC_NOT_AVAILABLE, process , flowElement, &quot;Async property is not available when asyncExecutor is disabled.&quot;);</span>
+            }
+
+<span class="fc bfc" id="L35" title="All 2 branches covered.">            if ((flowElement instanceof Event)) {</span>
+<span class="fc" id="L36">                ((Event) flowElement).getEventDefinitions().stream().forEach(event -&gt; {</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">                    if (event instanceof TimerEventDefinition) {</span>
+<span class="fc" id="L38">                        addWarning(errors, Problems.EVENT_TIMER_ASYNC_NOT_AVAILABLE, process, flowElement, &quot;Timer event is not available when asyncExecutor is disabled.&quot;);</span>
+<span class="pc bpc" id="L39" title="1 of 4 branches missed.">                    } else if ((event instanceof SignalEventDefinition) &amp;&amp; ((SignalEventDefinition) event).isAsync() ) {</span>
+<span class="fc" id="L40">                        addWarning(errors, Problems.SIGNAL_ASYNC_NOT_AVAILABLE, process, flowElement, &quot;Async property is not available when asyncExecutor is disabled.&quot;);</span>
+                    }
+<span class="fc" id="L42">                });</span>
+            }
+<span class="fc" id="L44">        }</span>
+<span class="fc" id="L45">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

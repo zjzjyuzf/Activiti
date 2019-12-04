@@ -1,0 +1,6 @@
+org/activiti/test/operations/ProcessRuntimeOperations.class
+org/activiti/test/LocalTaskSource$1.class
+org/activiti/test/config/ActivitiAssertionsAutoConfiguration.class
+org/activiti/test/LocalEventSource.class
+org/activiti/test/LocalTaskSource.class
+org/activiti/test/operations/TaskRuntimeOperations.class

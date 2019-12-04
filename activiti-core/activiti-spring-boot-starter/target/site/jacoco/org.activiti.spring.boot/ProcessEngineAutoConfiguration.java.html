@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProcessEngineAutoConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti :: Spring Boot Starter</a> &gt; <a href="index.source.html" class="el_package">org.activiti.spring.boot</a> &gt; <span class="el_source">ProcessEngineAutoConfiguration.java</span></div><h1>ProcessEngineAutoConfiguration.java</h1><pre class="source lang-java linenums">/* Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.activiti.spring.boot;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+
+import javax.sql.DataSource;
+
+import org.activiti.api.process.model.events.ProcessDeployedEvent;
+import org.activiti.api.process.model.events.StartMessageDeployedEvent;
+import org.activiti.api.process.runtime.events.listener.ProcessRuntimeEventListener;
+import org.activiti.api.runtime.shared.identity.UserGroupManager;
+import org.activiti.core.common.spring.project.ProjectModelService;
+import org.activiti.engine.ManagementService;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.cfg.ProcessEngineConfigurator;
+import org.activiti.engine.impl.event.EventSubscriptionPayloadMappingProvider;
+import org.activiti.engine.impl.persistence.StrongUuidGenerator;
+import org.activiti.runtime.api.event.impl.StartMessageSubscriptionConverter;
+import org.activiti.runtime.api.impl.VariablesMappingProvider;
+import org.activiti.runtime.api.model.impl.APIProcessDefinitionConverter;
+import org.activiti.spring.ProcessDeployedEventProducer;
+import org.activiti.spring.SpringAsyncExecutor;
+import org.activiti.spring.SpringProcessEngineConfiguration;
+import org.activiti.spring.StartMessageDeployedEventProducer;
+import org.activiti.spring.boot.process.validation.AsyncPropertyValidator;
+import org.activiti.spring.process.ProcessExtensionResourceFinderDescriptor;
+import org.activiti.spring.process.ProcessVariablesInitiator;
+import org.activiti.spring.resources.ResourceFinder;
+import org.activiti.spring.resources.ResourceFinderDescriptor;
+import org.activiti.validation.ProcessValidatorImpl;
+import org.activiti.validation.validator.ValidatorSet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.io.Resource;
+import org.springframework.transaction.PlatformTransactionManager;
+
+@Configuration
+@AutoConfigureAfter(name = {&quot;org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration&quot;,
+        &quot;org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration&quot;})
+@EnableConfigurationProperties({ActivitiProperties.class, AsyncExecutorProperties.class})
+public class ProcessEngineAutoConfiguration extends AbstractProcessEngineAutoConfiguration {
+
+    public static final String BEHAVIOR_FACTORY_MAPPING_CONFIGURER = &quot;behaviorFactoryMappingConfigurer&quot;;
+    private final UserGroupManager userGroupManager;
+
+<span class="fc" id="L71">    public ProcessEngineAutoConfiguration(UserGroupManager userGroupManager) {</span>
+<span class="fc" id="L72">        this.userGroupManager = userGroupManager;</span>
+<span class="fc" id="L73">    }</span>
+
+    @Bean
+    @ConditionalOnMissingBean
+    public SpringProcessEngineConfiguration springProcessEngineConfiguration(
+            DataSource dataSource,
+            PlatformTransactionManager transactionManager,
+            SpringAsyncExecutor springAsyncExecutor,
+            ActivitiProperties activitiProperties,
+            ResourceFinder resourceFinder,
+            List&lt;ResourceFinderDescriptor&gt; resourceFinderDescriptors,
+            ProjectModelService projectModelService,
+            @Autowired(required = false) List&lt;ProcessEngineConfigurationConfigurer&gt; processEngineConfigurationConfigurers,
+            @Autowired(required = false) List&lt;ProcessEngineConfigurator&gt; processEngineConfigurators) throws IOException {
+
+<span class="fc" id="L88">        SpringProcessEngineConfiguration conf = new SpringProcessEngineConfiguration(projectModelService);</span>
+<span class="fc" id="L89">        conf.setConfigurators(processEngineConfigurators);</span>
+
+
+<span class="fc" id="L92">        configureResources(resourceFinder, resourceFinderDescriptors, conf);</span>
+
+<span class="fc" id="L94">        conf.setDataSource(dataSource);</span>
+<span class="fc" id="L95">        conf.setTransactionManager(transactionManager);</span>
+
+<span class="fc" id="L97">        conf.setAsyncExecutor(springAsyncExecutor);</span>
+<span class="fc" id="L98">        conf.setDeploymentName(activitiProperties.getDeploymentName());</span>
+<span class="fc" id="L99">        conf.setDatabaseSchema(activitiProperties.getDatabaseSchema());</span>
+<span class="fc" id="L100">        conf.setDatabaseSchemaUpdate(activitiProperties.getDatabaseSchemaUpdate());</span>
+<span class="fc" id="L101">        conf.setDbHistoryUsed(activitiProperties.isDbHistoryUsed());</span>
+<span class="fc" id="L102">        conf.setAsyncExecutorActivate(activitiProperties.isAsyncExecutorActivate());</span>
+<span class="fc" id="L103">        addAsyncPropertyValidator(activitiProperties,</span>
+                conf);
+<span class="fc" id="L105">        conf.setMailServerHost(activitiProperties.getMailServerHost());</span>
+<span class="fc" id="L106">        conf.setMailServerPort(activitiProperties.getMailServerPort());</span>
+<span class="fc" id="L107">        conf.setMailServerUsername(activitiProperties.getMailServerUserName());</span>
+<span class="fc" id="L108">        conf.setMailServerPassword(activitiProperties.getMailServerPassword());</span>
+<span class="fc" id="L109">        conf.setMailServerDefaultFrom(activitiProperties.getMailServerDefaultFrom());</span>
+<span class="fc" id="L110">        conf.setMailServerUseSSL(activitiProperties.isMailServerUseSsl());</span>
+<span class="fc" id="L111">        conf.setMailServerUseTLS(activitiProperties.isMailServerUseTls());</span>
+
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">        if (userGroupManager != null) {</span>
+<span class="fc" id="L114">            conf.setUserGroupManager(userGroupManager);</span>
+        }
+
+<span class="fc" id="L117">        conf.setHistoryLevel(activitiProperties.getHistoryLevel());</span>
+<span class="fc" id="L118">        conf.setCopyVariablesToLocalForTasks(activitiProperties.isCopyVariablesToLocalForTasks());</span>
+<span class="fc" id="L119">        conf.setSerializePOJOsInVariablesToJson(activitiProperties.isSerializePOJOsInVariablesToJson());</span>
+<span class="fc" id="L120">        conf.setJavaClassFieldForJackson(activitiProperties.getJavaClassFieldForJackson());</span>
+
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        if (activitiProperties.getCustomMybatisMappers() != null) {</span>
+<span class="nc" id="L123">            conf.setCustomMybatisMappers(getCustomMybatisMapperClasses(activitiProperties.getCustomMybatisMappers()));</span>
+        }
+
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">        if (activitiProperties.getCustomMybatisXMLMappers() != null) {</span>
+<span class="nc" id="L127">            conf.setCustomMybatisXMLMappers(new HashSet&lt;&gt;(activitiProperties.getCustomMybatisXMLMappers()));</span>
+        }
+
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">        if (activitiProperties.getCustomMybatisXMLMappers() != null) {</span>
+<span class="nc" id="L131">            conf.setCustomMybatisXMLMappers(new HashSet&lt;&gt;(activitiProperties.getCustomMybatisXMLMappers()));</span>
+        }
+
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">        if (activitiProperties.isUseStrongUuids()) {</span>
+<span class="fc" id="L135">            conf.setIdGenerator(new StrongUuidGenerator());</span>
+        }
+
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">        if (activitiProperties.getDeploymentMode() != null) {</span>
+<span class="fc" id="L139">            conf.setDeploymentMode(activitiProperties.getDeploymentMode());</span>
+        }
+
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">        if (processEngineConfigurationConfigurers != null) {</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">            for (ProcessEngineConfigurationConfigurer processEngineConfigurationConfigurer : processEngineConfigurationConfigurers) {</span>
+<span class="fc" id="L144">                processEngineConfigurationConfigurer.configure(conf);</span>
+<span class="fc" id="L145">            }</span>
+        }
+<span class="fc" id="L147">        springAsyncExecutor.applyConfig(conf);</span>
+<span class="fc" id="L148">        return conf;</span>
+    }
+
+    private void configureResources(ResourceFinder resourceFinder,
+                                    List&lt;ResourceFinderDescriptor&gt; resourceFinderDescriptors,
+                                    SpringProcessEngineConfiguration conf) throws IOException {
+
+<span class="fc" id="L155">        List&lt;Resource&gt; resources = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        for (ResourceFinderDescriptor resourceFinderDescriptor : resourceFinderDescriptors) {</span>
+<span class="fc" id="L157">            resources.addAll(resourceFinder.discoverResources(resourceFinderDescriptor));</span>
+<span class="fc" id="L158">        }</span>
+
+<span class="fc" id="L160">        conf.setDeploymentResources(resources.toArray(new Resource[0]));</span>
+<span class="fc" id="L161">    }</span>
+
+    protected void addAsyncPropertyValidator(ActivitiProperties activitiProperties,
+                                             SpringProcessEngineConfiguration conf) {
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        if (!activitiProperties.isAsyncExecutorActivate()) {</span>
+<span class="fc" id="L166">            ValidatorSet springBootStarterValidatorSet = new ValidatorSet(&quot;activiti-spring-boot-starter&quot;);</span>
+<span class="fc" id="L167">            springBootStarterValidatorSet.addValidator(new AsyncPropertyValidator());</span>
+<span class="pc bpc" id="L168" title="1 of 2 branches missed.">            if (conf.getProcessValidator() == null) {</span>
+<span class="fc" id="L169">                ProcessValidatorImpl processValidator = new ProcessValidatorImpl();</span>
+<span class="fc" id="L170">                processValidator.addValidatorSet(springBootStarterValidatorSet);</span>
+<span class="fc" id="L171">                conf.setProcessValidator(processValidator);</span>
+<span class="fc" id="L172">            } else {</span>
+<span class="nc" id="L173">                conf.getProcessValidator().getValidatorSets().add(springBootStarterValidatorSet);</span>
+            }
+        }
+<span class="fc" id="L176">    }</span>
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ProcessDefinitionResourceFinderDescriptor processDefinitionResourceFinderDescriptor(ActivitiProperties activitiProperties) {
+<span class="fc" id="L181">        return new ProcessDefinitionResourceFinderDescriptor(activitiProperties);</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ProcessExtensionResourceFinderDescriptor processExtensionResourceFinderDescriptor(ActivitiProperties activitiProperties,
+                                                                                             @Value(&quot;${spring.activiti.process.extensions.dir:NOT_DEFINED}&quot;) String locationPrefix,
+                                                                                             @Value(&quot;${spring.activiti.process.extensions.suffix:**-extensions.json}&quot;) String locationSuffix) {
+<span class="pc bpc" id="L189" title="1 of 2 branches missed.">        if (locationPrefix.equalsIgnoreCase(&quot;NOT_DEFINED&quot;))</span>
+<span class="fc" id="L190">            locationPrefix = activitiProperties.getProcessDefinitionLocationPrefix();</span>
+<span class="fc" id="L191">        return new ProcessExtensionResourceFinderDescriptor(activitiProperties.isCheckProcessDefinitions(),</span>
+                locationPrefix,
+                locationSuffix);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ProcessDeployedEventProducer processDeployedEventProducer(RepositoryService repositoryService,
+                                                                     APIProcessDefinitionConverter converter,
+                                                                     @Autowired(required = false) List&lt;ProcessRuntimeEventListener&lt;ProcessDeployedEvent&gt;&gt; listeners,
+                                                                     ApplicationEventPublisher eventPublisher) {
+<span class="fc" id="L202">        return new ProcessDeployedEventProducer(repositoryService,</span>
+                converter,
+<span class="fc" id="L204">                Optional.ofNullable(listeners)</span>
+<span class="fc" id="L205">                        .orElse(Collections.emptyList()),</span>
+                eventPublisher);
+    }
+    
+    @Bean
+    @ConditionalOnMissingBean
+    public StartMessageDeployedEventProducer startMessageDeployedEventProducer(RepositoryService repositoryService,
+                                                                               ManagementService managementService,
+                                                                               StartMessageSubscriptionConverter subscriptionConverter,
+                                                                               APIProcessDefinitionConverter converter,
+                                                                               List&lt;ProcessRuntimeEventListener&lt;StartMessageDeployedEvent&gt;&gt; listeners,
+                                                                               ApplicationEventPublisher eventPublisher) {
+<span class="fc" id="L217">        return new StartMessageDeployedEventProducer(repositoryService,</span>
+                                                     managementService,
+                                                     subscriptionConverter,
+                                                     converter,
+                                                     listeners,
+                                                     eventPublisher);
+    }
+    
+
+    @Bean(name = BEHAVIOR_FACTORY_MAPPING_CONFIGURER)
+    @ConditionalOnMissingBean(name = BEHAVIOR_FACTORY_MAPPING_CONFIGURER)
+    public DefaultActivityBehaviorFactoryMappingConfigurer defaultActivityBehaviorFactoryMappingConfigurer(VariablesMappingProvider variablesMappingProvider,
+                                                                                                           ProcessVariablesInitiator processVariablesInitiator,
+                                                                                                           EventSubscriptionPayloadMappingProvider eventSubscriptionPayloadMappingProvider) {
+<span class="fc" id="L231">        return new DefaultActivityBehaviorFactoryMappingConfigurer(variablesMappingProvider,</span>
+                processVariablesInitiator,
+                eventSubscriptionPayloadMappingProvider);
+    }
+
+    @Bean
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    public ProcessEngineConfigurationConfigurer asyncExecutorPropertiesConfigurer(AsyncExecutorProperties properties) {
+<span class="fc" id="L239">        return (configuration) -&gt; {</span>
+<span class="fc" id="L240">            configuration.setAsyncExecutorMessageQueueMode(properties.isMessageQueueMode());</span>
+<span class="fc" id="L241">            configuration.setAsyncExecutorCorePoolSize(properties.getCorePoolSize());</span>
+<span class="fc" id="L242">            configuration.setAsyncExecutorAsyncJobLockTimeInMillis(properties.getAsyncJobLockTimeInMillis());</span>
+<span class="fc" id="L243">            configuration.setAsyncExecutorNumberOfRetries(properties.getNumberOfRetries());</span>
+
+<span class="fc" id="L245">            configuration.setAsyncExecutorDefaultAsyncJobAcquireWaitTime(properties.getDefaultAsyncJobAcquireWaitTimeInMillis());</span>
+<span class="fc" id="L246">            configuration.setAsyncExecutorDefaultTimerJobAcquireWaitTime(properties.getDefaultTimerJobAcquireWaitTimeInMillis());</span>
+<span class="fc" id="L247">            configuration.setAsyncExecutorDefaultQueueSizeFullWaitTime(properties.getDefaultQueueSizeFullWaitTime());</span>
+
+<span class="fc" id="L249">            configuration.setAsyncExecutorMaxAsyncJobsDuePerAcquisition(properties.getMaxAsyncJobsDuePerAcquisition());</span>
+<span class="fc" id="L250">            configuration.setAsyncExecutorMaxTimerJobsPerAcquisition(properties.getMaxTimerJobsPerAcquisition());</span>
+<span class="fc" id="L251">            configuration.setAsyncExecutorMaxPoolSize(properties.getMaxPoolSize());</span>
+
+<span class="fc" id="L253">            configuration.setAsyncExecutorResetExpiredJobsInterval(properties.getResetExpiredJobsInterval());</span>
+<span class="fc" id="L254">            configuration.setAsyncExecutorResetExpiredJobsPageSize(properties.getResetExpiredJobsPageSize());</span>
+
+<span class="fc" id="L256">            configuration.setAsyncExecutorSecondsToWaitOnShutdown(properties.getSecondsToWaitOnShutdown());</span>
+<span class="fc" id="L257">            configuration.setAsyncExecutorThreadKeepAliveTime(properties.getKeepAliveTime());</span>
+<span class="fc" id="L258">            configuration.setAsyncExecutorTimerLockTimeInMillis(properties.getTimerLockTimeInMillis());</span>
+<span class="fc" id="L259">            configuration.setAsyncExecutorThreadPoolQueueSize(properties.getQueueSize());</span>
+
+<span class="fc" id="L261">            configuration.setAsyncFailedJobWaitTime(properties.getRetryWaitTimeInMillis());</span>
+<span class="fc" id="L262">        };</span>
+    }
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

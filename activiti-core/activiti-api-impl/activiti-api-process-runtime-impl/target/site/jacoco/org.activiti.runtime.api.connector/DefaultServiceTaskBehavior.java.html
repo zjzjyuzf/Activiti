@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultServiceTaskBehavior.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti API :: Process Runtime Implementation</a> &gt; <a href="index.source.html" class="el_package">org.activiti.runtime.api.connector</a> &gt; <span class="el_source">DefaultServiceTaskBehavior.java</span></div><h1>DefaultServiceTaskBehavior.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2018 Alfresco, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.activiti.runtime.api.connector;
+
+import org.activiti.api.process.model.IntegrationContext;
+import org.activiti.api.process.runtime.connector.Connector;
+import org.activiti.bpmn.model.ServiceTask;
+import org.activiti.engine.delegate.DelegateExecution;
+import org.activiti.engine.impl.bpmn.behavior.AbstractBpmnActivityBehavior;
+import org.activiti.runtime.api.impl.VariablesMappingProvider;
+import org.springframework.context.ApplicationContext;
+
+import static org.activiti.runtime.api.impl.MappingExecutionContext.buildMappingExecutionContext;
+
+public class DefaultServiceTaskBehavior extends AbstractBpmnActivityBehavior {
+
+    private final ApplicationContext applicationContext;
+    private final IntegrationContextBuilder integrationContextBuilder;
+    private VariablesMappingProvider outboundVariablesProvider;
+
+    public DefaultServiceTaskBehavior(ApplicationContext applicationContext,
+                                      IntegrationContextBuilder integrationContextBuilder,
+<span class="fc" id="L37">                                      VariablesMappingProvider outboundVariablesProvider) {</span>
+<span class="fc" id="L38">        this.applicationContext = applicationContext;</span>
+<span class="fc" id="L39">        this.integrationContextBuilder = integrationContextBuilder;</span>
+<span class="fc" id="L40">        this.outboundVariablesProvider = outboundVariablesProvider;</span>
+<span class="fc" id="L41">    }</span>
+
+    /**
+     * We have two different implementation strategy that can be executed
+     * in according if we have a connector action definition match or not.
+     **/
+    @Override
+    public void execute(DelegateExecution execution) {
+<span class="nc" id="L49">        Connector connector = getConnector(getImplementation(execution));</span>
+<span class="nc" id="L50">        IntegrationContext integrationContext = connector.apply(integrationContextBuilder.from(execution));</span>
+
+<span class="nc" id="L52">        execution.setVariables(outboundVariablesProvider.calculateOutPutVariables(buildMappingExecutionContext(execution),</span>
+<span class="nc" id="L53">                                                                                  integrationContext.getOutBoundVariables()));</span>
+
+<span class="nc" id="L55">        leave(execution);</span>
+<span class="nc" id="L56">    }</span>
+
+    private String getImplementation(DelegateExecution execution) {
+<span class="nc" id="L59">        return ((ServiceTask) execution.getCurrentFlowElement()).getImplementation();</span>
+    }
+
+    private Connector getConnector(String implementation) {
+<span class="nc" id="L63">        return applicationContext.getBean(implementation,</span>
+                                          Connector.class);
+    }
+
+    private String getServiceTaskImplementation(DelegateExecution execution) {
+<span class="fc" id="L68">        return ((ServiceTask) execution.getCurrentFlowElement()).getImplementation();</span>
+    }
+
+    public boolean hasConnectorBean(DelegateExecution execution) {
+<span class="fc" id="L72">        String implementation = getServiceTaskImplementation(execution);</span>
+<span class="fc bfc" id="L73" title="All 4 branches covered.">        return applicationContext.containsBean(implementation) &amp;&amp; applicationContext.getBean(implementation) instanceof Connector;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

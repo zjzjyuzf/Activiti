@@ -1,0 +1,9 @@
+org/activiti/runtime/api/event/impl/ToTaskCancelledConverterTest.class
+org/activiti/runtime/api/event/impl/ToTaskCompletedConverterTest.class
+org/activiti/runtime/api/model/impl/MockTaskBuilder.class
+org/activiti/runtime/api/model/impl/APITaskConverterTest.class
+org/activiti/runtime/api/impl/TaskVariablesPayloadValidatorTest.class
+org/activiti/runtime/api/model/impl/APITaskCandidateGroupConverterTest.class
+org/activiti/runtime/api/model/impl/APITaskCandidateUserConverterTest.class
+org/activiti/runtime/api/impl/TaskRuntimeHelperTest.class
+org/activiti/runtime/api/impl/TaskRuntimeImplTest.class

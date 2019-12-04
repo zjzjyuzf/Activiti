@@ -1,0 +1,9 @@
+org/activiti/core/common/spring/security/test/LocalSpringSecurityContextPrincipalProviderTest.class
+org/activiti/core/common/spring/security/test/AuthenticationPrincipalRolesProviderTest.class
+org/activiti/core/common/spring/security/LocalSpringSecurityManagerTest.class
+org/activiti/core/common/spring/security/test/SimpleGrantedAuthoritiesResolverTest.class
+org/activiti/core/common/spring/security/test/AuthenticationPrincipalGroupsProviderTest.class
+org/activiti/core/common/spring/security/test/AuthenticationPrincipalIdentityProviderTest.class
+org/activiti/core/common/spring/security/test/SimpleGrantedAuthoritiesRolesMapperTest.class
+org/activiti/core/common/spring/security/test/SimpleGrantedAuthoritiesGroupsMapperTest.class
+org/activiti/core/common/spring/security/LocalSpringSecurityManagerTest$Application.class

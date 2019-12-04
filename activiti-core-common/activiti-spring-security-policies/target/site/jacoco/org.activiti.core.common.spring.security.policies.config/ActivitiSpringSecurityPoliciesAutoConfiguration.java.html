@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ActivitiSpringSecurityPoliciesAutoConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti :: Spring Security Policies</a> &gt; <a href="index.source.html" class="el_package">org.activiti.core.common.spring.security.policies.config</a> &gt; <span class="el_source">ActivitiSpringSecurityPoliciesAutoConfiguration.java</span></div><h1>ActivitiSpringSecurityPoliciesAutoConfiguration.java</h1><pre class="source lang-java linenums">package org.activiti.core.common.spring.security.policies.config;
+
+import org.activiti.api.process.model.payloads.GetProcessDefinitionsPayload;
+import org.activiti.api.process.model.payloads.GetProcessInstancesPayload;
+import org.activiti.api.runtime.shared.security.SecurityManager;
+import org.activiti.core.common.spring.security.policies.ProcessSecurityPoliciesManager;
+import org.activiti.core.common.spring.security.policies.ProcessSecurityPoliciesManagerImpl;
+import org.activiti.core.common.spring.security.policies.SecurityPoliciesProcessDefinitionRestrictionApplier;
+import org.activiti.core.common.spring.security.policies.SecurityPoliciesProcessInstanceRestrictionApplier;
+import org.activiti.core.common.spring.security.policies.SecurityPoliciesRestrictionApplier;
+import org.activiti.core.common.spring.security.policies.conf.SecurityPoliciesProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@EnableConfigurationProperties(SecurityPoliciesProperties.class)
+<span class="nc" id="L19">public class ActivitiSpringSecurityPoliciesAutoConfiguration {</span>
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ProcessSecurityPoliciesManager processSecurityPoliciesManager(SecurityManager securityManager,
+                                                                         SecurityPoliciesProperties securityPoliciesProperties,
+                                                                         SecurityPoliciesRestrictionApplier&lt;GetProcessDefinitionsPayload&gt; processDefinitionRestrictionApplier,
+                                                                         SecurityPoliciesRestrictionApplier&lt;GetProcessInstancesPayload&gt; processInstanceRestrictionApplier) {
+<span class="nc" id="L27">        return new ProcessSecurityPoliciesManagerImpl(securityManager, </span>
+                                                      securityPoliciesProperties, 
+                                                      processDefinitionRestrictionApplier, 
+                                                      processInstanceRestrictionApplier);
+    }
+    
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;processInstanceRestrictionApplier&quot;)
+    public SecurityPoliciesRestrictionApplier&lt;GetProcessInstancesPayload&gt; processInstanceRestrictionApplier() {
+<span class="nc" id="L36">        return new SecurityPoliciesProcessInstanceRestrictionApplier();</span>
+    }
+    
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;processDefinitionRestrictionApplier&quot;)
+    public SecurityPoliciesRestrictionApplier&lt;GetProcessDefinitionsPayload&gt; processDefinitionRestrictionApplier () {
+<span class="nc" id="L42">        return new SecurityPoliciesProcessDefinitionRestrictionApplier();</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -1,0 +1,4 @@
+org/activiti/spring/resources/ResourceReader.class
+org/activiti/spring/resources/ResourceFinderDescriptor.class
+org/activiti/spring/resources/ResourceFinder.class
+org/activiti/spring/resources/conf/ResourceFinderAutoConfiguration.class

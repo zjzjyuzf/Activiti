@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: org.activiti.spring.process.ProcessExtensionResourceReaderTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.146 s - in org.activiti.spring.process.ProcessExtensionResourceReaderTest

@@ -1,0 +1,11 @@
+org/activiti/application/AppliationLoadException.class
+org/activiti/application/ApplicationReader.class
+org/activiti/application/ApplicationEntryDiscovery.class
+org/activiti/application/deployer/ApplicationDeployer.class
+org/activiti/application/ApplicationService.class
+org/activiti/application/FileContent.class
+org/activiti/application/ApplicationContent.class
+org/activiti/application/ApplicationDiscovery.class
+org/activiti/application/conf/ApplicationAutoConfiguration.class
+org/activiti/application/deployer/ApplicationEntryDeployer.class
+org/activiti/application/ApplicationEntry.class

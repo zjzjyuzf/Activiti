@@ -1,0 +1,89 @@
+2019-12-04 11:52:59.662  INFO 3234 --- [           main] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [org.activiti.spring.boot.process.ProcessExtensionsTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+2019-12-04 11:52:59.669  INFO 3234 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [org.activiti.spring.boot.process.ProcessExtensionsTest]: ProcessExtensionsTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2019-12-04 11:52:59.672  INFO 3234 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration org.activiti.spring.boot.Application for test class org.activiti.spring.boot.process.ProcessExtensionsTest
+2019-12-04 11:52:59.673  INFO 3234 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener, org.springframework.security.test.context.support.ReactorContextTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]
+2019-12-04 11:52:59.674  INFO 3234 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@53b742e9, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@97ced7, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@4e1934ee, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@733b3d3, org.springframework.test.context.support.DirtiesContextTestExecutionListener@6efa19d6, org.springframework.test.context.transaction.TransactionalTestExecutionListener@50a583a8, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@571c6316, org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener@4d2bff0d, org.springframework.security.test.context.support.ReactorContextTestExecutionListener@73a16bd7, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@fe50ec8, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@3bd5d8f1, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@29149b11, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@5113b237, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@76a77593]
+2019-12-04 11:52:59.685  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: user
+2019-12-04 11:52:59.700 ERROR 3234 --- [           main] o.a.e.impl.interceptor.CommandContext    : Error while closing command context
+
+org.activiti.engine.ActivitiException: Can't start process 'initialVarsProcess' without required variables - age
+	at org.activiti.spring.process.ProcessVariablesInitiator.calculateVariablesFromExtensionFile(ProcessVariablesInitiator.java:62) ~[activiti-spring-process-extensions-7.1.135.jar:na]
+	at org.activiti.spring.process.ProcessVariablesInitiator.createProcessInstanceWithInitialFlowElement(ProcessVariablesInitiator.java:87) ~[activiti-spring-process-extensions-7.1.135.jar:na]
+	at org.activiti.engine.impl.util.ProcessInstanceHelper.createAndStartProcessInstanceWithInitialFlowElement(ProcessInstanceHelper.java:159) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.util.ProcessInstanceHelper.createAndStartProcessInstance(ProcessInstanceHelper.java:86) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.util.ProcessInstanceHelper.createAndStartProcessInstance(ProcessInstanceHelper.java:61) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.cmd.StartProcessInstanceCmd.createAndStartProcessInstance(StartProcessInstanceCmd.java:109) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.cmd.StartProcessInstanceCmd.execute(StartProcessInstanceCmd.java:102) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.cmd.StartProcessInstanceCmd.execute(StartProcessInstanceCmd.java:37) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.interceptor.CommandInvoker$1.run(CommandInvoker.java:37) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.interceptor.CommandInvoker.executeOperation(CommandInvoker.java:78) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.interceptor.CommandInvoker.executeOperations(CommandInvoker.java:57) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.interceptor.CommandInvoker.execute(CommandInvoker.java:42) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.interceptor.TransactionContextInterceptor.execute(TransactionContextInterceptor.java:48) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.interceptor.CommandContextInterceptor.execute(CommandContextInterceptor.java:59) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.spring.SpringTransactionInterceptor$1.doInTransaction(SpringTransactionInterceptor.java:47) ~[activiti-spring-7.1.135.jar:na]
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:140) ~[spring-tx-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.activiti.spring.SpringTransactionInterceptor.execute(SpringTransactionInterceptor.java:45) ~[activiti-spring-7.1.135.jar:na]
+	at org.activiti.engine.impl.interceptor.LogInterceptor.execute(LogInterceptor.java:29) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.cfg.CommandExecutorImpl.execute(CommandExecutorImpl.java:44) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.cfg.CommandExecutorImpl.execute(CommandExecutorImpl.java:39) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.RuntimeServiceImpl.startProcessInstance(RuntimeServiceImpl.java:524) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.runtime.ProcessInstanceBuilderImpl.start(ProcessInstanceBuilderImpl.java:114) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.runtime.api.impl.ProcessRuntimeImpl.start(ProcessRuntimeImpl.java:233) ~[activiti-api-process-runtime-impl-7.1.135.jar:na]
+	at org.activiti.runtime.api.impl.ProcessRuntimeImpl$$FastClassBySpringCGLIB$$60a3d48.invoke(<generated>) ~[activiti-api-process-runtime-impl-7.1.135.jar:na]
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:750) ~[spring-aop-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor.invoke(MethodSecurityInterceptor.java:69) ~[spring-security-core-5.1.7.RELEASE.jar:5.1.7.RELEASE]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:689) ~[spring-aop-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.activiti.runtime.api.impl.ProcessRuntimeImpl$$EnhancerBySpringCGLIB$$e3496847_3.start(<generated>) ~[activiti-api-process-runtime-impl-7.1.135.jar:na]
+	at org.activiti.spring.boot.process.ProcessExtensionsTest.lambda$processInstanceFailsWithoutRequiredVariables$0(ProcessExtensionsTest.java:128) ~[test-classes/:na]
+	at org.assertj.core.api.ThrowableAssert.catchThrowable(ThrowableAssert.java:62) ~[assertj-core-3.11.1.jar:na]
+	at org.assertj.core.api.ThrowableTypeAssert.isThrownBy(ThrowableTypeAssert.java:59) ~[assertj-core-3.11.1.jar:na]
+	at org.activiti.spring.boot.process.ProcessExtensionsTest.processInstanceFailsWithoutRequiredVariables(ProcessExtensionsTest.java:127) ~[test-classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566) ~[na:na]
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50) ~[junit-4.12.jar:4.12]
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12) ~[junit-4.12.jar:4.12]
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47) ~[junit-4.12.jar:4.12]
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17) ~[junit-4.12.jar:4.12]
+	at org.springframework.test.context.junit4.statements.RunBeforeTestExecutionCallbacks.evaluate(RunBeforeTestExecutionCallbacks.java:74) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.test.context.junit4.statements.RunAfterTestExecutionCallbacks.evaluate(RunAfterTestExecutionCallbacks.java:84) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.test.context.junit4.statements.RunBeforeTestMethodCallbacks.evaluate(RunBeforeTestMethodCallbacks.java:75) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27) ~[junit-4.12.jar:4.12]
+	at org.springframework.test.context.junit4.statements.RunAfterTestMethodCallbacks.evaluate(RunAfterTestMethodCallbacks.java:86) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.test.context.junit4.statements.SpringRepeat.evaluate(SpringRepeat.java:84) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325) ~[junit-4.12.jar:4.12]
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:251) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:97) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290) ~[junit-4.12.jar:4.12]
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71) ~[junit-4.12.jar:4.12]
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288) ~[junit-4.12.jar:4.12]
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58) ~[junit-4.12.jar:4.12]
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268) ~[junit-4.12.jar:4.12]
+	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363) ~[junit-4.12.jar:4.12]
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:190) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:365) ~[surefire-junit4-3.0.0-M3.jar:3.0.0-M3]
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeWithRerun(JUnit4Provider.java:273) ~[surefire-junit4-3.0.0-M3.jar:3.0.0-M3]
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:238) ~[surefire-junit4-3.0.0-M3.jar:3.0.0-M3]
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:159) ~[surefire-junit4-3.0.0-M3.jar:3.0.0-M3]
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:384) ~[surefire-booter-3.0.0-M3.jar:3.0.0-M3]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:345) ~[surefire-booter-3.0.0-M3.jar:3.0.0-M3]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:126) ~[surefire-booter-3.0.0-M3.jar:3.0.0-M3]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:418) ~[surefire-booter-3.0.0-M3.jar:3.0.0-M3]
+
+2019-12-04 11:52:59.707  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: admin
+2019-12-04 11:52:59.726  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: user
+2019-12-04 11:52:59.737 ERROR 3234 --- [           main] o.a.s.p.v.types.JavaObjectVariableType   : class java.lang.String is not assignable from class java.lang.Boolean
+2019-12-04 11:52:59.738 ERROR 3234 --- [           main] o.a.s.p.v.types.JavaObjectVariableType   : class java.lang.Integer is not assignable from class java.lang.String
+2019-12-04 11:52:59.741 ERROR 3234 --- [           main] o.a.s.p.v.types.JavaObjectVariableType   : class java.lang.Boolean is not assignable from class java.lang.Integer
+2019-12-04 11:52:59.743  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: admin
+2019-12-04 11:52:59.761  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: user
+2019-12-04 11:52:59.916  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: admin
+2019-12-04 11:52:59.934  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: user
+2019-12-04 11:53:00.047  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: admin

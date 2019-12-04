@@ -1,0 +1,11 @@
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-application/src/main/java/org/activiti/application/ApplicationReader.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-application/src/main/java/org/activiti/application/deployer/ApplicationDeployer.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-application/src/main/java/org/activiti/application/ApplicationDiscovery.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-application/src/main/java/org/activiti/application/AppliationLoadException.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-application/src/main/java/org/activiti/application/ApplicationEntry.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-application/src/main/java/org/activiti/application/ApplicationContent.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-application/src/main/java/org/activiti/application/deployer/ApplicationEntryDeployer.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-application/src/main/java/org/activiti/application/ApplicationEntryDiscovery.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-application/src/main/java/org/activiti/application/FileContent.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-application/src/main/java/org/activiti/application/conf/ApplicationAutoConfiguration.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-application/src/main/java/org/activiti/application/ApplicationService.java

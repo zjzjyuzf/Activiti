@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Activiti.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti :: Spring Boot Starter</a> &gt; <a href="index.source.html" class="el_package">org.activiti.spring.integration</a> &gt; <span class="el_source">Activiti.java</span></div><h1>Activiti.java</h1><pre class="source lang-java linenums">/* Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.activiti.spring.integration;
+
+import org.activiti.engine.ProcessEngine;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHandler;
+import org.springframework.messaging.MessagingException;
+
+/**
+ * Spring Integration Java Configuration DSL integration for Activiti.
+ *
+
+ */
+<span class="nc" id="L25">public class Activiti {</span>
+
+    /**
+     * This is the component that you'll use in your Spring Integration
+     * {@link org.springframework.integration.dsl.IntegrationFlow}.
+     */
+    public static ActivitiInboundGateway inboundGateway(ProcessEngine processEngine, String... varsToPreserve) {
+<span class="nc" id="L32">        return new ActivitiInboundGateway(processEngine, varsToPreserve);</span>
+    }
+
+    /**
+     * This is the bean to expose and then reference
+     * from your Activiti BPMN flow in an expression.
+     */
+    public static IntegrationActivityBehavior inboundGatewayActivityBehavior(ActivitiInboundGateway gateway) {
+<span class="nc" id="L40">        return new IntegrationActivityBehavior(gateway);</span>
+    }
+
+    /**
+     * Any message that enters this {@link org.springframework.messaging.MessageHandler}
+     * containing a {@code executionId} parameter will trigger a
+     * {@link org.activiti.engine.RuntimeService#signalEventReceived(String)}.
+     */
+    public static MessageHandler signallingMessageHandler(final ProcessEngine processEngine) {
+<span class="nc" id="L49">        return new MessageHandler() {</span>
+            @Override
+            public void handleMessage(Message&lt;?&gt; message) throws MessagingException {
+<span class="nc bnc" id="L52" title="All 2 branches missed.">                String executionId = message.getHeaders().containsKey(&quot;executionId&quot;) ?</span>
+<span class="nc" id="L53">                        (String) message.getHeaders().get(&quot;executionId&quot;) : (String) null;</span>
+
+<span class="nc bnc" id="L55" title="All 2 branches missed.">                if (null != executionId)</span>
+<span class="nc" id="L56">                    processEngine.getRuntimeService().trigger(executionId);</span>
+<span class="nc" id="L57">            }</span>
+        };
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

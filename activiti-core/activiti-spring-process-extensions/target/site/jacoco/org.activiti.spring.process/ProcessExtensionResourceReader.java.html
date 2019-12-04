@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProcessExtensionResourceReader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti :: Process Extensions</a> &gt; <a href="index.source.html" class="el_package">org.activiti.spring.process</a> &gt; <span class="el_source">ProcessExtensionResourceReader.java</span></div><h1>ProcessExtensionResourceReader.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2019 Alfresco, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.activiti.spring.process;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+import java.util.function.Predicate;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.activiti.spring.process.model.ProcessExtensionModel;
+import org.activiti.spring.process.model.VariableDefinition;
+import org.activiti.spring.process.variable.types.VariableType;
+import org.activiti.spring.resources.ResourceReader;
+
+public class ProcessExtensionResourceReader implements ResourceReader&lt;ProcessExtensionModel&gt; {
+
+    private final ObjectMapper objectMapper;
+    private final Map&lt;String, VariableType&gt; variableTypeMap;
+
+    public ProcessExtensionResourceReader(ObjectMapper objectMapper,
+<span class="fc" id="L38">                                          Map&lt;String, VariableType&gt; variableTypeMap) {</span>
+<span class="fc" id="L39">        this.objectMapper = objectMapper;</span>
+<span class="fc" id="L40">        this.variableTypeMap = variableTypeMap;</span>
+<span class="fc" id="L41">    }</span>
+
+    @Override
+    public Predicate&lt;String&gt; getResourceNameSelector() {
+<span class="fc" id="L45">        return resourceName -&gt; resourceName.endsWith(&quot;-extensions.json&quot;);</span>
+    }
+
+    @Override
+    public ProcessExtensionModel read(InputStream inputStream) throws IOException {
+<span class="nc" id="L50">        objectMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);</span>
+<span class="nc" id="L51">        ProcessExtensionModel mappedModel = objectMapper.readValue(inputStream,</span>
+                                                                   ProcessExtensionModel.class);
+
+<span class="nc" id="L54">        return convertJsonVariables(mappedModel);</span>
+    }
+
+    /**
+     * Json variables need to be represented as JsonNode for engine to handle as Json
+     * Do this for any var marked as json or whose type is not recognised from the extension file
+     */
+    private ProcessExtensionModel convertJsonVariables(ProcessExtensionModel processExtensionModel) {
+<span class="nc bnc" id="L62" title="All 4 branches missed.">        if (processExtensionModel != null &amp;&amp; processExtensionModel.getExtensions() != null</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">                &amp;&amp; processExtensionModel.getExtensions().getProperties() != null) {</span>
+
+<span class="nc bnc" id="L65" title="All 2 branches missed.">            for (VariableDefinition variableDefinition : processExtensionModel.getExtensions().getProperties().values()) {</span>
+<span class="nc bnc" id="L66" title="All 4 branches missed.">                if (!variableTypeMap.keySet().contains(variableDefinition.getType()) || variableDefinition.getType().equals(&quot;json&quot;)) {</span>
+<span class="nc" id="L67">                    variableDefinition.setValue(objectMapper.convertValue(variableDefinition.getValue(),</span>
+                                                                          JsonNode.class));
+                }
+<span class="nc" id="L70">            }</span>
+        }
+<span class="nc" id="L72">        return processExtensionModel;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

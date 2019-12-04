@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: org.activiti.spring.conformance.set5.BasicCallActivityAndServiceTaskTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 19.458 s - in org.activiti.spring.conformance.set5.BasicCallActivityAndServiceTaskTest

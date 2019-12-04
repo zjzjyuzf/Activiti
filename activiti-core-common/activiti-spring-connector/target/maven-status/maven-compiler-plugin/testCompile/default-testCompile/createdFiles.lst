@@ -1,0 +1,5 @@
+org/activiti/core/common/spring/connector/ConnectorDefinitionServiceIT.class
+org/activiti/core/common/spring/connector/MultipleConnectorDefinitionServiceIT.class
+org/activiti/core/common/spring/connector/ConnectorDefinitionDirDoNotExistsIT.class
+org/activiti/core/common/spring/connector/EmptyConnectorDefinitionServiceIT.class
+org/activiti/core/common/spring/connector/ConnectorDefinitionServiceTest.class

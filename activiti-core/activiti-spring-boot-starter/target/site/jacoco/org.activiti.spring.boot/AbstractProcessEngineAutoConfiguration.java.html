@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractProcessEngineAutoConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti :: Spring Boot Starter</a> &gt; <a href="index.source.html" class="el_package">org.activiti.spring.boot</a> &gt; <span class="el_source">AbstractProcessEngineAutoConfiguration.java</span></div><h1>AbstractProcessEngineAutoConfiguration.java</h1><pre class="source lang-java linenums">/* Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.activiti.spring.boot;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.ManagementService;
+import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.impl.persistence.entity.integration.IntegrationContextManager;
+import org.activiti.engine.integration.IntegrationContextService;
+import org.activiti.spring.ProcessEngineFactoryBean;
+import org.activiti.spring.SpringAsyncExecutor;
+import org.activiti.spring.SpringCallerRunsRejectedJobsHandler;
+import org.activiti.spring.SpringProcessEngineConfiguration;
+import org.activiti.spring.SpringRejectedJobsHandler;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
+
+/**
+ * Provides sane definitions for the various beans required to be productive with Activiti in Spring.
+ *
+ */
+<span class="fc" id="L41">public abstract class AbstractProcessEngineAutoConfiguration</span>
+        extends AbstractProcessEngineConfiguration {
+
+  @Bean
+  public SpringAsyncExecutor springAsyncExecutor(TaskExecutor applicationTaskExecutor) {
+<span class="fc" id="L46">    return new SpringAsyncExecutor(applicationTaskExecutor, springRejectedJobsHandler());</span>
+  }
+  
+  @Bean 
+  public SpringRejectedJobsHandler springRejectedJobsHandler() {
+<span class="fc" id="L51">    return new SpringCallerRunsRejectedJobsHandler();</span>
+  }
+
+  protected Set&lt;Class&lt;?&gt;&gt; getCustomMybatisMapperClasses(List&lt;String&gt; customMyBatisMappers) {
+<span class="nc" id="L55">    Set&lt;Class&lt;?&gt;&gt; mybatisMappers = new HashSet&lt;&gt;();</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">    for (String customMybatisMapperClassName : customMyBatisMappers) {</span>
+      try {
+<span class="nc" id="L58">        Class customMybatisClass = Class.forName(customMybatisMapperClassName);</span>
+<span class="nc" id="L59">        mybatisMappers.add(customMybatisClass);</span>
+<span class="nc" id="L60">      } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L61">        throw new IllegalArgumentException(&quot;Class &quot; + customMybatisMapperClassName + &quot; has not been found.&quot;, e);</span>
+<span class="nc" id="L62">      }</span>
+<span class="nc" id="L63">    }</span>
+<span class="nc" id="L64">    return mybatisMappers;</span>
+  }
+
+  @Bean
+  public ProcessEngineFactoryBean processEngine(SpringProcessEngineConfiguration configuration) {
+<span class="fc" id="L69">    return super.springProcessEngineBean(configuration);</span>
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  @Override
+  public RuntimeService runtimeServiceBean(ProcessEngine processEngine) {
+<span class="fc" id="L76">    return super.runtimeServiceBean(processEngine);</span>
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  @Override
+  public RepositoryService repositoryServiceBean(ProcessEngine processEngine) {
+<span class="fc" id="L83">    return super.repositoryServiceBean(processEngine);</span>
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  @Override
+  public TaskService taskServiceBean(ProcessEngine processEngine) {
+<span class="fc" id="L90">    return super.taskServiceBean(processEngine);</span>
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  @Override
+  public HistoryService historyServiceBean(ProcessEngine processEngine) {
+<span class="fc" id="L97">    return super.historyServiceBean(processEngine);</span>
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  @Override
+  public ManagementService managementServiceBeanBean(ProcessEngine processEngine) {
+<span class="fc" id="L104">    return super.managementServiceBeanBean(processEngine);</span>
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public TaskExecutor taskExecutor() {
+<span class="nc" id="L110">    return new SimpleAsyncTaskExecutor();</span>
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  @Override
+  public IntegrationContextManager integrationContextManagerBean(ProcessEngine processEngine) {
+<span class="fc" id="L117">    return super.integrationContextManagerBean(processEngine);</span>
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  @Override
+  public IntegrationContextService integrationContextServiceBean(ProcessEngine processEngine) {
+<span class="fc" id="L124">    return super.integrationContextServiceBean(processEngine);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

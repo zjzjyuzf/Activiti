@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DateFormatterProvider.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">activiti-common-util</a> &gt; <a href="index.source.html" class="el_package">org.activiti.common.util</a> &gt; <span class="el_source">DateFormatterProvider.java</span></div><h1>DateFormatterProvider.java</h1><pre class="source lang-java linenums">/*
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.activiti.common.util;
+
+import java.text.MessageFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.Date;
+
+public class DateFormatterProvider  {
+   
+    private String dateFormatPattern;
+    
+<span class="fc" id="L28">    private ZoneId zoneId = ZoneOffset.UTC;</span>
+ 
+<span class="fc" id="L30">    public DateFormatterProvider(String dateFormatPattern) {</span>
+<span class="fc" id="L31">        this.dateFormatPattern = dateFormatPattern;</span>
+<span class="fc" id="L32">    }</span>
+
+    public ZoneId getZoneId() {
+<span class="fc" id="L35">        return zoneId;</span>
+    }
+    
+    public String getDateFormatPattern() {
+<span class="fc" id="L39">        return dateFormatPattern;</span>
+    }
+    
+    public void setDateFormatPattern(String dateFormatPattern) {
+<span class="nc" id="L43">        this.dateFormatPattern = dateFormatPattern;</span>
+<span class="nc" id="L44">    }</span>
+ 
+    public Date parse(String value) throws DateTimeException {
+<span class="fc" id="L47">        DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()</span>
+<span class="fc" id="L48">                                                      .appendPattern(getDateFormatPattern())</span>
+<span class="fc" id="L49">                                                      .toFormatter()</span>
+<span class="fc" id="L50">                                                      .withZone(getZoneId());</span>
+        
+        try {
+<span class="fc" id="L53">            LocalDateTime localDateTime = dateTimeFormatter.parse(value,</span>
+                                                                  LocalDateTime::from);
+<span class="fc" id="L55">            return Date.from(localDateTime.atZone(getZoneId()).toInstant());                </span>
+<span class="fc" id="L56">        } catch (DateTimeException e) {</span>
+<span class="fc" id="L57">            LocalDate localDate = dateTimeFormatter.parse(String.valueOf(value),</span>
+                                                          LocalDate::from);
+<span class="fc" id="L59">            return Date.from(localDate.atStartOfDay().atZone(getZoneId()).toInstant());</span>
+        }
+    }    
+    
+    public Date toDate(Object value) {
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (value instanceof String) {</span>
+<span class="fc" id="L65">            return parse((String) value);</span>
+        }
+
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (value instanceof Date) {</span>
+<span class="fc" id="L69">            return (Date)value;</span>
+        }
+        
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (value instanceof Long) {</span>
+<span class="fc" id="L73">            return new Date((long)value);                       </span>
+        }
+ 
+<span class="fc" id="L76">        throw new DateTimeException(MessageFormat.format(&quot;Error while parsing date. Type: {0}, value: {1}&quot;, value.getClass().getName(), value));</span>
+    }    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

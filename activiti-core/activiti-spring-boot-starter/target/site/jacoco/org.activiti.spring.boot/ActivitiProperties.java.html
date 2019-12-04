@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ActivitiProperties.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti :: Spring Boot Starter</a> &gt; <a href="index.source.html" class="el_package">org.activiti.spring.boot</a> &gt; <span class="el_source">ActivitiProperties.java</span></div><h1>ActivitiProperties.java</h1><pre class="source lang-java linenums">/* Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.activiti.spring.boot;
+
+import java.util.Arrays;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.activiti.engine.impl.history.HistoryLevel;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.core.io.support.ResourcePatternResolver;
+
+@ConfigurationProperties(&quot;spring.activiti&quot;)
+<span class="fc" id="L24">public class ActivitiProperties {</span>
+
+<span class="fc" id="L26">  private boolean checkProcessDefinitions = true;</span>
+<span class="fc" id="L27">  private boolean asyncExecutorActivate = true;</span>
+<span class="fc" id="L28">  private String deploymentName = &quot;SpringAutoDeployment&quot;;</span>
+<span class="fc" id="L29">  private String mailServerHost = &quot;localhost&quot;;</span>
+<span class="fc" id="L30">  private int mailServerPort = 1025;</span>
+  private String mailServerUserName;
+  private String mailServerPassword;
+  private String mailServerDefaultFrom;
+  private boolean mailServerUseSsl;
+  private boolean mailServerUseTls;
+<span class="fc" id="L36">  private String databaseSchemaUpdate = &quot;true&quot;;</span>
+  private String databaseSchema;
+<span class="fc" id="L38">  private boolean dbHistoryUsed = false;</span>
+<span class="fc" id="L39">  private HistoryLevel historyLevel = HistoryLevel.NONE;</span>
+<span class="fc" id="L40">  private String processDefinitionLocationPrefix = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + &quot;**/processes/&quot;;</span>
+<span class="fc" id="L41">  private List&lt;String&gt; processDefinitionLocationSuffixes = Arrays.asList(&quot;**.bpmn20.xml&quot;, &quot;**.bpmn&quot;);</span>
+  private List&lt;String&gt; customMybatisMappers;
+  private List&lt;String&gt; customMybatisXMLMappers;
+<span class="fc" id="L44">  private boolean useStrongUuids = true;</span>
+<span class="fc" id="L45">  private boolean copyVariablesToLocalForTasks = true;</span>
+<span class="fc" id="L46">  private String deploymentMode = &quot;default&quot;;</span>
+<span class="fc" id="L47">  private boolean serializePOJOsInVariablesToJson = true;</span>
+<span class="fc" id="L48">  private String javaClassFieldForJackson = JsonTypeInfo.Id.CLASS.getDefaultPropertyName();</span>
+
+  public boolean isAsyncExecutorActivate() {
+<span class="fc" id="L51">    return asyncExecutorActivate;</span>
+  }
+
+  public void setAsyncExecutorActivate(boolean asyncExecutorActivate) {
+<span class="fc" id="L55">    this.asyncExecutorActivate = asyncExecutorActivate;</span>
+<span class="fc" id="L56">  }</span>
+
+  public boolean isCheckProcessDefinitions() {
+<span class="fc" id="L59">    return checkProcessDefinitions;</span>
+  }
+
+  public void setCheckProcessDefinitions(boolean checkProcessDefinitions) {
+<span class="nc" id="L63">    this.checkProcessDefinitions = checkProcessDefinitions;</span>
+<span class="nc" id="L64">  }</span>
+
+  public String getDeploymentName() {
+<span class="fc" id="L67">    return deploymentName;</span>
+  }
+
+  public void setDeploymentName(String deploymentName) {
+<span class="nc" id="L71">    this.deploymentName = deploymentName;</span>
+<span class="nc" id="L72">  }</span>
+
+  public String getDatabaseSchemaUpdate() {
+<span class="fc" id="L75">    return databaseSchemaUpdate;</span>
+  }
+
+  public void setDatabaseSchemaUpdate(String databaseSchemaUpdate) {
+<span class="nc" id="L79">    this.databaseSchemaUpdate = databaseSchemaUpdate;</span>
+<span class="nc" id="L80">  }</span>
+
+  public String getDatabaseSchema() {
+<span class="fc" id="L83">    return databaseSchema;</span>
+  }
+
+  public void setDatabaseSchema(String databaseSchema) {
+<span class="nc" id="L87">    this.databaseSchema = databaseSchema;</span>
+<span class="nc" id="L88">  }</span>
+
+  public boolean isDbHistoryUsed() {
+<span class="fc" id="L91">    return dbHistoryUsed;</span>
+  }
+
+  public void setDbHistoryUsed(boolean isDbHistoryUsed) {
+<span class="fc" id="L95">    this.dbHistoryUsed = isDbHistoryUsed;</span>
+<span class="fc" id="L96">  }</span>
+
+  public HistoryLevel getHistoryLevel() {
+<span class="fc" id="L99">    return historyLevel;</span>
+  }
+
+  public void setHistoryLevel(HistoryLevel historyLevel) {
+<span class="fc" id="L103">    this.historyLevel = historyLevel;</span>
+<span class="fc" id="L104">  }</span>
+
+  public String getProcessDefinitionLocationPrefix() {
+<span class="fc" id="L107">    return processDefinitionLocationPrefix;</span>
+  }
+
+  public void setProcessDefinitionLocationPrefix(
+      String processDefinitionLocationPrefix) {
+<span class="nc" id="L112">    this.processDefinitionLocationPrefix = processDefinitionLocationPrefix;</span>
+<span class="nc" id="L113">  }</span>
+
+  public List&lt;String&gt; getProcessDefinitionLocationSuffixes() {
+<span class="fc" id="L116">		return processDefinitionLocationSuffixes;</span>
+	}
+
+	public void setProcessDefinitionLocationSuffixes(
+	    List&lt;String&gt; processDefinitionLocationSuffixes) {
+<span class="nc" id="L121">		this.processDefinitionLocationSuffixes = processDefinitionLocationSuffixes;</span>
+<span class="nc" id="L122">	}</span>
+
+	public String getMailServerHost() {
+<span class="fc" id="L125">    return mailServerHost;</span>
+  }
+
+  public void setMailServerHost(String mailServerHost) {
+<span class="nc" id="L129">    this.mailServerHost = mailServerHost;</span>
+<span class="nc" id="L130">  }</span>
+
+  public int getMailServerPort() {
+<span class="fc" id="L133">    return mailServerPort;</span>
+  }
+
+  public void setMailServerPort(int mailServerPort) {
+<span class="nc" id="L137">    this.mailServerPort = mailServerPort;</span>
+<span class="nc" id="L138">  }</span>
+
+	public String getMailServerUserName() {
+<span class="fc" id="L141">		return mailServerUserName;</span>
+	}
+
+	public void setMailServerUserName(String mailServerUserName) {
+<span class="nc" id="L145">		this.mailServerUserName = mailServerUserName;</span>
+<span class="nc" id="L146">	}</span>
+
+	public String getMailServerPassword() {
+<span class="fc" id="L149">		return mailServerPassword;</span>
+	}
+
+	public void setMailServerPassword(String mailServerPassword) {
+<span class="nc" id="L153">		this.mailServerPassword = mailServerPassword;</span>
+<span class="nc" id="L154">	}</span>
+
+	public String getMailServerDefaultFrom() {
+<span class="fc" id="L157">		return mailServerDefaultFrom;</span>
+	}
+
+	public void setMailServerDefaultFrom(String mailServerDefaultFrom) {
+<span class="nc" id="L161">		this.mailServerDefaultFrom = mailServerDefaultFrom;</span>
+<span class="nc" id="L162">	}</span>
+
+	public boolean isMailServerUseSsl() {
+<span class="fc" id="L165">		return mailServerUseSsl;</span>
+	}
+
+	public void setMailServerUseSsl(boolean mailServerUseSsl) {
+<span class="nc" id="L169">		this.mailServerUseSsl = mailServerUseSsl;</span>
+<span class="nc" id="L170">	}</span>
+
+	public boolean isMailServerUseTls() {
+<span class="fc" id="L173">		return mailServerUseTls;</span>
+	}
+
+	public void setMailServerUseTls(boolean mailServerUseTls) {
+<span class="nc" id="L177">		this.mailServerUseTls = mailServerUseTls;</span>
+<span class="nc" id="L178">	}</span>
+
+  public List&lt;String&gt; getCustomMybatisMappers() {
+<span class="fc" id="L181">    return customMybatisMappers;</span>
+  }
+
+  public void setCustomMybatisMappers(List&lt;String&gt; customMyBatisMappers) {
+<span class="nc" id="L185">    this.customMybatisMappers = customMyBatisMappers;</span>
+<span class="nc" id="L186">  }</span>
+
+  public List&lt;String&gt; getCustomMybatisXMLMappers() {
+<span class="fc" id="L189">    return customMybatisXMLMappers;</span>
+  }
+
+  public void setCustomMybatisXMLMappers(List&lt;String&gt; customMybatisXMLMappers) {
+<span class="nc" id="L193">    this.customMybatisXMLMappers = customMybatisXMLMappers;</span>
+<span class="nc" id="L194">  }</span>
+  
+  public boolean isUseStrongUuids() {
+<span class="fc" id="L197">	return useStrongUuids;</span>
+  }
+  
+  public void setUseStrongUuids(boolean useStrongUuids) {
+<span class="nc" id="L201">	this.useStrongUuids = useStrongUuids;</span>
+<span class="nc" id="L202">  }</span>
+
+    public boolean isCopyVariablesToLocalForTasks() {
+<span class="fc" id="L205">        return copyVariablesToLocalForTasks;</span>
+    }
+
+    public void setCopyVariablesToLocalForTasks(boolean copyVariablesToLocalForTasks) {
+<span class="nc" id="L209">        this.copyVariablesToLocalForTasks = copyVariablesToLocalForTasks;</span>
+<span class="nc" id="L210">    }</span>
+
+    public String getDeploymentMode() {
+<span class="fc" id="L213">        return deploymentMode;</span>
+    }
+
+    public void setDeploymentMode(String deploymentMode) {
+<span class="nc" id="L217">        this.deploymentMode = deploymentMode;</span>
+<span class="nc" id="L218">    }</span>
+
+    public boolean isSerializePOJOsInVariablesToJson() {
+<span class="fc" id="L221">        return serializePOJOsInVariablesToJson;</span>
+    }
+
+    public void setSerializePOJOsInVariablesToJson(boolean serializePOJOsInVariablesToJson) {
+<span class="nc" id="L225">        this.serializePOJOsInVariablesToJson = serializePOJOsInVariablesToJson;</span>
+<span class="nc" id="L226">    }</span>
+
+    public String getJavaClassFieldForJackson() {
+<span class="fc" id="L229">        return javaClassFieldForJackson;</span>
+    }
+
+    public void setJavaClassFieldForJackson(String javaClassFieldForJackson) {
+<span class="nc" id="L233">        this.javaClassFieldForJackson = javaClassFieldForJackson;</span>
+<span class="nc" id="L234">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

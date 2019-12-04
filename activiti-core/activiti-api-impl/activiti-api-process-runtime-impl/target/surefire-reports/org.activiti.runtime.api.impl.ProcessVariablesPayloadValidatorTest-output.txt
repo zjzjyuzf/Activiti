@@ -1,0 +1,5 @@
+11:51:09.339 [main] ERROR org.activiti.spring.process.variable.types.JavaObjectVariableType - class java.lang.String is not assignable from class java.lang.Integer
+11:51:09.346 [main] ERROR org.activiti.spring.process.variable.types.JavaObjectVariableType - class java.lang.String is not assignable from class java.util.Date
+11:51:09.351 [main] ERROR org.activiti.spring.process.variable.types.JavaObjectVariableType - class java.lang.String is not assignable from class java.util.Date
+11:51:09.383 [main] ERROR org.activiti.spring.process.variable.types.JavaObjectVariableType - class java.lang.String is not assignable from class java.lang.Boolean
+11:51:09.384 [main] ERROR org.activiti.spring.process.variable.types.JavaObjectVariableType - class java.lang.String is not assignable from class java.lang.Integer

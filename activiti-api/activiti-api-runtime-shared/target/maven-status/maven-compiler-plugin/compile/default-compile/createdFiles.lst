@@ -1,0 +1,14 @@
+org/activiti/api/runtime/shared/query/Order$Direction.class
+org/activiti/api/runtime/shared/events/VariableEventListener.class
+org/activiti/api/runtime/shared/query/Page.class
+org/activiti/api/runtime/shared/identity/UserGroupManager.class
+org/activiti/api/runtime/shared/security/SecurityContextPrincipalProvider.class
+org/activiti/api/runtime/shared/security/SecurityContextTokenProvider.class
+org/activiti/api/runtime/shared/security/SecurityManager.class
+org/activiti/api/runtime/shared/NotFoundException.class
+org/activiti/api/runtime/shared/query/Pageable.class
+org/activiti/api/runtime/shared/security/PrincipalIdentityProvider.class
+org/activiti/api/runtime/shared/security/PrincipalRolesProvider.class
+org/activiti/api/runtime/shared/query/Order.class
+org/activiti/api/runtime/shared/security/PrincipalGroupsProvider.class
+org/activiti/api/runtime/shared/security/AbstractSecurityManager.class

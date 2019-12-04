@@ -1,0 +1,10 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Activiti Core Common :: Application,org.activiti.application,AppliationLoadException,0,5,0,0,0,2,0,1,0,1
+Activiti Core Common :: Application,org.activiti.application,ApplicationReader,78,0,2,0,23,0,6,0,5,0
+Activiti Core Common :: Application,org.activiti.application,ApplicationContent,25,8,0,0,5,2,3,1,3,1
+Activiti Core Common :: Application,org.activiti.application,ApplicationDiscovery,0,46,1,1,0,12,1,2,0,2
+Activiti Core Common :: Application,org.activiti.application,FileContent,15,0,0,0,6,0,3,0,3,0
+Activiti Core Common :: Application,org.activiti.application,ApplicationEntry,15,0,0,0,6,0,3,0,3,0
+Activiti Core Common :: Application,org.activiti.application,ApplicationService,0,48,0,2,0,14,0,3,0,2
+Activiti Core Common :: Application,org.activiti.application.deployer,ApplicationDeployer,0,40,0,4,0,11,0,4,0,2
+Activiti Core Common :: Application,org.activiti.application.conf,ApplicationAutoConfiguration,35,0,0,0,6,0,3,0,3,0

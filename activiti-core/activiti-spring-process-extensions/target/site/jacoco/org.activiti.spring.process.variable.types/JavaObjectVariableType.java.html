@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JavaObjectVariableType.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti :: Process Extensions</a> &gt; <a href="index.source.html" class="el_package">org.activiti.spring.process.variable.types</a> &gt; <span class="el_source">JavaObjectVariableType.java</span></div><h1>JavaObjectVariableType.java</h1><pre class="source lang-java linenums">package org.activiti.spring.process.variable.types;
+
+import java.util.List;
+
+import org.activiti.engine.ActivitiException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * For defining types to match json extension files where types correspond to java classes
+ */
+public class JavaObjectVariableType extends VariableType {
+
+<span class="nc" id="L14">    private static final Logger logger = LoggerFactory.getLogger(JavaObjectVariableType.class);</span>
+
+    public Class clazz;
+
+<span class="nc" id="L18">    public JavaObjectVariableType(Class clazz) {</span>
+<span class="nc" id="L19">        this.clazz = clazz;</span>
+<span class="nc" id="L20">    }</span>
+
+    public Class getClazz() {
+<span class="nc" id="L23">        return clazz;</span>
+    }
+
+    public void setClazz(Class clazz) {
+<span class="nc" id="L27">        this.clazz = clazz;</span>
+<span class="nc" id="L28">    }</span>
+
+    @Override
+    public void validate(Object var,List&lt;ActivitiException&gt; errors) {
+
+
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        if (!(var).getClass().isAssignableFrom(clazz)){</span>
+<span class="nc" id="L35">            String message = var.getClass()+&quot; is not assignable from &quot;+clazz;</span>
+<span class="nc" id="L36">            errors.add(new ActivitiException(message));</span>
+<span class="nc" id="L37">            logger.error(message);</span>
+        }
+<span class="nc" id="L39">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

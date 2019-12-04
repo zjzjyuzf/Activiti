@@ -1,0 +1,13 @@
+org/activiti/core/common/spring/security/AuthenticationPrincipalIdentityProvider.class
+org/activiti/core/common/spring/security/GrantedAuthoritiesGroupsMapper.class
+org/activiti/core/common/spring/security/LocalSpringSecurityManager.class
+org/activiti/core/common/spring/security/AuthenticationPrincipalGroupsProvider.class
+org/activiti/core/common/spring/security/AbstractSimpleGrantedAuthoritiesMapper.class
+org/activiti/core/common/spring/security/LocalSpringSecurityContextPrincipalProvider.class
+org/activiti/core/common/spring/security/GrantedAuthoritiesResolver.class
+org/activiti/core/common/spring/security/config/ActivitiSpringSecurityAutoConfiguration.class
+org/activiti/core/common/spring/security/SimpleGrantedAuthoritiesResolver.class
+org/activiti/core/common/spring/security/SimpleGrantedAuthoritiesRolesMapper.class
+org/activiti/core/common/spring/security/SimpleGrantedAuthoritiesGroupsMapper.class
+org/activiti/core/common/spring/security/AuthenticationPrincipalRolesProvider.class
+org/activiti/core/common/spring/security/GrantedAuthoritiesRolesMapper.class

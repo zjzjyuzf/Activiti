@@ -1,0 +1,3 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+activiti-common-util,org.activiti.common.util,DateFormatterProvider,4,97,0,6,2,22,1,8,1,5
+activiti-common-util,org.activiti.common.util.conf,ActivitiCoreCommonUtilAutoConfiguration,0,8,0,0,0,2,0,2,0,2

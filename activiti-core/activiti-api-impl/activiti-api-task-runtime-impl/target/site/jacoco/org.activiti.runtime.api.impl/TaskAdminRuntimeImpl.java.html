@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TaskAdminRuntimeImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti API :: Task Runtime Implementation</a> &gt; <a href="index.source.html" class="el_package">org.activiti.runtime.api.impl</a> &gt; <span class="el_source">TaskAdminRuntimeImpl.java</span></div><h1>TaskAdminRuntimeImpl.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2018 Alfresco, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.activiti.runtime.api.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.activiti.api.model.shared.model.VariableInstance;
+import org.activiti.api.runtime.shared.query.Page;
+import org.activiti.api.runtime.shared.query.Pageable;
+import org.activiti.api.runtime.shared.security.SecurityManager;
+import org.activiti.api.task.model.Task;
+import org.activiti.api.task.model.builders.TaskPayloadBuilder;
+import org.activiti.api.task.model.impl.TaskImpl;
+import org.activiti.api.task.model.payloads.AssignTaskPayload;
+import org.activiti.api.task.model.payloads.CandidateGroupsPayload;
+import org.activiti.api.task.model.payloads.CandidateUsersPayload;
+import org.activiti.api.task.model.payloads.ClaimTaskPayload;
+import org.activiti.api.task.model.payloads.CompleteTaskPayload;
+import org.activiti.api.task.model.payloads.CreateTaskVariablePayload;
+import org.activiti.api.task.model.payloads.DeleteTaskPayload;
+import org.activiti.api.task.model.payloads.GetTaskVariablesPayload;
+import org.activiti.api.task.model.payloads.GetTasksPayload;
+import org.activiti.api.task.model.payloads.ReleaseTaskPayload;
+import org.activiti.api.task.model.payloads.UpdateTaskPayload;
+import org.activiti.api.task.model.payloads.UpdateTaskVariablePayload;
+import org.activiti.api.task.runtime.TaskAdminRuntime;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.task.IdentityLink;
+import org.activiti.engine.task.IdentityLinkType;
+import org.activiti.engine.task.TaskQuery;
+import org.activiti.runtime.api.model.impl.APITaskConverter;
+import org.activiti.runtime.api.model.impl.APIVariableInstanceConverter;
+import org.activiti.runtime.api.query.impl.PageImpl;
+import org.springframework.security.access.prepost.PreAuthorize;
+
+@PreAuthorize(&quot;hasRole('ACTIVITI_ADMIN')&quot;)
+public class TaskAdminRuntimeImpl implements TaskAdminRuntime {
+
+    private final TaskService taskService;
+
+    private final APITaskConverter taskConverter;
+
+    private final APIVariableInstanceConverter variableInstanceConverter;
+
+    private final TaskRuntimeHelper taskRuntimeHelper;
+
+    private final SecurityManager securityManager;
+
+    public TaskAdminRuntimeImpl(TaskService taskService,
+                                APITaskConverter taskConverter,
+                                APIVariableInstanceConverter variableInstanceConverter,
+                                TaskRuntimeHelper taskRuntimeHelper,
+<span class="nc" id="L68">                                SecurityManager securityManager) {</span>
+<span class="nc" id="L69">        this.taskService = taskService;</span>
+<span class="nc" id="L70">        this.taskConverter = taskConverter;</span>
+<span class="nc" id="L71">        this.variableInstanceConverter = variableInstanceConverter;</span>
+<span class="nc" id="L72">        this.taskRuntimeHelper = taskRuntimeHelper;</span>
+<span class="nc" id="L73">        this.securityManager = securityManager;</span>
+<span class="nc" id="L74">    }</span>
+
+    @Override
+    public Task task(String taskId) {
+<span class="nc" id="L78">        return taskConverter.from(taskRuntimeHelper.getInternalTask(taskId));</span>
+    }
+
+    @Override
+    public Page&lt;Task&gt; tasks(Pageable pageable) {
+<span class="nc" id="L83">        return tasks(pageable,</span>
+<span class="nc" id="L84">                TaskPayloadBuilder.tasks().build());</span>
+    }
+
+    @Override
+    public Page&lt;Task&gt; tasks(Pageable pageable,
+                            GetTasksPayload getTasksPayload) {
+<span class="nc" id="L90">        TaskQuery taskQuery = taskService.createTaskQuery();</span>
+
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if (getTasksPayload.getProcessInstanceId() != null) {</span>
+<span class="nc" id="L93">            taskQuery = taskQuery.processInstanceId(getTasksPayload.getProcessInstanceId());</span>
+        }
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        if (getTasksPayload.getParentTaskId() != null) {</span>
+<span class="nc" id="L96">            taskQuery = taskQuery.taskParentTaskId(getTasksPayload.getParentTaskId());</span>
+        }
+
+<span class="nc" id="L99">        List&lt;Task&gt; tasks = taskConverter.from(taskQuery.listPage(pageable.getStartIndex(),</span>
+<span class="nc" id="L100">                pageable.getMaxItems()));</span>
+<span class="nc" id="L101">        return new PageImpl&lt;&gt;(tasks,</span>
+<span class="nc" id="L102">                Math.toIntExact(taskQuery.count()));</span>
+    }
+
+    @Override
+    public Task update(UpdateTaskPayload updateTaskPayload) {
+<span class="nc" id="L107">        return taskRuntimeHelper.applyUpdateTaskPayload(true, updateTaskPayload);</span>
+    }
+
+    @Override
+    public Task delete(DeleteTaskPayload deleteTaskPayload) {
+
+        //      we might need to create an empty shell with the task ID and Status only
+<span class="nc" id="L114">        Task task = task(deleteTaskPayload.getTaskId());</span>
+
+<span class="nc" id="L116">        TaskImpl deletedTaskData = new TaskImpl(task.getId(),</span>
+<span class="nc" id="L117">                task.getName(),</span>
+                Task.TaskStatus.CANCELLED);
+
+<span class="nc" id="L120">        String authenticatedUserId = securityManager.getAuthenticatedUserId();</span>
+
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (!deleteTaskPayload.hasReason()) {</span>
+<span class="nc" id="L123">            deleteTaskPayload.setReason(&quot;Task deleted by &quot; + authenticatedUserId);</span>
+        }
+
+<span class="nc" id="L126">        taskService.deleteTask(deleteTaskPayload.getTaskId(),</span>
+<span class="nc" id="L127">                deleteTaskPayload.getReason(),</span>
+                true);
+<span class="nc" id="L129">        return deletedTaskData;</span>
+    }
+
+    @Override
+    public List&lt;VariableInstance&gt; variables(GetTaskVariablesPayload getTaskVariablesPayload) {
+<span class="nc" id="L134">        return variableInstanceConverter.from(taskRuntimeHelper.getInternalTaskVariables(getTaskVariablesPayload.getTaskId()).values());</span>
+    }
+
+    @Override
+    public void createVariable(CreateTaskVariablePayload createTaskVariablePayload) {
+<span class="nc" id="L139">        taskRuntimeHelper.createVariable(true, createTaskVariablePayload);</span>
+<span class="nc" id="L140">    }</span>
+
+    @Override
+    public void updateVariable(UpdateTaskVariablePayload updateTaskVariablePayload) {
+<span class="nc" id="L144">        taskRuntimeHelper.updateVariable(true, updateTaskVariablePayload);</span>
+<span class="nc" id="L145">    }</span>
+
+    @Override
+    public Task complete(CompleteTaskPayload completeTaskPayload) {
+<span class="nc" id="L149">        Task task = task(completeTaskPayload.getTaskId());</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (task == null) {</span>
+<span class="nc" id="L151">            throw new IllegalStateException(&quot;Task with id: &quot; + completeTaskPayload.getTaskId() + &quot; cannot be completed because it cannot be found.&quot;);</span>
+        }
+        
+<span class="nc" id="L154">        taskRuntimeHelper.handleCompleteTaskPayload(completeTaskPayload);</span>
+        
+<span class="nc" id="L156">        TaskImpl competedTaskData = new TaskImpl(task.getId(),</span>
+<span class="nc" id="L157">                task.getName(),</span>
+                Task.TaskStatus.COMPLETED);
+<span class="nc" id="L159">        taskService.complete(completeTaskPayload.getTaskId(),</span>
+<span class="nc" id="L160">                completeTaskPayload.getVariables(), true);</span>
+<span class="nc" id="L161">        return competedTaskData;</span>
+    }
+
+    @Override
+    public Task claim(ClaimTaskPayload claimTaskPayload) {
+<span class="nc" id="L166">        taskService.claim(claimTaskPayload.getTaskId(),</span>
+<span class="nc" id="L167">                claimTaskPayload.getAssignee());</span>
+
+<span class="nc" id="L169">        return task(claimTaskPayload.getTaskId());</span>
+    }
+
+    @Override
+    public Task release(ReleaseTaskPayload releaseTaskPayload) {
+<span class="nc" id="L174">        taskService.unclaim(releaseTaskPayload.getTaskId());</span>
+<span class="nc" id="L175">        return task(releaseTaskPayload.getTaskId());</span>
+    }
+
+    @Override
+    public Task assign(AssignTaskPayload assignTaskPayload) {
+        //We need to release, claim for assigned task is not working!
+<span class="nc" id="L181">        taskService.unclaim(assignTaskPayload.getTaskId());</span>
+
+        //Now assign a new user
+<span class="nc" id="L184">        taskService.claim(assignTaskPayload.getTaskId(),</span>
+<span class="nc" id="L185">                assignTaskPayload.getAssignee());</span>
+
+<span class="nc" id="L187">        return task(assignTaskPayload.getTaskId());</span>
+    }
+
+    @Override
+    public void addCandidateUsers(CandidateUsersPayload candidateUsersPayload) {
+<span class="nc bnc" id="L192" title="All 4 branches missed.">        if (candidateUsersPayload.getCandidateUsers() != null &amp;&amp; !candidateUsersPayload.getCandidateUsers().isEmpty()) {</span>
+<span class="nc bnc" id="L193" title="All 2 branches missed.">            for ( String u : candidateUsersPayload.getCandidateUsers() ) {</span>
+<span class="nc" id="L194">                taskService.addCandidateUser(candidateUsersPayload.getTaskId(),</span>
+                        u);
+<span class="nc" id="L196">            }</span>
+        }
+<span class="nc" id="L198">    }</span>
+
+    @Override
+    public void deleteCandidateUsers(CandidateUsersPayload candidateUsersPayload) {
+<span class="nc bnc" id="L202" title="All 4 branches missed.">        if (candidateUsersPayload.getCandidateUsers() != null &amp;&amp; !candidateUsersPayload.getCandidateUsers().isEmpty()) {</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">            for ( String u : candidateUsersPayload.getCandidateUsers() ) {</span>
+<span class="nc" id="L204">                taskService.deleteCandidateUser(candidateUsersPayload.getTaskId(),</span>
+                        u);
+<span class="nc" id="L206">            }</span>
+        }
+<span class="nc" id="L208">    }</span>
+
+    @Override
+    public void addCandidateGroups(CandidateGroupsPayload candidateGroupsPayload) {
+<span class="nc bnc" id="L212" title="All 4 branches missed.">        if (candidateGroupsPayload.getCandidateGroups() != null &amp;&amp; !candidateGroupsPayload.getCandidateGroups().isEmpty()) {</span>
+<span class="nc bnc" id="L213" title="All 2 branches missed.">            for ( String g : candidateGroupsPayload.getCandidateGroups() ) {</span>
+<span class="nc" id="L214">                taskService.addCandidateGroup(candidateGroupsPayload.getTaskId(),</span>
+                        g);
+<span class="nc" id="L216">            }</span>
+        }
+<span class="nc" id="L218">    }</span>
+
+    @Override
+    public void deleteCandidateGroups(CandidateGroupsPayload candidateGroupsPayload) {
+<span class="nc bnc" id="L222" title="All 4 branches missed.">        if (candidateGroupsPayload.getCandidateGroups() != null &amp;&amp; !candidateGroupsPayload.getCandidateGroups().isEmpty()) {</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">            for ( String g : candidateGroupsPayload.getCandidateGroups() ) {</span>
+<span class="nc" id="L224">                taskService.deleteCandidateGroup(candidateGroupsPayload.getTaskId(),</span>
+                        g);
+<span class="nc" id="L226">            }</span>
+        }
+<span class="nc" id="L228">    }</span>
+
+    @Override
+    public List&lt;String&gt; userCandidates(String taskId) {
+<span class="nc" id="L232">        List&lt;IdentityLink&gt; identityLinks = getIdentityLinks(taskId);</span>
+<span class="nc" id="L233">        List&lt;String&gt; userCandidates = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">        if (identityLinks != null) {</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">            for ( IdentityLink i : identityLinks ) {</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">                if (i.getUserId() != null) {</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">                    if (i.getType().equals(IdentityLinkType.CANDIDATE)) {</span>
+<span class="nc" id="L238">                        userCandidates.add(i.getUserId());</span>
+                    }
+                }
+<span class="nc" id="L241">            }</span>
+
+        }
+<span class="nc" id="L244">        return userCandidates;</span>
+    }
+
+    @Override
+    public List&lt;String&gt; groupCandidates(String taskId) {
+<span class="nc" id="L249">        List&lt;IdentityLink&gt; identityLinks = getIdentityLinks(taskId);</span>
+<span class="nc" id="L250">        List&lt;String&gt; groupCandidates = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">        if (identityLinks != null) {</span>
+<span class="nc bnc" id="L252" title="All 2 branches missed.">            for ( IdentityLink i : identityLinks ) {</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">                if (i.getGroupId() != null) {</span>
+<span class="nc bnc" id="L254" title="All 2 branches missed.">                    if (i.getType().equals(IdentityLinkType.CANDIDATE)) {</span>
+<span class="nc" id="L255">                        groupCandidates.add(i.getGroupId());</span>
+                    }
+                }
+<span class="nc" id="L258">            }</span>
+
+        }
+<span class="nc" id="L261">        return groupCandidates;</span>
+    }
+
+    private List&lt;IdentityLink&gt; getIdentityLinks(String taskId) {
+<span class="nc" id="L265">        return taskService.getIdentityLinksForTask(taskId);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

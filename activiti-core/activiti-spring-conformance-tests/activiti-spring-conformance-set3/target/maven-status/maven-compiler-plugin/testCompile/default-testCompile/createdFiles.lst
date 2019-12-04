@@ -1,0 +1,5 @@
+org/activiti/spring/conformance/set3/UserTaskCandidateGroupAndAssigneeTest.class
+org/activiti/spring/conformance/set3/Application.class
+org/activiti/spring/conformance/set3/ConformanceBasicProcessRuntimeTest.class
+org/activiti/spring/conformance/set3/UserTaskCandidateGroupsTest.class
+org/activiti/spring/conformance/set3/UserTaskCandidateVisibilityTest.class

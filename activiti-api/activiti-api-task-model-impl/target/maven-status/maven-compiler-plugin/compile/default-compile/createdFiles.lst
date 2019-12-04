@@ -1,0 +1,6 @@
+org/activiti/api/task/model/impl/TaskCandidateGroupImpl.class
+org/activiti/api/task/conf/impl/TaskModelAutoConfiguration.class
+org/activiti/api/task/conf/impl/TaskModelAutoConfiguration$1.class
+org/activiti/api/task/model/impl/TaskImpl.class
+org/activiti/api/task/model/impl/TaskCandidateImpl.class
+org/activiti/api/task/model/impl/TaskCandidateUserImpl.class

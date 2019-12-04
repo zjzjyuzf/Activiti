@@ -1,0 +1,13 @@
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/main/java/org/activiti/core/common/spring/security/AuthenticationPrincipalGroupsProvider.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/main/java/org/activiti/core/common/spring/security/SimpleGrantedAuthoritiesResolver.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/main/java/org/activiti/core/common/spring/security/config/ActivitiSpringSecurityAutoConfiguration.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/main/java/org/activiti/core/common/spring/security/AbstractSimpleGrantedAuthoritiesMapper.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/main/java/org/activiti/core/common/spring/security/AuthenticationPrincipalRolesProvider.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/main/java/org/activiti/core/common/spring/security/SimpleGrantedAuthoritiesGroupsMapper.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/main/java/org/activiti/core/common/spring/security/GrantedAuthoritiesResolver.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/main/java/org/activiti/core/common/spring/security/GrantedAuthoritiesGroupsMapper.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/main/java/org/activiti/core/common/spring/security/SimpleGrantedAuthoritiesRolesMapper.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/main/java/org/activiti/core/common/spring/security/AuthenticationPrincipalIdentityProvider.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/main/java/org/activiti/core/common/spring/security/LocalSpringSecurityContextPrincipalProvider.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/main/java/org/activiti/core/common/spring/security/GrantedAuthoritiesRolesMapper.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/main/java/org/activiti/core/common/spring/security/LocalSpringSecurityManager.java

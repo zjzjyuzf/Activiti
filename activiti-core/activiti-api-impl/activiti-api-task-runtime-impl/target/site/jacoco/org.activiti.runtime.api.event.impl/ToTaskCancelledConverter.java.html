@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ToTaskCancelledConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti API :: Task Runtime Implementation</a> &gt; <a href="index.source.html" class="el_package">org.activiti.runtime.api.event.impl</a> &gt; <span class="el_source">ToTaskCancelledConverter.java</span></div><h1>ToTaskCancelledConverter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2018 Alfresco, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.activiti.runtime.api.event.impl;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.activiti.api.task.model.Task;
+import org.activiti.api.task.model.impl.TaskImpl;
+import org.activiti.api.task.runtime.events.TaskCancelledEvent;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.delegate.event.ActivitiActivityCancelledEvent;
+import org.activiti.engine.task.TaskQuery;
+import org.activiti.runtime.api.model.impl.APITaskConverter;
+
+public class ToTaskCancelledConverter implements EventConverter&lt;TaskCancelledEvent, ActivitiActivityCancelledEvent&gt; {
+
+    private APITaskConverter taskConverter;
+
+    private TaskService taskService;
+
+    public ToTaskCancelledConverter(APITaskConverter taskConverter,
+<span class="fc" id="L39">                                    TaskService taskService) {</span>
+<span class="fc" id="L40">        this.taskConverter = taskConverter;</span>
+<span class="fc" id="L41">        this.taskService = taskService;</span>
+<span class="fc" id="L42">    }</span>
+
+    @Override
+    public Optional&lt;TaskCancelledEvent&gt; from(ActivitiActivityCancelledEvent internalEvent) {
+<span class="fc" id="L46">        TaskQuery taskQuery = taskService.createTaskQuery();</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (internalEvent.getProcessInstanceId() != null) {</span>
+<span class="fc" id="L48">            taskQuery.processInstanceId(internalEvent.getProcessInstanceId());</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">            if (internalEvent.getActivityId() != null) {</span>
+<span class="fc" id="L50">                taskQuery.taskDefinitionKey(internalEvent.getActivityId());</span>
+            }
+        } else {
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">            if (internalEvent.getExecutionId() != null) {</span>
+                //temporary workaround for stand alone tasks, task id is mapped as execution id
+<span class="fc" id="L55">                taskQuery.taskId(internalEvent.getExecutionId());</span>
+            }
+        }
+<span class="fc" id="L58">        List&lt;org.activiti.engine.task.Task&gt; tasks = taskQuery.list();</span>
+<span class="fc" id="L59">        tasks = filterMultiInstances(internalEvent,</span>
+                                     tasks);
+<span class="fc" id="L61">        TaskCancelledEvent event = null;</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        if (tasks.size() == 1) {</span>
+<span class="fc" id="L63">            Task task = taskConverter.from(tasks.get(0));</span>
+<span class="fc" id="L64">            ((TaskImpl) task).setStatus(Task.TaskStatus.CANCELLED);</span>
+<span class="fc" id="L65">            event = new TaskCancelledImpl(task);</span>
+        }
+<span class="fc" id="L67">        return Optional.ofNullable(event);</span>
+    }
+
+    private List&lt;org.activiti.engine.task.Task&gt; filterMultiInstances(ActivitiActivityCancelledEvent internalEvent,
+                                                                     List&lt;org.activiti.engine.task.Task&gt; tasks) {
+        // in case of parallel multi-instance we need to also filter on execution id because more than will task can
+        // be returned for same process instance id and task definition key.
+        // Note that's not possible to always filter on execution id, because in some cases the execution related to
+        // cancel action is not the the task itself. For instance, boundary events.
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        if (tasks.size() &gt; 1) {</span>
+<span class="nc" id="L77">            tasks = tasks</span>
+<span class="nc" id="L78">                    .stream()</span>
+<span class="nc" id="L79">                    .filter(task -&gt; Objects.equals(task.getExecutionId(),</span>
+<span class="nc" id="L80">                                                   internalEvent.getExecutionId()))</span>
+<span class="nc" id="L81">                    .collect(Collectors.toList());</span>
+        }
+<span class="fc" id="L83">        return tasks;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

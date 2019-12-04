@@ -1,0 +1,12 @@
+org/activiti/api/runtime/conf/impl/CommonModelAutoConfiguration.class
+org/activiti/api/runtime/model/impl/ActivitiErrorMessageImpl.class
+org/activiti/api/runtime/conf/impl/CommonModelAutoConfiguration$1.class
+org/activiti/api/runtime/event/impl/RuntimeEventImpl.class
+org/activiti/api/runtime/event/impl/VariableEventImpl.class
+org/activiti/api/runtime/model/impl/ApplicationElementImpl.class
+org/activiti/api/runtime/event/impl/VariableCreatedEventImpl.class
+org/activiti/api/runtime/event/impl/VariableUpdatedEventImpl.class
+org/activiti/api/runtime/model/impl/VariableInstanceImpl.class
+org/activiti/api/runtime/event/impl/VariableDeletedEventImpl.class
+org/activiti/api/runtime/conf/impl/ResultMixIn.class
+org/activiti/api/runtime/conf/impl/PayloadMixIn.class

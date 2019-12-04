@@ -1,0 +1,6 @@
+org/activiti/api/task/runtime/TaskRuntime.class
+org/activiti/api/task/runtime/events/listener/TaskCandidateEventListener.class
+org/activiti/api/task/runtime/conf/TaskRuntimeConfiguration.class
+org/activiti/api/task/runtime/TaskAdminRuntime.class
+org/activiti/api/task/runtime/events/listener/TaskEventListener.class
+org/activiti/api/task/runtime/events/listener/TaskRuntimeEventListener.class

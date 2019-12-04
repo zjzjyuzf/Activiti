@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApplicationReader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti Core Common :: Application</a> &gt; <a href="index.source.html" class="el_package">org.activiti.application</a> &gt; <span class="el_source">ApplicationReader.java</span></div><h1>ApplicationReader.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2018 Alfresco, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.activiti.application;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
+import org.apache.commons.io.IOUtils;
+
+public class ApplicationReader {
+
+    private List&lt;ApplicationEntryDiscovery&gt; applicationEntryDiscoveries;
+
+<span class="nc" id="L31">    public ApplicationReader(List&lt;ApplicationEntryDiscovery&gt; applicationEntryDiscoveries) {</span>
+<span class="nc" id="L32">        this.applicationEntryDiscoveries = applicationEntryDiscoveries;</span>
+<span class="nc" id="L33">    }</span>
+
+    public ApplicationContent read(InputStream inputStream) {
+<span class="nc" id="L36">        ApplicationContent application = new ApplicationContent();</span>
+<span class="nc" id="L37">        try (ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {</span>
+            ZipEntry zipEntry;
+<span class="nc bnc" id="L39" title="All 2 branches missed.">            while ((zipEntry = zipInputStream.getNextEntry()) != null) {</span>
+<span class="nc" id="L40">                ZipEntry currentEntry = zipEntry;</span>
+<span class="nc" id="L41">                applicationEntryDiscoveries</span>
+<span class="nc" id="L42">                        .stream()</span>
+<span class="nc" id="L43">                        .filter(applicationEntryDiscovery -&gt; applicationEntryDiscovery.filter(currentEntry).test(currentEntry))</span>
+<span class="nc" id="L44">                        .findFirst()</span>
+<span class="nc" id="L45">                        .ifPresent(</span>
+                                applicationEntryDiscovery -&gt;
+<span class="nc" id="L47">                                        application.add(new ApplicationEntry(applicationEntryDiscovery.getEntryType(),</span>
+<span class="nc" id="L48">                                                                             new FileContent(currentEntry.getName(),</span>
+<span class="nc" id="L49">                                                                                             readBytes(zipInputStream</span>
+                                                                                             )))));
+<span class="nc" id="L51">            }</span>
+<span class="nc" id="L52">        } catch (IOException e) {</span>
+<span class="nc" id="L53">            throw new AppliationLoadException(&quot;Unable to read zip file&quot;,</span>
+                                              e);
+<span class="nc" id="L55">        }</span>
+<span class="nc" id="L56">        return application;</span>
+    }
+
+    private byte[] readBytes(ZipInputStream zipInputStream) {
+        try {
+<span class="nc" id="L61">            return IOUtils.toByteArray(zipInputStream);</span>
+<span class="nc" id="L62">        } catch (IOException e) {</span>
+<span class="nc" id="L63">            throw new AppliationLoadException(&quot;Unable to read zip file&quot;,</span>
+                                              e);
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

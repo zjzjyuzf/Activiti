@@ -1,0 +1,4 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Activiti :: Application,org.activiti.application.discovery,ProcessEntryDiscovery,19,0,4,0,3,0,6,0,4,0
+Activiti :: Application,org.activiti.application.deployer,ProcessEntryDeployer,0,39,0,2,0,10,0,3,0,2
+Activiti :: Application,org.activiti.application.conf,ApplicationProcessAutoConfiguration,12,0,0,0,3,0,3,0,3,0

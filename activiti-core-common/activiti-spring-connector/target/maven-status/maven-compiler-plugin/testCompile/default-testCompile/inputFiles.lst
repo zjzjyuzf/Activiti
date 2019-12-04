@@ -1,0 +1,5 @@
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-connector/src/test/java/org/activiti/core/common/spring/connector/ConnectorDefinitionServiceIT.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-connector/src/test/java/org/activiti/core/common/spring/connector/ConnectorDefinitionDirDoNotExistsIT.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-connector/src/test/java/org/activiti/core/common/spring/connector/MultipleConnectorDefinitionServiceIT.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-connector/src/test/java/org/activiti/core/common/spring/connector/ConnectorDefinitionServiceTest.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-connector/src/test/java/org/activiti/core/common/spring/connector/EmptyConnectorDefinitionServiceIT.java

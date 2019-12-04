@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TaskRuntimeImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti API :: Task Runtime Implementation</a> &gt; <a href="index.source.html" class="el_package">org.activiti.runtime.api.impl</a> &gt; <span class="el_source">TaskRuntimeImpl.java</span></div><h1>TaskRuntimeImpl.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2018 Alfresco, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.activiti.runtime.api.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import org.activiti.api.model.shared.model.VariableInstance;
+import org.activiti.api.runtime.shared.NotFoundException;
+import org.activiti.api.runtime.shared.query.Page;
+import org.activiti.api.runtime.shared.query.Pageable;
+import org.activiti.api.runtime.shared.security.SecurityManager;
+import org.activiti.api.task.model.Task;
+import org.activiti.api.task.model.builders.TaskPayloadBuilder;
+import org.activiti.api.task.model.impl.TaskImpl;
+import org.activiti.api.task.model.payloads.CandidateGroupsPayload;
+import org.activiti.api.task.model.payloads.CandidateUsersPayload;
+import org.activiti.api.task.model.payloads.ClaimTaskPayload;
+import org.activiti.api.task.model.payloads.CompleteTaskPayload;
+import org.activiti.api.task.model.payloads.CreateTaskPayload;
+import org.activiti.api.task.model.payloads.CreateTaskVariablePayload;
+import org.activiti.api.task.model.payloads.DeleteTaskPayload;
+import org.activiti.api.task.model.payloads.GetTaskVariablesPayload;
+import org.activiti.api.task.model.payloads.GetTasksPayload;
+import org.activiti.api.task.model.payloads.ReleaseTaskPayload;
+import org.activiti.api.task.model.payloads.SaveTaskPayload;
+import org.activiti.api.task.model.payloads.UpdateTaskPayload;
+import org.activiti.api.task.model.payloads.UpdateTaskVariablePayload;
+import org.activiti.api.task.runtime.TaskRuntime;
+import org.activiti.api.task.runtime.conf.TaskRuntimeConfiguration;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.task.IdentityLink;
+import org.activiti.engine.task.IdentityLinkType;
+import org.activiti.engine.task.TaskQuery;
+import org.activiti.runtime.api.model.impl.APITaskConverter;
+import org.activiti.runtime.api.model.impl.APIVariableInstanceConverter;
+import org.activiti.runtime.api.query.impl.PageImpl;
+import org.springframework.security.access.prepost.PreAuthorize;
+
+@PreAuthorize(&quot;hasRole('ACTIVITI_USER')&quot;)
+public class TaskRuntimeImpl implements TaskRuntime {
+
+    private final TaskService taskService;
+
+    private final APITaskConverter taskConverter;
+
+    private final APIVariableInstanceConverter variableInstanceConverter;
+
+    private final TaskRuntimeConfiguration configuration;
+
+    private final SecurityManager securityManager;
+
+    private final TaskRuntimeHelper taskRuntimeHelper;
+
+    public TaskRuntimeImpl(TaskService taskService,
+                           SecurityManager securityManager,
+                           APITaskConverter taskConverter,
+                           APIVariableInstanceConverter variableInstanceConverter,
+                           TaskRuntimeConfiguration configuration,
+<span class="fc" id="L75">                           TaskRuntimeHelper taskRuntimeHelper) {</span>
+<span class="fc" id="L76">        this.taskService = taskService;</span>
+<span class="fc" id="L77">        this.securityManager = securityManager;</span>
+<span class="fc" id="L78">        this.taskConverter = taskConverter;</span>
+<span class="fc" id="L79">        this.variableInstanceConverter = variableInstanceConverter;</span>
+<span class="fc" id="L80">        this.configuration = configuration;</span>
+<span class="fc" id="L81">        this.taskRuntimeHelper = taskRuntimeHelper;</span>
+<span class="fc" id="L82">    }</span>
+
+    @Override
+    public TaskRuntimeConfiguration configuration() {
+<span class="nc" id="L86">        return configuration;</span>
+    }
+
+    @Override
+    public Task task(String taskId) {
+<span class="nc" id="L91">        return taskConverter.from(taskRuntimeHelper.getInternalTaskWithChecks(taskId));</span>
+    }
+
+    @Override
+    public Page&lt;Task&gt; tasks(Pageable pageable) {
+<span class="nc" id="L96">        String authenticatedUserId = securityManager.getAuthenticatedUserId();</span>
+<span class="nc bnc" id="L97" title="All 4 branches missed.">        if (authenticatedUserId != null &amp;&amp; !authenticatedUserId.isEmpty()) {</span>
+<span class="nc" id="L98">            List&lt;String&gt; userGroups = securityManager.getAuthenticatedUserGroups();</span>
+<span class="nc" id="L99">            return tasks(pageable,</span>
+<span class="nc" id="L100">                    TaskPayloadBuilder.tasks().withAssignee(authenticatedUserId).withGroups(userGroups).build());</span>
+        }
+<span class="nc" id="L102">        throw new IllegalStateException(&quot;You need an authenticated user to perform a task query&quot;);</span>
+    }
+
+    @Override
+    public Page&lt;Task&gt; tasks(Pageable pageable,
+                            GetTasksPayload getTasksPayload) {
+<span class="nc" id="L108">        TaskQuery taskQuery = taskService.createTaskQuery();</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        if (getTasksPayload == null) {</span>
+<span class="nc" id="L110">            getTasksPayload = TaskPayloadBuilder.tasks().build();</span>
+        }
+<span class="nc" id="L112">        String authenticatedUserId = securityManager.getAuthenticatedUserId();</span>
+<span class="nc bnc" id="L113" title="All 4 branches missed.">        if (authenticatedUserId != null &amp;&amp; !authenticatedUserId.isEmpty()) {</span>
+<span class="nc" id="L114">            List&lt;String&gt; userGroups = securityManager.getAuthenticatedUserGroups();</span>
+<span class="nc" id="L115">            getTasksPayload.setAssigneeId(authenticatedUserId);</span>
+<span class="nc" id="L116">            getTasksPayload.setGroups(userGroups);</span>
+<span class="nc" id="L117">        } else {</span>
+<span class="nc" id="L118">            throw new IllegalStateException(&quot;You need an authenticated user to perform a task query&quot;);</span>
+        }
+<span class="nc" id="L120">        taskQuery = taskQuery.or()</span>
+<span class="nc" id="L121">                .taskCandidateOrAssigned(getTasksPayload.getAssigneeId(),</span>
+<span class="nc" id="L122">                        getTasksPayload.getGroups())</span>
+<span class="nc" id="L123">                .taskOwner(authenticatedUserId)</span>
+<span class="nc" id="L124">                .endOr();</span>
+
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        if (getTasksPayload.getProcessInstanceId() != null) {</span>
+<span class="nc" id="L127">            taskQuery = taskQuery.processInstanceId(getTasksPayload.getProcessInstanceId());</span>
+        }
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (getTasksPayload.getParentTaskId() != null) {</span>
+<span class="nc" id="L130">            taskQuery = taskQuery.taskParentTaskId(getTasksPayload.getParentTaskId());</span>
+        }
+<span class="nc" id="L132">        List&lt;Task&gt; tasks = taskConverter.from(taskQuery.listPage(pageable.getStartIndex(),</span>
+<span class="nc" id="L133">                pageable.getMaxItems()));</span>
+<span class="nc" id="L134">        return new PageImpl&lt;&gt;(tasks,</span>
+<span class="nc" id="L135">                Math.toIntExact(taskQuery.count()));</span>
+    }
+
+    @Override
+    public Task complete(CompleteTaskPayload completeTaskPayload) {
+        //@TODO: not the most efficient way to return the just completed task, improve
+        //      we might need to create an empty shell with the task ID and Status only
+        Task task;
+<span class="nc" id="L143">        String authenticatedUserId = securityManager.getAuthenticatedUserId();</span>
+        try {
+<span class="nc" id="L145">            task = task(completeTaskPayload.getTaskId());</span>
+<span class="nc" id="L146">        } catch (IllegalStateException ex) {</span>
+<span class="nc" id="L147">            throw new IllegalStateException(&quot;The authenticated user cannot complete task&quot; + completeTaskPayload.getTaskId() + &quot; due he/she cannot access to the task&quot;);</span>
+<span class="nc" id="L148">        }</span>
+        // validate the the task does have an assignee
+<span class="nc bnc" id="L150" title="All 4 branches missed.">        if (task.getAssignee() == null || task.getAssignee().isEmpty()) {</span>
+<span class="nc" id="L151">            throw new IllegalStateException(&quot;The task needs to be claimed before trying to complete it&quot;);</span>
+        }
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        if (!task.getAssignee().equals(authenticatedUserId)) {</span>
+<span class="nc" id="L154">            throw new IllegalStateException(&quot;You cannot complete the task if you are not assigned to it&quot;);</span>
+        }
+        
+<span class="nc" id="L157">        taskRuntimeHelper.handleCompleteTaskPayload(completeTaskPayload);</span>
+                
+<span class="nc" id="L159">        taskService.complete(completeTaskPayload.getTaskId(),</span>
+<span class="nc" id="L160">                completeTaskPayload.getVariables(), true);</span>
+
+
+<span class="nc" id="L163">        ((TaskImpl) task).setStatus(Task.TaskStatus.COMPLETED);</span>
+
+<span class="nc" id="L165">        return task;</span>
+    }
+
+    @Override
+    public Task claim(ClaimTaskPayload claimTaskPayload) {
+        // Validate that the task is visible by the currently authorized user
+        Task task;
+        try {
+<span class="nc" id="L173">            task = task(claimTaskPayload.getTaskId());</span>
+<span class="nc" id="L174">        } catch (IllegalStateException ex) {</span>
+<span class="nc" id="L175">            throw new IllegalStateException(&quot;The authenticated user cannot claim task&quot; + claimTaskPayload.getTaskId() + &quot; due it is not a candidate for it&quot;);</span>
+<span class="nc" id="L176">        }</span>
+        // validate the the task doesn't have an assignee
+<span class="nc bnc" id="L178" title="All 4 branches missed.">        if (task.getAssignee() != null &amp;&amp; !task.getAssignee().isEmpty()) {</span>
+<span class="nc" id="L179">            throw new IllegalStateException(&quot;The task was already claimed, the assignee of this task needs to release it first for you to claim it&quot;);</span>
+        }
+
+<span class="nc" id="L182">        String authenticatedUserId = securityManager.getAuthenticatedUserId();</span>
+<span class="nc" id="L183">        claimTaskPayload.setAssignee(authenticatedUserId);</span>
+<span class="nc" id="L184">        taskService.claim(claimTaskPayload.getTaskId(),</span>
+<span class="nc" id="L185">                claimTaskPayload.getAssignee());</span>
+
+<span class="nc" id="L187">        return task(claimTaskPayload.getTaskId());</span>
+    }
+
+    @Override
+    public Task release(ReleaseTaskPayload releaseTaskPayload) {
+        // Validate that the task is visible by the currently authorized user
+        Task task;
+        try {
+<span class="nc" id="L195">            task = task(releaseTaskPayload.getTaskId());</span>
+<span class="nc" id="L196">        } catch (IllegalStateException ex) {</span>
+<span class="nc" id="L197">            throw new IllegalStateException(&quot;The authenticated user cannot claim task&quot; + releaseTaskPayload.getTaskId() + &quot; due it is not a candidate for it&quot;);</span>
+<span class="nc" id="L198">        }</span>
+        // validate the the task doesn't have an assignee
+<span class="nc bnc" id="L200" title="All 4 branches missed.">        if (task.getAssignee() == null || task.getAssignee().isEmpty()) {</span>
+<span class="nc" id="L201">            throw new IllegalStateException(&quot;You cannot release a task that is not claimed&quot;);</span>
+        }
+<span class="nc" id="L203">        String authenticatedUserId = securityManager.getAuthenticatedUserId();</span>
+        // validate that you are trying to release task where you are the assignee
+<span class="nc bnc" id="L205" title="All 2 branches missed.">        if (!task.getAssignee().equals(authenticatedUserId)) {</span>
+<span class="nc" id="L206">            throw new IllegalStateException(&quot;You cannot release a task where you are not the assignee&quot;);</span>
+        }
+
+<span class="nc" id="L209">        taskService.unclaim(releaseTaskPayload.getTaskId());</span>
+<span class="nc" id="L210">        return task(releaseTaskPayload.getTaskId());</span>
+    }
+
+    @Override
+    public Task update(UpdateTaskPayload updateTaskPayload) {
+<span class="fc" id="L215">        return taskRuntimeHelper.applyUpdateTaskPayload(false, updateTaskPayload);</span>
+    }
+
+    @Override
+    public Task delete(DeleteTaskPayload deleteTaskPayload) {
+        //@TODO: not the most efficient way to return the just deleted task, improve
+        //      we might need to create an empty shell with the task ID and Status only
+        Task task;
+        try {
+<span class="nc" id="L224">            task = task(deleteTaskPayload.getTaskId());</span>
+<span class="nc" id="L225">        } catch (IllegalStateException ex) {</span>
+<span class="nc" id="L226">            throw new IllegalStateException(&quot;The authenticated user cannot delete the task&quot; + deleteTaskPayload.getTaskId() + &quot; due it is not the current assignee&quot;);</span>
+<span class="nc" id="L227">        }</span>
+<span class="nc" id="L228">        String authenticatedUserId = securityManager.getAuthenticatedUserId();</span>
+        // validate that you are trying to delete task where you are the assignee or the owner
+<span class="nc bnc" id="L230" title="All 6 branches missed.">        if ((task.getAssignee() == null || task.getAssignee().isEmpty() || !task.getAssignee().equals(authenticatedUserId)) &amp;&amp;</span>
+<span class="nc bnc" id="L231" title="All 6 branches missed.">                (task.getOwner() == null || task.getOwner().isEmpty() || !task.getOwner().equals(authenticatedUserId))) {</span>
+<span class="nc" id="L232">            throw new IllegalStateException(&quot;You cannot delete a task where you are not the assignee/owner&quot;);</span>
+        }
+<span class="nc" id="L234">        TaskImpl deletedTaskData = new TaskImpl(task.getId(),</span>
+<span class="nc" id="L235">                task.getName(),</span>
+                Task.TaskStatus.CANCELLED);
+<span class="nc bnc" id="L237" title="All 2 branches missed.">        if (!deleteTaskPayload.hasReason()) {</span>
+<span class="nc" id="L238">            deleteTaskPayload.setReason(&quot;Task deleted by &quot; + authenticatedUserId);</span>
+        }
+<span class="nc" id="L240">        taskService.deleteTask(deleteTaskPayload.getTaskId(),</span>
+<span class="nc" id="L241">                deleteTaskPayload.getReason(),</span>
+                true);
+<span class="nc" id="L243">        return deletedTaskData;</span>
+    }
+
+    @Override
+    public Task create(CreateTaskPayload createTaskPayload) {
+<span class="nc bnc" id="L248" title="All 4 branches missed.">        if (createTaskPayload.getName() == null || createTaskPayload.getName().isEmpty()) {</span>
+<span class="nc" id="L249">            throw new IllegalStateException(&quot;You cannot create a task without name&quot;);</span>
+        }
+
+<span class="nc" id="L252">        org.activiti.engine.task.Task task = taskService.newTask();</span>
+<span class="nc" id="L253">        task.setName(createTaskPayload.getName());</span>
+<span class="nc" id="L254">        task.setDescription(createTaskPayload.getDescription());</span>
+<span class="nc" id="L255">        task.setDueDate(createTaskPayload.getDueDate());</span>
+<span class="nc" id="L256">        task.setPriority(createTaskPayload.getPriority());</span>
+<span class="nc bnc" id="L257" title="All 4 branches missed.">        if (createTaskPayload.getAssignee() != null &amp;&amp; !createTaskPayload.getAssignee().isEmpty()) {</span>
+<span class="nc" id="L258">            task.setAssignee(createTaskPayload.getAssignee());</span>
+        }
+<span class="nc" id="L260">        task.setParentTaskId(createTaskPayload.getParentTaskId());</span>
+<span class="nc" id="L261">        task.setFormKey(createTaskPayload.getFormKey());</span>
+<span class="nc" id="L262">        task.setOwner(securityManager.getAuthenticatedUserId());</span>
+<span class="nc" id="L263">        taskService.saveTask(task);</span>
+<span class="nc" id="L264">        taskService.addCandidateUser(task.getId(),</span>
+<span class="nc" id="L265">                securityManager.getAuthenticatedUserId());</span>
+<span class="nc bnc" id="L266" title="All 4 branches missed.">        if (createTaskPayload.getCandidateGroups() != null &amp;&amp; !createTaskPayload.getCandidateGroups().isEmpty()) {</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">            for ( String g : createTaskPayload.getCandidateGroups() ) {</span>
+<span class="nc" id="L268">                taskService.addCandidateGroup(task.getId(),</span>
+                        g);
+<span class="nc" id="L270">            }</span>
+        }
+
+<span class="nc bnc" id="L273" title="All 4 branches missed.">        if (createTaskPayload.getCandidateUsers() != null &amp;&amp; !createTaskPayload.getCandidateUsers().isEmpty()) {</span>
+<span class="nc bnc" id="L274" title="All 2 branches missed.">            for ( String u : createTaskPayload.getCandidateUsers() ) {</span>
+<span class="nc" id="L275">                taskService.addCandidateUser(task.getId(),</span>
+                        u);
+<span class="nc" id="L277">            }</span>
+        }
+
+<span class="nc" id="L280">        return taskConverter.from(task);</span>
+    }
+
+    @Override
+    public void addCandidateUsers(CandidateUsersPayload candidateUsersPayload) {
+        org.activiti.engine.task.Task internalTask;
+        try {
+<span class="nc" id="L287">            internalTask = taskRuntimeHelper.getInternalTaskWithChecks(candidateUsersPayload.getTaskId());</span>
+
+<span class="nc" id="L289">        } catch (IllegalStateException ex) {</span>
+<span class="nc" id="L290">            throw new IllegalStateException(&quot;The authenticated user cannot update the task&quot; + candidateUsersPayload.getTaskId() + &quot; due it is not the current assignee&quot;);</span>
+<span class="nc" id="L291">        }</span>
+
+<span class="nc" id="L293">        String authenticatedUserId = securityManager.getAuthenticatedUserId();</span>
+
+        // validate that you are trying to add CandidateUsers to the task where you are the assignee
+<span class="nc bnc" id="L296" title="All 2 branches missed.">        if (!Objects.equals(internalTask.getAssignee(), authenticatedUserId)) {</span>
+<span class="nc" id="L297">            throw new IllegalStateException(&quot;You cannot update a task where you are not the assignee&quot;);</span>
+        }
+
+
+<span class="nc bnc" id="L301" title="All 4 branches missed.">        if (candidateUsersPayload.getCandidateUsers() != null &amp;&amp; !candidateUsersPayload.getCandidateUsers().isEmpty()) {</span>
+<span class="nc bnc" id="L302" title="All 2 branches missed.">            for ( String u : candidateUsersPayload.getCandidateUsers() ) {</span>
+<span class="nc" id="L303">                taskService.addCandidateUser(internalTask.getId(),</span>
+                        u);
+<span class="nc" id="L305">            }</span>
+        }
+<span class="nc" id="L307">    }</span>
+
+    @Override
+    public void deleteCandidateUsers(CandidateUsersPayload candidateUsersPayload) {
+        org.activiti.engine.task.Task internalTask;
+        try {
+<span class="nc" id="L313">            internalTask = taskRuntimeHelper.getInternalTaskWithChecks(candidateUsersPayload.getTaskId());</span>
+
+<span class="nc" id="L315">        } catch (IllegalStateException ex) {</span>
+<span class="nc" id="L316">            throw new IllegalStateException(&quot;The authenticated user cannot update the task&quot; + candidateUsersPayload.getTaskId() + &quot; due it is not the current assignee&quot;);</span>
+<span class="nc" id="L317">        }</span>
+
+<span class="nc" id="L319">        String authenticatedUserId = securityManager.getAuthenticatedUserId();</span>
+
+        // validate that you are trying to add CandidateUsers to the task where you are the assignee
+<span class="nc bnc" id="L322" title="All 2 branches missed.">        if (!Objects.equals(internalTask.getAssignee(), authenticatedUserId)) {</span>
+<span class="nc" id="L323">            throw new IllegalStateException(&quot;You cannot update a task where you are not the assignee&quot;);</span>
+        }
+
+
+<span class="nc bnc" id="L327" title="All 4 branches missed.">        if (candidateUsersPayload.getCandidateUsers() != null &amp;&amp; !candidateUsersPayload.getCandidateUsers().isEmpty()) {</span>
+<span class="nc bnc" id="L328" title="All 2 branches missed.">            for ( String u : candidateUsersPayload.getCandidateUsers() ) {</span>
+<span class="nc" id="L329">                taskService.deleteCandidateUser(internalTask.getId(),</span>
+                        u);
+<span class="nc" id="L331">            }</span>
+        }
+<span class="nc" id="L333">    }</span>
+
+    @Override
+    public void addCandidateGroups(CandidateGroupsPayload candidateGroupsPayload) {
+        org.activiti.engine.task.Task internalTask;
+        try {
+<span class="nc" id="L339">            internalTask = taskRuntimeHelper.getInternalTaskWithChecks(candidateGroupsPayload.getTaskId());</span>
+
+<span class="nc" id="L341">        } catch (IllegalStateException ex) {</span>
+<span class="nc" id="L342">            throw new IllegalStateException(&quot;The authenticated user cannot update the task&quot; + candidateGroupsPayload.getTaskId() + &quot; due it is not the current assignee&quot;);</span>
+<span class="nc" id="L343">        }</span>
+
+<span class="nc" id="L345">        String authenticatedUserId = securityManager.getAuthenticatedUserId();</span>
+        // validate that you are trying to add CandidateGroups to the task where you are the assignee
+<span class="nc bnc" id="L347" title="All 2 branches missed.">        if (!Objects.equals(internalTask.getAssignee(), authenticatedUserId)) {</span>
+<span class="nc" id="L348">            throw new IllegalStateException(&quot;You cannot update a task where you are not the assignee&quot;);</span>
+        }
+
+
+<span class="nc bnc" id="L352" title="All 4 branches missed.">        if (candidateGroupsPayload.getCandidateGroups() != null &amp;&amp; !candidateGroupsPayload.getCandidateGroups().isEmpty()) {</span>
+<span class="nc bnc" id="L353" title="All 2 branches missed.">            for ( String g : candidateGroupsPayload.getCandidateGroups() ) {</span>
+<span class="nc" id="L354">                taskService.addCandidateGroup(internalTask.getId(),</span>
+                        g);
+<span class="nc" id="L356">            }</span>
+        }
+<span class="nc" id="L358">    }</span>
+
+    @Override
+    public void deleteCandidateGroups(CandidateGroupsPayload candidateGroupsPayload) {
+        org.activiti.engine.task.Task internalTask;
+        try {
+<span class="nc" id="L364">            internalTask = taskRuntimeHelper.getInternalTaskWithChecks(candidateGroupsPayload.getTaskId());</span>
+
+<span class="nc" id="L366">        } catch (IllegalStateException ex) {</span>
+<span class="nc" id="L367">            throw new IllegalStateException(&quot;The authenticated user cannot update the task&quot; + candidateGroupsPayload.getTaskId() + &quot; due it is not the current assignee&quot;);</span>
+<span class="nc" id="L368">        }</span>
+
+<span class="nc" id="L370">        String authenticatedUserId = securityManager.getAuthenticatedUserId();</span>
+        // validate that you are trying to add CandidateGroups to the task where you are the assignee
+<span class="nc bnc" id="L372" title="All 2 branches missed.">        if (!Objects.equals(internalTask.getAssignee(), authenticatedUserId)) {</span>
+<span class="nc" id="L373">            throw new IllegalStateException(&quot;You cannot update a task where you are not the assignee&quot;);</span>
+        }
+
+
+<span class="nc bnc" id="L377" title="All 4 branches missed.">        if (candidateGroupsPayload.getCandidateGroups() != null &amp;&amp; !candidateGroupsPayload.getCandidateGroups().isEmpty()) {</span>
+<span class="nc bnc" id="L378" title="All 2 branches missed.">            for ( String g : candidateGroupsPayload.getCandidateGroups() ) {</span>
+<span class="nc" id="L379">                taskService.deleteCandidateGroup(internalTask.getId(),</span>
+                        g);
+<span class="nc" id="L381">            }</span>
+        }
+<span class="nc" id="L383">    }</span>
+
+    @Override
+    public List&lt;String&gt; userCandidates(String taskId) {
+<span class="nc" id="L387">        List&lt;IdentityLink&gt; identityLinks = getIdentityLinks(taskId);</span>
+<span class="nc" id="L388">        List&lt;String&gt; userCandidates = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L389" title="All 2 branches missed.">        if (identityLinks != null) {</span>
+<span class="nc bnc" id="L390" title="All 2 branches missed.">            for ( IdentityLink i : identityLinks ) {</span>
+<span class="nc bnc" id="L391" title="All 2 branches missed.">                if (i.getUserId() != null) {</span>
+<span class="nc bnc" id="L392" title="All 2 branches missed.">                    if (i.getType().equals(IdentityLinkType.CANDIDATE)) {</span>
+<span class="nc" id="L393">                        userCandidates.add(i.getUserId());</span>
+                    }
+                }
+<span class="nc" id="L396">            }</span>
+
+        }
+<span class="nc" id="L399">        return userCandidates;</span>
+    }
+
+    @Override
+    public List&lt;String&gt; groupCandidates(String taskId) {
+<span class="nc" id="L404">        List&lt;IdentityLink&gt; identityLinks = getIdentityLinks(taskId);</span>
+<span class="nc" id="L405">        List&lt;String&gt; groupCandidates = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L406" title="All 2 branches missed.">        if (identityLinks != null) {</span>
+<span class="nc bnc" id="L407" title="All 2 branches missed.">            for ( IdentityLink i : identityLinks ) {</span>
+<span class="nc bnc" id="L408" title="All 2 branches missed.">                if (i.getGroupId() != null) {</span>
+<span class="nc bnc" id="L409" title="All 2 branches missed.">                    if (i.getType().equals(IdentityLinkType.CANDIDATE)) {</span>
+<span class="nc" id="L410">                        groupCandidates.add(i.getGroupId());</span>
+                    }
+                }
+<span class="nc" id="L413">            }</span>
+
+        }
+<span class="nc" id="L416">        return groupCandidates;</span>
+    }
+
+    @Override
+    public List&lt;VariableInstance&gt; variables(GetTaskVariablesPayload getTaskVariablesPayload) {
+<span class="nc" id="L421">        taskRuntimeHelper.assertHasAccessToTask(getTaskVariablesPayload.getTaskId());</span>
+<span class="nc" id="L422">        return variableInstanceConverter.from(taskRuntimeHelper.getInternalTaskVariables(getTaskVariablesPayload.getTaskId()).values());</span>
+    }
+
+    @Override
+    public void createVariable(CreateTaskVariablePayload createTaskVariablePayload) {
+<span class="nc" id="L427">        taskRuntimeHelper.createVariable(false, createTaskVariablePayload);</span>
+<span class="nc" id="L428">    }</span>
+
+    @Override
+    public void updateVariable(UpdateTaskVariablePayload updateTaskVariablePayload) {
+<span class="nc" id="L432">        taskRuntimeHelper.updateVariable(false, updateTaskVariablePayload);</span>
+<span class="nc" id="L433">    }</span>
+
+    private List&lt;IdentityLink&gt; getIdentityLinks(String taskId) {
+<span class="nc" id="L436">        String authenticatedUserId = securityManager.getAuthenticatedUserId();</span>
+<span class="nc bnc" id="L437" title="All 4 branches missed.">        if (authenticatedUserId != null &amp;&amp; !authenticatedUserId.isEmpty()) {</span>
+<span class="nc" id="L438">            List&lt;String&gt; userRoles = securityManager.getAuthenticatedUserRoles();</span>
+<span class="nc" id="L439">            List&lt;String&gt; userGroups = securityManager.getAuthenticatedUserGroups();</span>
+<span class="nc" id="L440">            org.activiti.engine.task.Task internalTask = taskService.createTaskQuery().taskCandidateOrAssigned(authenticatedUserId,</span>
+<span class="nc" id="L441">                    userGroups).taskId(taskId).singleResult();</span>
+<span class="nc bnc" id="L442" title="All 2 branches missed.">            if (internalTask == null) {</span>
+<span class="nc" id="L443">                throw new NotFoundException(&quot;Unable to find task for the given id: &quot; + taskId + &quot; for user: &quot; + authenticatedUserId + &quot; (with groups: &quot; + userGroups + &quot; &amp; with roles: &quot; + userRoles + &quot;)&quot;);</span>
+            }
+<span class="nc" id="L445">            return taskService.getIdentityLinksForTask(taskId);</span>
+        }
+<span class="nc" id="L447">        throw new IllegalStateException(&quot;There is no authenticated user, we need a user authenticated to find tasks&quot;);</span>
+    }
+
+    @Override
+    public void save(SaveTaskPayload saveTaskPayload) {
+<span class="nc" id="L452">        taskRuntimeHelper.assertHasAccessToTask(saveTaskPayload.getTaskId());</span>
+
+<span class="nc" id="L454">        taskRuntimeHelper.handleSaveTaskPayload(saveTaskPayload);</span>
+        
+<span class="nc" id="L456">        taskService.setVariablesLocal(saveTaskPayload.getTaskId(),</span>
+<span class="nc" id="L457">                saveTaskPayload.getVariables());</span>
+<span class="nc" id="L458">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

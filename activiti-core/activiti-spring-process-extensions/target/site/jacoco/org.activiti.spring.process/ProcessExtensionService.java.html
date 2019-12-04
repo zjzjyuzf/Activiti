@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProcessExtensionService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti :: Process Extensions</a> &gt; <a href="index.source.html" class="el_package">org.activiti.spring.process</a> &gt; <span class="el_source">ProcessExtensionService.java</span></div><h1>ProcessExtensionService.java</h1><pre class="source lang-java linenums">/* Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.activiti.spring.process;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.spring.process.model.ProcessExtensionModel;
+import org.activiti.spring.resources.DeploymentResourceLoader;
+
+public class ProcessExtensionService {
+
+    private DeploymentResourceLoader&lt;ProcessExtensionModel&gt; processExtensionLoader;
+    private ProcessExtensionResourceReader processExtensionReader;
+    private RepositoryService repositoryService;
+
+<span class="nc" id="L33">    private static final ProcessExtensionModel EMPTY_EXTENSIONS = new ProcessExtensionModel();</span>
+
+    //deploymentId =&gt; processDefinitionKey, ProcessExtensionModel
+<span class="nc" id="L36">    private Map&lt;String, Map&lt;String, ProcessExtensionModel&gt;&gt; processExtensionModelDeploymentMap = new HashMap&lt;&gt;();</span>
+
+    public ProcessExtensionService(DeploymentResourceLoader&lt;ProcessExtensionModel&gt; processExtensionLoader,
+<span class="nc" id="L39">                                   ProcessExtensionResourceReader processExtensionReader) {</span>
+
+<span class="nc" id="L41">        this.processExtensionLoader = processExtensionLoader;</span>
+<span class="nc" id="L42">        this.processExtensionReader = processExtensionReader;</span>
+<span class="nc" id="L43">    }</span>
+
+    private Map&lt;String, ProcessExtensionModel&gt; getProcessExtensionsForDeploymentId(String deploymentId) {
+<span class="nc" id="L46">        Map&lt;String, ProcessExtensionModel&gt; processExtensionModelMap = processExtensionModelDeploymentMap.get(deploymentId);</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (processExtensionModelMap != null) {</span>
+<span class="nc" id="L48">            return processExtensionModelMap;</span>
+        }
+
+<span class="nc" id="L51">        List&lt;ProcessExtensionModel&gt; processExtensionModels = processExtensionLoader.loadResourcesForDeployment(deploymentId,</span>
+                processExtensionReader);
+<span class="nc" id="L53">        processExtensionModelMap = processExtensionModels.stream().collect(Collectors.toMap(ProcessExtensionModel::getId,</span>
+<span class="nc" id="L54">                Function.identity()));</span>
+
+
+<span class="nc" id="L57">        processExtensionModelDeploymentMap.put(deploymentId, processExtensionModelMap);</span>
+<span class="nc" id="L58">        return processExtensionModelMap;</span>
+    }
+
+    public boolean hasExtensionsFor(ProcessDefinition processDefinition) {
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        return !EMPTY_EXTENSIONS.equals(getExtensionsFor(processDefinition));</span>
+    }
+
+    public boolean hasExtensionsFor(String processDefinitionId) {
+<span class="nc" id="L66">        ProcessDefinition processDefinition = repositoryService.getProcessDefinition(processDefinitionId);</span>
+<span class="nc" id="L67">        return hasExtensionsFor(processDefinition);</span>
+    }
+
+    public ProcessExtensionModel getExtensionsFor(ProcessDefinition processDefinition) {
+<span class="nc" id="L71">        ProcessExtensionModel processExtensionModel = null;</span>
+
+<span class="nc" id="L73">        Map&lt;String, ProcessExtensionModel&gt; processExtensionModelMap = getProcessExtensionsForDeploymentId(processDefinition.getDeploymentId());</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (processExtensionModelMap != null) {</span>
+<span class="nc" id="L75">            processExtensionModel = processExtensionModelMap.get(processDefinition.getKey());</span>
+        }
+
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        return processExtensionModel != null ? processExtensionModel : EMPTY_EXTENSIONS;</span>
+    }
+
+    public ProcessExtensionModel getExtensionsForId(String processDefinitionId) {
+<span class="nc" id="L82">        ProcessDefinition processDefinition = repositoryService.getProcessDefinition(processDefinitionId);</span>
+
+<span class="nc" id="L84">        ProcessExtensionModel processExtensionModel = getExtensionsFor(processDefinition);</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        return processExtensionModel != null ? processExtensionModel : EMPTY_EXTENSIONS;</span>
+    }
+
+    public void setRepositoryService(RepositoryService repositoryService) {
+<span class="nc" id="L89">        this.repositoryService = repositoryService;</span>
+<span class="nc" id="L90">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

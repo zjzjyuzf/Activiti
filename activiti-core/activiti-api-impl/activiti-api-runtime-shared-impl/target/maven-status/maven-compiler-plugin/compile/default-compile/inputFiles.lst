@@ -1,0 +1,12 @@
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-api-impl/activiti-api-runtime-shared-impl/src/main/java/org/activiti/runtime/api/event/impl/ToVariableDeletedConverter.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-api-impl/activiti-api-runtime-shared-impl/src/main/java/org/activiti/runtime/api/query/impl/PageImpl.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-api-impl/activiti-api-runtime-shared-impl/src/main/java/org/activiti/runtime/api/event/internal/VariableUpdatedListenerDelegate.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-api-impl/activiti-api-runtime-shared-impl/src/main/java/org/activiti/runtime/api/event/impl/ToVariableCreatedConverter.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-api-impl/activiti-api-runtime-shared-impl/src/main/java/org/activiti/runtime/api/event/impl/ToVariableUpdatedConverter.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-api-impl/activiti-api-runtime-shared-impl/src/main/java/org/activiti/runtime/api/model/impl/APIVariableInstanceConverter.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-api-impl/activiti-api-runtime-shared-impl/src/main/java/org/activiti/runtime/api/impl/VariableNameValidator.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-api-impl/activiti-api-runtime-shared-impl/src/main/java/org/activiti/runtime/api/event/impl/EventConverter.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-api-impl/activiti-api-runtime-shared-impl/src/main/java/org/activiti/runtime/api/model/impl/ModelConverter.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-api-impl/activiti-api-runtime-shared-impl/src/main/java/org/activiti/runtime/api/model/impl/ListConverter.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-api-impl/activiti-api-runtime-shared-impl/src/main/java/org/activiti/runtime/api/event/internal/VariableCreatedListenerDelegate.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-api-impl/activiti-api-runtime-shared-impl/src/main/java/org/activiti/runtime/api/conf/CommonRuntimeAutoConfiguration.java

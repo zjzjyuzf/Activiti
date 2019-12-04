@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TaskRuntimeHelper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti API :: Task Runtime Implementation</a> &gt; <a href="index.source.html" class="el_package">org.activiti.runtime.api.impl</a> &gt; <span class="el_source">TaskRuntimeHelper.java</span></div><h1>TaskRuntimeHelper.java</h1><pre class="source lang-java linenums">package org.activiti.runtime.api.impl;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.activiti.api.runtime.shared.NotFoundException;
+import org.activiti.api.runtime.shared.security.SecurityManager;
+import org.activiti.api.task.model.Task;
+import org.activiti.api.task.model.payloads.CompleteTaskPayload;
+import org.activiti.api.task.model.payloads.CreateTaskVariablePayload;
+import org.activiti.api.task.model.payloads.SaveTaskPayload;
+import org.activiti.api.task.model.payloads.UpdateTaskPayload;
+import org.activiti.api.task.model.payloads.UpdateTaskVariablePayload;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.impl.persistence.entity.VariableInstance;
+import org.activiti.runtime.api.model.impl.APITaskConverter;
+
+public class TaskRuntimeHelper {
+    private final TaskService taskService;
+    private final SecurityManager securityManager;
+    private final APITaskConverter taskConverter;
+    private final TaskVariablesPayloadValidator taskVariablesValidator;
+
+    public TaskRuntimeHelper(TaskService taskService,
+                             APITaskConverter taskConverter,
+                             SecurityManager securityManager,
+<span class="fc" id="L28">                             TaskVariablesPayloadValidator taskVariablesValidator) {</span>
+<span class="fc" id="L29">        this.taskService = taskService;</span>
+<span class="fc" id="L30">        this.securityManager = securityManager;</span>
+<span class="fc" id="L31">        this.taskConverter = taskConverter;</span>
+<span class="fc" id="L32">        this.taskVariablesValidator = taskVariablesValidator;</span>
+<span class="fc" id="L33">    }</span>
+
+    public Task applyUpdateTaskPayload(boolean isAdmin, UpdateTaskPayload updateTaskPayload) {
+
+        org.activiti.engine.task.Task internalTask;
+
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (isAdmin) {</span>
+<span class="nc" id="L40">            internalTask = getInternalTask(updateTaskPayload.getTaskId());</span>
+        } else {
+<span class="fc" id="L42">            internalTask = getTaskToUpdate(updateTaskPayload.getTaskId());</span>
+        }
+
+<span class="fc" id="L45">        int updates = updateName(updateTaskPayload,</span>
+                internalTask,
+                0);
+<span class="fc" id="L48">        updates = updateDescription(updateTaskPayload,</span>
+                internalTask,
+                updates);
+<span class="fc" id="L51">        updates = updatePriority(updateTaskPayload,</span>
+                internalTask,
+                updates);
+
+<span class="fc" id="L55">        updates = updateDueDate(updateTaskPayload,</span>
+                internalTask,
+                updates);
+<span class="fc" id="L58">        updates = updateParentTaskId(updateTaskPayload,</span>
+                internalTask,
+                updates);
+<span class="fc" id="L61">        updates = updateFormKey(updateTaskPayload,</span>
+                internalTask,
+                updates);
+
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if (updates &gt; 0) {</span>
+<span class="fc" id="L66">            taskService.saveTask(internalTask);</span>
+        }
+
+<span class="fc" id="L69">        return taskConverter.from(getInternalTask(updateTaskPayload.getTaskId()));</span>
+    }
+
+    private org.activiti.engine.task.Task getTaskToUpdate(String taskId) {
+
+<span class="fc" id="L74">        org.activiti.engine.task.Task internalTask = getInternalTaskWithChecks(taskId);</span>
+<span class="fc" id="L75">        assertCanModifyTask(internalTask);</span>
+<span class="fc" id="L76">        return internalTask;</span>
+    }
+
+    private void assertCanModifyTask(org.activiti.engine.task.Task internalTask) {
+<span class="fc" id="L80">        String authenticatedUserId = getAuthenticatedUser();</span>
+        // validate that you are trying to update task where you are the assignee
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        if (!Objects.equals(internalTask.getAssignee(), authenticatedUserId)) {</span>
+<span class="fc" id="L83">            throw new IllegalStateException(&quot;You cannot update a task where you are not the assignee&quot;);</span>
+        }
+<span class="fc" id="L85">    }</span>
+
+    private int updateFormKey(UpdateTaskPayload updateTaskPayload,
+                              org.activiti.engine.task.Task internalTask,
+                              int updates) {
+        String newValue;
+
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        if ((newValue = updateTaskPayload.getFormKey()) != null) {</span>
+<span class="fc" id="L93">            String oldValue = internalTask.getFormKey();</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">            if (!Objects.equals(oldValue, newValue)) {</span>
+<span class="fc" id="L95">                updates++;</span>
+<span class="fc" id="L96">                internalTask.setFormKey(newValue);</span>
+            }
+        }
+<span class="fc" id="L99">        return updates;</span>
+    }
+
+    private int updateParentTaskId(UpdateTaskPayload updateTaskPayload,
+                                   org.activiti.engine.task.Task internalTask,
+                                   int updates) {
+        String newValue;
+
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">        if ((newValue = updateTaskPayload.getParentTaskId()) != null) {</span>
+<span class="nc" id="L108">            String oldValue = internalTask.getParentTaskId();</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">            if (!Objects.equals(oldValue, newValue)) {</span>
+<span class="nc" id="L110">                updates++;</span>
+<span class="nc" id="L111">                internalTask.setParentTaskId(newValue);</span>
+            }
+        }
+<span class="fc" id="L114">        return updates;</span>
+    }
+
+    private int updateDueDate(UpdateTaskPayload updateTaskPayload,
+                              org.activiti.engine.task.Task internalTask,
+                              int updates) {
+<span class="pc bpc" id="L120" title="1 of 4 branches missed.">        if (updateTaskPayload.getDueDate() != null &amp;&amp; !Objects.equals(internalTask.getDueDate(),</span>
+<span class="fc" id="L121">                updateTaskPayload.getDueDate())) {</span>
+<span class="fc" id="L122">            updates++;</span>
+<span class="fc" id="L123">            internalTask.setDueDate(updateTaskPayload.getDueDate());</span>
+        }
+<span class="fc" id="L125">        return updates;</span>
+    }
+
+    private int updatePriority(UpdateTaskPayload updateTaskPayload,
+                               org.activiti.engine.task.Task internalTask,
+                               int updates) {
+<span class="pc bpc" id="L131" title="1 of 4 branches missed.">        if (updateTaskPayload.getPriority() != null &amp;&amp; internalTask.getPriority() != updateTaskPayload.getPriority()) {</span>
+<span class="fc" id="L132">            updates++;</span>
+<span class="fc" id="L133">            internalTask.setPriority(updateTaskPayload.getPriority());</span>
+        }
+<span class="fc" id="L135">        return updates;</span>
+    }
+
+    private int updateDescription(UpdateTaskPayload updateTaskPayload,
+                                  org.activiti.engine.task.Task internalTask,
+                                  int updates) {
+        String newValue;
+
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        if ((newValue = updateTaskPayload.getDescription()) != null) {</span>
+<span class="fc" id="L144">            String oldValue = internalTask.getDescription();</span>
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">            if (!Objects.equals(oldValue, newValue)) {</span>
+<span class="fc" id="L146">                updates++;</span>
+<span class="fc" id="L147">                internalTask.setDescription(newValue);</span>
+            }
+        }
+<span class="fc" id="L150">        return updates;</span>
+    }
+
+    private int updateName(UpdateTaskPayload updateTaskPayload,
+                           org.activiti.engine.task.Task internalTask,
+                           int updates) {
+        String newValue;
+<span class="fc bfc" id="L157" title="All 2 branches covered.">        if ((newValue = updateTaskPayload.getName()) != null) {</span>
+<span class="fc" id="L158">            String oldValue = internalTask.getName();</span>
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">            if (!Objects.equals(oldValue, newValue)) {</span>
+<span class="fc" id="L160">                updates++;</span>
+<span class="fc" id="L161">                internalTask.setName(newValue);</span>
+            }
+        }
+<span class="fc" id="L164">        return updates;</span>
+    }
+
+    public org.activiti.engine.task.Task getInternalTaskWithChecks(String taskId) {
+<span class="fc" id="L168">        String authenticatedUserId = getAuthenticatedUser();</span>
+
+<span class="pc bpc" id="L170" title="2 of 6 branches missed.">        if (authenticatedUserId != null &amp;&amp; !authenticatedUserId.isEmpty() &amp;&amp; securityManager != null) {</span>
+
+<span class="fc" id="L172">            List&lt;String&gt; userRoles = securityManager.getAuthenticatedUserRoles();</span>
+<span class="fc" id="L173">            List&lt;String&gt; userGroups = securityManager.getAuthenticatedUserGroups();</span>
+<span class="fc" id="L174">            org.activiti.engine.task.Task task = taskService.createTaskQuery().taskCandidateOrAssigned(authenticatedUserId,</span>
+<span class="fc" id="L175">                    userGroups).taskId(taskId).singleResult();</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">            if (task == null) {</span>
+<span class="fc" id="L177">                throw new NotFoundException(&quot;Unable to find task for the given id: &quot; + taskId + &quot; for user: &quot; + authenticatedUserId + &quot; (with groups: &quot; + userGroups + &quot; &amp; with roles: &quot; + userRoles + &quot;)&quot;);</span>
+            }
+
+<span class="fc" id="L180">            return task;</span>
+        }
+<span class="fc" id="L182">        throw new IllegalStateException(&quot;There is no authenticated user, we need a user authenticated to find tasks&quot;);</span>
+    }
+
+    public void assertHasAccessToTask(String taskId) {
+<span class="nc" id="L186">        getInternalTaskWithChecks(taskId);</span>
+<span class="nc" id="L187">    }</span>
+
+    private String getAuthenticatedUser() {
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">        return securityManager != null ? securityManager.getAuthenticatedUserId() : null;</span>
+    }
+
+    public org.activiti.engine.task.Task getInternalTask(String taskId) {
+<span class="nc" id="L194">        org.activiti.engine.task.Task internalTask = taskService.createTaskQuery().taskId(taskId).singleResult();</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">        if (internalTask == null) {</span>
+<span class="nc" id="L196">            throw new NotFoundException(&quot;Unable to find task for the given id: &quot; + taskId);</span>
+        }
+<span class="nc" id="L198">        return internalTask;</span>
+    }
+
+    public Map&lt;String, org.activiti.engine.impl.persistence.entity.VariableInstance&gt; getInternalTaskVariables(String taskId) {
+<span class="nc" id="L202">        return taskService.getVariableInstancesLocal(taskId);</span>
+    }
+
+    public void createVariable(boolean isAdmin,
+                               CreateTaskVariablePayload createTaskVariablePayload) {
+<span class="nc bnc" id="L207" title="All 2 branches missed.">        if (!isAdmin) {</span>
+<span class="nc" id="L208">            assertCanModifyTask(getInternalTask(createTaskVariablePayload.getTaskId()));</span>
+        }
+        
+<span class="nc" id="L211">        taskVariablesValidator.handleCreateTaskVariablePayload(createTaskVariablePayload);</span>
+        
+<span class="nc" id="L213">        assertVariableDoesNotExist(createTaskVariablePayload);</span>
+
+<span class="nc" id="L215">        taskService.setVariableLocal(createTaskVariablePayload.getTaskId(),</span>
+<span class="nc" id="L216">                createTaskVariablePayload.getName(),</span>
+<span class="nc" id="L217">                createTaskVariablePayload.getValue());</span>
+<span class="nc" id="L218">    }</span>
+
+    private void assertVariableDoesNotExist(CreateTaskVariablePayload createTaskVariablePayload) {
+<span class="nc" id="L221">        Map&lt;String, VariableInstance&gt; variables = taskService.getVariableInstancesLocal(createTaskVariablePayload.getTaskId());</span>
+
+<span class="nc bnc" id="L223" title="All 4 branches missed.">        if (variables != null &amp;&amp; variables.containsKey(createTaskVariablePayload.getName())) {</span>
+<span class="nc" id="L224">            throw new IllegalStateException(&quot;Variable already exists&quot;);</span>
+        }
+<span class="nc" id="L226">    }</span>
+
+    public void updateVariable(boolean isAdmin,
+                               UpdateTaskVariablePayload updateTaskVariablePayload) {
+<span class="nc bnc" id="L230" title="All 2 branches missed.">        if (!isAdmin) {</span>
+<span class="nc" id="L231">            assertCanModifyTask(getInternalTask(updateTaskVariablePayload.getTaskId()));</span>
+        }
+
+<span class="nc" id="L234">        taskVariablesValidator.handleUpdateTaskVariablePayload(updateTaskVariablePayload);</span>
+  
+<span class="nc" id="L236">        assertVariableExists(updateTaskVariablePayload);</span>
+
+<span class="nc" id="L238">        taskService.setVariableLocal(updateTaskVariablePayload.getTaskId(),</span>
+<span class="nc" id="L239">                updateTaskVariablePayload.getName(),</span>
+<span class="nc" id="L240">                updateTaskVariablePayload.getValue());</span>
+<span class="nc" id="L241">    }</span>
+    
+    private void assertVariableExists(UpdateTaskVariablePayload updateTaskVariablePayload) {
+<span class="nc" id="L244">        Map&lt;String, VariableInstance&gt; variables = taskService.getVariableInstancesLocal(updateTaskVariablePayload.getTaskId());</span>
+
+<span class="nc bnc" id="L246" title="All 2 branches missed.">        if (variables == null) {</span>
+<span class="nc" id="L247">            throw new IllegalStateException(&quot;Variable does not exist&quot;);</span>
+        }
+
+<span class="nc bnc" id="L250" title="All 2 branches missed.">        if (!variables.containsKey(updateTaskVariablePayload.getName())) {</span>
+<span class="nc" id="L251">            throw new IllegalStateException(&quot;Variable does not exist&quot;);</span>
+        }
+<span class="nc" id="L253">    }</span>
+    
+    public void handleCompleteTaskPayload(CompleteTaskPayload completeTaskPayload) {
+        
+<span class="nc" id="L257">        completeTaskPayload.setVariables(taskVariablesValidator</span>
+<span class="nc" id="L258">                                         .handlePayloadVariables(completeTaskPayload.getVariables()));</span>
+       
+<span class="nc" id="L260">    }</span>
+    
+    public void handleSaveTaskPayload(SaveTaskPayload saveTaskPayload) {
+        
+<span class="nc" id="L264">        saveTaskPayload.setVariables(taskVariablesValidator</span>
+<span class="nc" id="L265">                                     .handlePayloadVariables(saveTaskPayload.getVariables()));</span>
+       
+<span class="nc" id="L267">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

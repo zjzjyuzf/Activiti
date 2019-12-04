@@ -1,0 +1,5 @@
+org/activiti/spring/conformance/set1/Application.class
+org/activiti/spring/conformance/set1/ConformanceBasicProcessRuntimeTest.class
+org/activiti/spring/conformance/set1/ConformanceServiceTaskModifyVariableTest.class
+org/activiti/spring/conformance/set1/ConformanceServiceTaskTest.class
+org/activiti/spring/conformance/set1/Set1RuntimeTestConfiguration.class

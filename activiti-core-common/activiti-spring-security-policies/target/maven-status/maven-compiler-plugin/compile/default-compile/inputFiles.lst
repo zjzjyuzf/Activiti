@@ -1,0 +1,12 @@
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security-policies/src/main/java/org/activiti/core/common/spring/security/policies/SecurityPoliciesProcessInstanceRestrictionApplier.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security-policies/src/main/java/org/activiti/core/common/spring/security/policies/ActivitiForbiddenException.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security-policies/src/main/java/org/activiti/core/common/spring/security/policies/ProcessSecurityPoliciesManagerImpl.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security-policies/src/main/java/org/activiti/core/common/spring/security/policies/SecurityPoliciesRestrictionApplier.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security-policies/src/main/java/org/activiti/core/common/spring/security/policies/SecurityPolicy.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security-policies/src/main/java/org/activiti/core/common/spring/security/policies/config/ActivitiSpringSecurityPoliciesAutoConfiguration.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security-policies/src/main/java/org/activiti/core/common/spring/security/policies/conf/SecurityPoliciesProperties.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security-policies/src/main/java/org/activiti/core/common/spring/security/policies/ProcessSecurityPoliciesManager.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security-policies/src/main/java/org/activiti/core/common/spring/security/policies/SecurityPoliciesManager.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security-policies/src/main/java/org/activiti/core/common/spring/security/policies/BaseSecurityPoliciesManagerImpl.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security-policies/src/main/java/org/activiti/core/common/spring/security/policies/SecurityPolicyAccess.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security-policies/src/main/java/org/activiti/core/common/spring/security/policies/SecurityPoliciesProcessDefinitionRestrictionApplier.java

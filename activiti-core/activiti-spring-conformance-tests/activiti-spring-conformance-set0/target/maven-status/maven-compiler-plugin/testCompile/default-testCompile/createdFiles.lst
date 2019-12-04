@@ -1,0 +1,5 @@
+org/activiti/spring/conformance/set0/ConformanceBasicGenericTaskTest.class
+org/activiti/spring/conformance/set0/ProcessInstanceOperationsTest.class
+org/activiti/spring/conformance/set0/Application.class
+org/activiti/spring/conformance/set0/ConformanceBasicProcessRuntimeTest.class
+org/activiti/spring/conformance/set0/ConformanceBasicProcessInformationTest.class

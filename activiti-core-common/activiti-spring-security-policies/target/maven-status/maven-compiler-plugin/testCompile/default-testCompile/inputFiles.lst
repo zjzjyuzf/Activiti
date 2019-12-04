@@ -1,0 +1,5 @@
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security-policies/src/test/java/org/activiti/core/common/spring/security/policies/SecurityPoliciesProcessDefinitionRestrictionApplierTest.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security-policies/src/test/java/org/activiti/core/common/spring/security/policies/Application.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security-policies/src/test/java/org/activiti/core/common/spring/security/policies/SecurityPoliciesProcessInstanceRestrictionApplierTest.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security-policies/src/test/java/org/activiti/core/common/spring/security/policies/SecurityPoliciesServiceIT.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security-policies/src/test/java/org/activiti/core/common/spring/security/policies/RuntimeTestConfiguraiton.java

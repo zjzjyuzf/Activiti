@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProcessRuntimeImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti API :: Process Runtime Implementation</a> &gt; <a href="index.source.html" class="el_package">org.activiti.runtime.api.impl</a> &gt; <span class="el_source">ProcessRuntimeImpl.java</span></div><h1>ProcessRuntimeImpl.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2018 Alfresco, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.activiti.runtime.api.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.activiti.api.model.shared.model.VariableInstance;
+import org.activiti.api.process.model.ProcessDefinition;
+import org.activiti.api.process.model.ProcessDefinitionMeta;
+import org.activiti.api.process.model.ProcessInstance;
+import org.activiti.api.process.model.ProcessInstanceMeta;
+import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
+import org.activiti.api.process.model.payloads.DeleteProcessPayload;
+import org.activiti.api.process.model.payloads.GetProcessDefinitionsPayload;
+import org.activiti.api.process.model.payloads.GetProcessInstancesPayload;
+import org.activiti.api.process.model.payloads.GetVariablesPayload;
+import org.activiti.api.process.model.payloads.ReceiveMessagePayload;
+import org.activiti.api.process.model.payloads.RemoveProcessVariablesPayload;
+import org.activiti.api.process.model.payloads.ResumeProcessPayload;
+import org.activiti.api.process.model.payloads.SetProcessVariablesPayload;
+import org.activiti.api.process.model.payloads.SignalPayload;
+import org.activiti.api.process.model.payloads.StartMessagePayload;
+import org.activiti.api.process.model.payloads.StartProcessPayload;
+import org.activiti.api.process.model.payloads.SuspendProcessPayload;
+import org.activiti.api.process.model.payloads.UpdateProcessPayload;
+import org.activiti.api.process.runtime.ProcessRuntime;
+import org.activiti.api.process.runtime.conf.ProcessRuntimeConfiguration;
+import org.activiti.api.runtime.model.impl.ProcessDefinitionMetaImpl;
+import org.activiti.api.runtime.model.impl.ProcessInstanceImpl;
+import org.activiti.api.runtime.model.impl.ProcessInstanceMetaImpl;
+import org.activiti.api.runtime.shared.NotFoundException;
+import org.activiti.api.runtime.shared.query.Page;
+import org.activiti.api.runtime.shared.query.Pageable;
+import org.activiti.core.common.spring.security.policies.ActivitiForbiddenException;
+import org.activiti.core.common.spring.security.policies.ProcessSecurityPoliciesManager;
+import org.activiti.core.common.spring.security.policies.SecurityPolicyAccess;
+import org.activiti.engine.ActivitiObjectNotFoundException;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.repository.ProcessDefinitionQuery;
+import org.activiti.runtime.api.model.impl.APIProcessDefinitionConverter;
+import org.activiti.runtime.api.model.impl.APIProcessInstanceConverter;
+import org.activiti.runtime.api.model.impl.APIVariableInstanceConverter;
+import org.activiti.runtime.api.query.impl.PageImpl;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
+
+@PreAuthorize(&quot;hasRole('ACTIVITI_USER')&quot;)
+public class ProcessRuntimeImpl implements ProcessRuntime {
+
+    private final RepositoryService repositoryService;
+
+    private final APIProcessDefinitionConverter processDefinitionConverter;
+
+    private final RuntimeService runtimeService;
+
+    private final APIProcessInstanceConverter processInstanceConverter;
+
+    private final APIVariableInstanceConverter variableInstanceConverter;
+
+    private final ProcessRuntimeConfiguration configuration;
+
+    private final ProcessSecurityPoliciesManager securityPoliciesManager;
+
+    private final ApplicationEventPublisher eventPublisher;
+
+    private final ProcessVariablesPayloadValidator processVariablesValidator;
+
+    public ProcessRuntimeImpl(RepositoryService repositoryService,
+                              APIProcessDefinitionConverter processDefinitionConverter,
+                              RuntimeService runtimeService,
+                              ProcessSecurityPoliciesManager securityPoliciesManager,
+                              APIProcessInstanceConverter processInstanceConverter,
+                              APIVariableInstanceConverter variableInstanceConverter,
+                              ProcessRuntimeConfiguration configuration,
+                              ApplicationEventPublisher eventPublisher,
+<span class="fc" id="L93">                              ProcessVariablesPayloadValidator processVariablesValidator) {</span>
+<span class="fc" id="L94">        this.repositoryService = repositoryService;</span>
+<span class="fc" id="L95">        this.processDefinitionConverter = processDefinitionConverter;</span>
+<span class="fc" id="L96">        this.runtimeService = runtimeService;</span>
+<span class="fc" id="L97">        this.securityPoliciesManager = securityPoliciesManager;</span>
+<span class="fc" id="L98">        this.processInstanceConverter = processInstanceConverter;</span>
+<span class="fc" id="L99">        this.variableInstanceConverter = variableInstanceConverter;</span>
+<span class="fc" id="L100">        this.configuration = configuration;</span>
+<span class="fc" id="L101">        this.eventPublisher = eventPublisher;</span>
+<span class="fc" id="L102">        this.processVariablesValidator = processVariablesValidator;</span>
+<span class="fc" id="L103">    }</span>
+
+    @Override
+    public ProcessDefinition processDefinition(String processDefinitionId) {
+        org.activiti.engine.repository.ProcessDefinition processDefinition;
+        // try searching by Key if there is no matching by Id
+<span class="nc" id="L109">        List&lt;org.activiti.engine.repository.ProcessDefinition&gt; list = repositoryService</span>
+<span class="nc" id="L110">                .createProcessDefinitionQuery()</span>
+<span class="nc" id="L111">                .processDefinitionKey(processDefinitionId)</span>
+<span class="nc" id="L112">                .orderByProcessDefinitionVersion()</span>
+<span class="nc" id="L113">                .asc()</span>
+<span class="nc" id="L114">                .list();</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (!list.isEmpty()) {</span>
+<span class="nc" id="L116">            processDefinition = list.get(0);</span>
+        } else {
+<span class="nc" id="L118">            processDefinition = repositoryService.getProcessDefinition(processDefinitionId);</span>
+        }
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        if (!securityPoliciesManager.canRead(processDefinition.getKey())) {</span>
+<span class="nc" id="L121">            throw new ActivitiObjectNotFoundException(&quot;Unable to find process definition for the given id:'&quot; + processDefinitionId + &quot;'&quot;);</span>
+        }
+<span class="nc" id="L123">        return processDefinitionConverter.from(processDefinition);</span>
+    }
+
+    @Override
+    public Page&lt;ProcessDefinition&gt; processDefinitions(Pageable pageable) {
+<span class="nc" id="L128">        return processDefinitions(pageable,</span>
+<span class="nc" id="L129">                ProcessPayloadBuilder.processDefinitions().build());</span>
+    }
+
+    @Override
+    public Page&lt;ProcessDefinition&gt; processDefinitions(Pageable pageable,
+                                                      GetProcessDefinitionsPayload getProcessDefinitionsPayload) {
+<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (getProcessDefinitionsPayload == null) {</span>
+<span class="nc" id="L136">            throw new IllegalStateException(&quot;payload cannot be null&quot;);</span>
+        }
+<span class="nc" id="L138">        GetProcessDefinitionsPayload securityKeysInPayload = securityPoliciesManager.restrictProcessDefQuery(SecurityPolicyAccess.READ);</span>
+        // If the security policies keys are not empty it means that I will need to use them to filter results,
+        //   else ignore and use the user provided ones.
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        if (!securityKeysInPayload.getProcessDefinitionKeys().isEmpty()) {</span>
+<span class="nc" id="L142">            getProcessDefinitionsPayload.setProcessDefinitionKeys(securityKeysInPayload.getProcessDefinitionKeys());</span>
+        }
+<span class="nc" id="L144">        ProcessDefinitionQuery processDefinitionQuery = repositoryService</span>
+<span class="nc" id="L145">                .createProcessDefinitionQuery();</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        if (getProcessDefinitionsPayload.hasDefinitionKeys()) {</span>
+<span class="nc" id="L147">            processDefinitionQuery.processDefinitionKeys(getProcessDefinitionsPayload.getProcessDefinitionKeys());</span>
+        }
+<span class="nc" id="L149">        return new PageImpl&lt;&gt;(processDefinitionConverter.from(processDefinitionQuery.list()),</span>
+<span class="nc" id="L150">                Math.toIntExact(processDefinitionQuery.count()));</span>
+    }
+
+    @Override
+    public ProcessInstance processInstance(String processInstanceId) {
+<span class="nc" id="L155">        org.activiti.engine.runtime.ProcessInstance internalProcessInstance = runtimeService</span>
+<span class="nc" id="L156">                .createProcessInstanceQuery()</span>
+<span class="nc" id="L157">                .processInstanceId(processInstanceId)</span>
+<span class="nc" id="L158">                .singleResult();</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">        if (internalProcessInstance == null) {</span>
+<span class="nc" id="L160">            throw new NotFoundException(&quot;Unable to find process instance for the given id:'&quot; + processInstanceId + &quot;'&quot;);</span>
+        }
+
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        if (!securityPoliciesManager.canRead(internalProcessInstance.getProcessDefinitionKey())) {</span>
+<span class="nc" id="L164">            throw new ActivitiObjectNotFoundException(&quot;You cannot read the process instance with Id:'&quot; + processInstanceId + &quot;' due to security policies violation&quot;);</span>
+        }
+<span class="nc" id="L166">        return processInstanceConverter.from(internalProcessInstance);</span>
+    }
+
+    @Override
+    public Page&lt;ProcessInstance&gt; processInstances(Pageable pageable) {
+<span class="nc" id="L171">        return processInstances(pageable,</span>
+<span class="nc" id="L172">                ProcessPayloadBuilder.processInstances().build());</span>
+    }
+
+    @Override
+    public Page&lt;ProcessInstance&gt; processInstances(Pageable pageable,
+                                                  GetProcessInstancesPayload getProcessInstancesPayload) {
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        if (getProcessInstancesPayload == null) {</span>
+<span class="nc" id="L179">            throw new IllegalStateException(&quot;payload cannot be null&quot;);</span>
+        }
+<span class="nc" id="L181">        GetProcessInstancesPayload securityKeysInPayload = securityPoliciesManager.restrictProcessInstQuery(SecurityPolicyAccess.READ);</span>
+
+<span class="nc" id="L183">        org.activiti.engine.runtime.ProcessInstanceQuery internalQuery = runtimeService.createProcessInstanceQuery();</span>
+
+<span class="nc bnc" id="L185" title="All 2 branches missed.">        if (!securityKeysInPayload.getProcessDefinitionKeys().isEmpty()) {</span>
+<span class="nc" id="L186">            getProcessInstancesPayload.setProcessDefinitionKeys(securityKeysInPayload.getProcessDefinitionKeys());</span>
+        }
+<span class="nc bnc" id="L188" title="All 4 branches missed.">        if (getProcessInstancesPayload.getProcessDefinitionKeys() != null &amp;&amp; !getProcessInstancesPayload.getProcessDefinitionKeys().isEmpty()) {</span>
+<span class="nc" id="L189">            internalQuery.processDefinitionKeys(getProcessInstancesPayload.getProcessDefinitionKeys());</span>
+        }
+<span class="nc bnc" id="L191" title="All 2 branches missed.">        if (getProcessInstancesPayload.getBusinessKey() != null &amp;&amp;</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">                !getProcessInstancesPayload.getBusinessKey().isEmpty()) {</span>
+<span class="nc" id="L193">            internalQuery.processInstanceBusinessKey(getProcessInstancesPayload.getBusinessKey());</span>
+        }
+
+<span class="nc bnc" id="L196" title="All 2 branches missed.">        if (getProcessInstancesPayload.isSuspendedOnly()) {</span>
+<span class="nc" id="L197">            internalQuery.suspended();</span>
+        }
+
+<span class="nc bnc" id="L200" title="All 2 branches missed.">        if (getProcessInstancesPayload.isActiveOnly()) {</span>
+<span class="nc" id="L201">            internalQuery.active();</span>
+        }
+
+<span class="nc bnc" id="L204" title="All 2 branches missed.">        if (getProcessInstancesPayload.getParentProcessInstanceId() != null) {</span>
+<span class="nc" id="L205">            internalQuery.superProcessInstanceId(getProcessInstancesPayload.getParentProcessInstanceId());</span>
+        }
+
+<span class="nc" id="L208">        return new PageImpl&lt;&gt;(processInstanceConverter.from(internalQuery.listPage(pageable.getStartIndex(),</span>
+<span class="nc" id="L209">                pageable.getMaxItems())),</span>
+<span class="nc" id="L210">                Math.toIntExact(internalQuery.count()));</span>
+    }
+
+    @Override
+    public ProcessRuntimeConfiguration configuration() {
+<span class="nc" id="L215">        return configuration;</span>
+    }
+
+    @Override
+    public ProcessInstance start(StartProcessPayload startProcessPayload) {
+
+<span class="nc" id="L221">        ProcessDefinition processDefinition = getProcessDefinitionAndCheckUserHasRights(startProcessPayload.getProcessDefinitionId(),</span>
+<span class="nc" id="L222">                                                                                        startProcessPayload.getProcessDefinitionKey());</span>
+
+<span class="nc" id="L224">        processVariablesValidator.checkStartProcessPayloadVariables(startProcessPayload, processDefinition.getId());</span>
+
+<span class="nc" id="L226">        return processInstanceConverter.from(runtimeService</span>
+<span class="nc" id="L227">                .createProcessInstanceBuilder()</span>
+<span class="nc" id="L228">                .processDefinitionId(processDefinition.getId())</span>
+<span class="nc" id="L229">                .processDefinitionKey(processDefinition.getKey())</span>
+<span class="nc" id="L230">                .businessKey(startProcessPayload.getBusinessKey())</span>
+<span class="nc" id="L231">                .variables(startProcessPayload.getVariables())</span>
+<span class="nc" id="L232">                .name(startProcessPayload.getName())</span>
+<span class="nc" id="L233">                .start());</span>
+    }
+
+    @Override
+    public ProcessInstance suspend(SuspendProcessPayload suspendProcessPayload) {
+<span class="nc" id="L238">        ProcessInstance processInstance = processInstance(suspendProcessPayload.getProcessInstanceId());</span>
+
+<span class="nc" id="L240">        checkUserCanWrite(processInstance.getProcessDefinitionKey());</span>
+
+<span class="nc" id="L242">        runtimeService.suspendProcessInstanceById(suspendProcessPayload.getProcessInstanceId());</span>
+<span class="nc" id="L243">        return processInstanceConverter.from(runtimeService.createProcessInstanceQuery().processInstanceId(suspendProcessPayload.getProcessInstanceId()).singleResult());</span>
+    }
+
+    @Override
+    public ProcessInstance resume(ResumeProcessPayload resumeProcessPayload) {
+<span class="nc" id="L248">        ProcessInstance processInstance = processInstance(resumeProcessPayload.getProcessInstanceId());</span>
+
+<span class="nc" id="L250">        checkUserCanWrite(processInstance.getProcessDefinitionKey());</span>
+
+<span class="nc" id="L252">        runtimeService.activateProcessInstanceById(resumeProcessPayload.getProcessInstanceId());</span>
+<span class="nc" id="L253">        return processInstanceConverter.from(runtimeService.createProcessInstanceQuery()</span>
+<span class="nc" id="L254">                .processInstanceId(resumeProcessPayload.getProcessInstanceId()).singleResult());</span>
+    }
+
+    @Override
+    public ProcessInstance delete(DeleteProcessPayload deleteProcessPayload) {
+<span class="nc" id="L259">        ProcessInstanceImpl processInstance = (ProcessInstanceImpl) processInstance(deleteProcessPayload.getProcessInstanceId());</span>
+
+<span class="nc" id="L261">        checkUserCanWrite(processInstance.getProcessDefinitionKey());</span>
+
+<span class="nc" id="L263">        runtimeService.deleteProcessInstance(deleteProcessPayload.getProcessInstanceId(),</span>
+<span class="nc" id="L264">                deleteProcessPayload.getReason());</span>
+<span class="nc" id="L265">        processInstance.setStatus(ProcessInstance.ProcessInstanceStatus.DELETED);</span>
+<span class="nc" id="L266">        return processInstance;</span>
+    }
+
+    @Override
+    public List&lt;VariableInstance&gt; variables(GetVariablesPayload getVariablesPayload) {
+        //Process Instance will check security policies on read
+<span class="nc" id="L272">        processInstance(getVariablesPayload.getProcessInstanceId());</span>
+
+        Map&lt;String, org.activiti.engine.impl.persistence.entity.VariableInstance&gt; variables;
+<span class="nc" id="L275">        variables = runtimeService.getVariableInstances(getVariablesPayload.getProcessInstanceId());</span>
+
+<span class="nc" id="L277">        return variableInstanceConverter.from(variables.values());</span>
+    }
+
+    @Override
+    public void removeVariables(RemoveProcessVariablesPayload removeProcessVariablesPayload) {
+<span class="nc" id="L282">        ProcessInstanceImpl processInstance = (ProcessInstanceImpl) processInstance(removeProcessVariablesPayload.getProcessInstanceId());</span>
+
+<span class="nc" id="L284">        checkUserCanWrite(processInstance.getProcessDefinitionKey());</span>
+
+<span class="nc" id="L286">        runtimeService.removeVariables(removeProcessVariablesPayload.getProcessInstanceId(),</span>
+<span class="nc" id="L287">                removeProcessVariablesPayload.getVariableNames());</span>
+
+<span class="nc" id="L289">    }</span>
+
+    @Override
+    public void setVariables(SetProcessVariablesPayload setProcessVariablesPayload) {
+<span class="nc" id="L293">        ProcessInstanceImpl processInstance = (ProcessInstanceImpl) processInstance(setProcessVariablesPayload.getProcessInstanceId());</span>
+
+<span class="nc" id="L295">        checkUserCanWrite(processInstance.getProcessDefinitionKey());</span>
+
+<span class="nc" id="L297">        processVariablesValidator.checkPayloadVariables(setProcessVariablesPayload,</span>
+<span class="nc" id="L298">                processInstance.getProcessDefinitionId());</span>
+
+<span class="nc" id="L300">        runtimeService.setVariables(setProcessVariablesPayload.getProcessInstanceId(),</span>
+<span class="nc" id="L301">                setProcessVariablesPayload.getVariables());</span>
+
+<span class="nc" id="L303">    }</span>
+
+    @Override
+    @Transactional
+    public void signal(SignalPayload signalPayload) {
+        //@TODO: define security policies for signalling
+
+<span class="nc" id="L310">        processVariablesValidator.checkSignalPayloadVariables(signalPayload,</span>
+                                                              null);
+
+<span class="nc" id="L313">        eventPublisher.publishEvent(signalPayload);</span>
+<span class="nc" id="L314">    }</span>
+
+    @Override
+    public ProcessDefinitionMeta processDefinitionMeta(String processDefinitionKey) {
+        //Process Definition will check security policies on read
+<span class="nc" id="L319">        processDefinition(processDefinitionKey);</span>
+<span class="nc" id="L320">        return new ProcessDefinitionMetaImpl(processDefinitionKey);</span>
+    }
+
+    @Override
+    public ProcessInstanceMeta processInstanceMeta(String processInstanceId) {
+        //Process Instance will check security policies on read
+<span class="nc" id="L326">        processInstance(processInstanceId);</span>
+<span class="nc" id="L327">        ProcessInstanceMetaImpl processInstanceMeta = new ProcessInstanceMetaImpl(processInstanceId);</span>
+<span class="nc" id="L328">        processInstanceMeta.setActiveActivitiesIds(runtimeService.getActiveActivityIds(processInstanceId));</span>
+<span class="nc" id="L329">        return processInstanceMeta;</span>
+    }
+
+    @Override
+    public ProcessInstance update(UpdateProcessPayload updateProcessPayload) {
+<span class="fc" id="L334">        ProcessInstance processInstance = processInstance(updateProcessPayload.getProcessInstanceId());</span>
+
+<span class="fc" id="L336">        checkUserCanWrite(processInstance.getProcessDefinitionKey());</span>
+
+<span class="pc bpc" id="L338" title="1 of 2 branches missed.">        if (updateProcessPayload.getBusinessKey() != null) {</span>
+<span class="fc" id="L339">            runtimeService.updateBusinessKey(updateProcessPayload.getProcessInstanceId(), updateProcessPayload.getBusinessKey());</span>
+        }
+<span class="pc bpc" id="L341" title="1 of 2 branches missed.">        if (updateProcessPayload.getName() != null) {</span>
+<span class="fc" id="L342">            runtimeService.setProcessInstanceName(updateProcessPayload.getProcessInstanceId(), updateProcessPayload.getName());</span>
+        }
+<span class="fc" id="L344">        ProcessInstance updatedProcessInstance = processInstanceConverter.from(runtimeService.createProcessInstanceQuery()</span>
+<span class="fc" id="L345">                .processInstanceId(updateProcessPayload.getProcessInstanceId())</span>
+<span class="fc" id="L346">                .singleResult());</span>
+
+<span class="fc" id="L348">        return updatedProcessInstance;</span>
+
+    }
+
+    @Override
+    @Transactional
+    public void receive(ReceiveMessagePayload messagePayload) {
+<span class="nc" id="L355">        processVariablesValidator.checkReceiveMessagePayloadVariables(messagePayload,</span>
+                                                                      null);
+
+<span class="nc" id="L358">        eventPublisher.publishEvent(messagePayload);</span>
+<span class="nc" id="L359">    }</span>
+
+    @Override
+    public ProcessInstance start(StartMessagePayload messagePayload) {
+<span class="nc" id="L363">        String messageName = messagePayload.getName();</span>
+<span class="nc" id="L364">        String businessKey = messagePayload.getBusinessKey();</span>
+<span class="nc" id="L365">        Map&lt;String, Object&gt; variables = messagePayload.getVariables();</span>
+
+<span class="nc" id="L367">        processVariablesValidator.checkStartMessagePayloadVariables(messagePayload,</span>
+                                                                    null);
+
+<span class="nc" id="L370">        ProcessInstance processInstance = processInstanceConverter.from(runtimeService.startProcessInstanceByMessage(messageName,</span>
+                                                                                                                     businessKey,
+                                                                                                                     variables));
+<span class="nc" id="L373">        return processInstance;</span>
+    }
+
+    private void checkUserCanWrite(String processDefinitionKey) {
+
+<span class="pc bpc" id="L378" title="1 of 2 branches missed.">        if (!securityPoliciesManager.canWrite(processDefinitionKey)) {</span>
+<span class="nc" id="L379">            throw new ActivitiForbiddenException(&quot;Operation not permitted for &quot; + processDefinitionKey + &quot; due security policy violation&quot;);</span>
+        }
+<span class="fc" id="L381">    }</span>
+
+    private ProcessDefinition getProcessDefinitionAndCheckUserHasRights(String processDefinitionId,
+                                                                        String processDefinitionKey) {
+
+<span class="nc" id="L386">        ProcessDefinition processDefinition = null;</span>
+
+<span class="nc bnc" id="L388" title="All 2 branches missed.">        String checkId = processDefinitionKey != null ?</span>
+<span class="nc" id="L389">                         processDefinitionKey :</span>
+<span class="nc bnc" id="L390" title="All 2 branches missed.">                         (processDefinitionId != null ? processDefinitionId : null);</span>
+
+<span class="nc" id="L392">        processDefinition = processDefinition(checkId);</span>
+
+<span class="nc bnc" id="L394" title="All 2 branches missed.">        if (processDefinition == null) {</span>
+<span class="nc" id="L395">            throw new IllegalStateException(&quot;At least Process Definition Id or Key needs to be provided to start a process&quot;);</span>
+        }
+
+<span class="nc" id="L398">        checkUserCanWrite(processDefinition.getKey());</span>
+
+<span class="nc" id="L400">        return processDefinition;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -1,0 +1,13 @@
+META-INF/spring-configuration-metadata.json
+org/activiti/core/common/spring/security/policies/ProcessSecurityPoliciesManagerImpl.class
+org/activiti/core/common/spring/security/policies/SecurityPoliciesProcessInstanceRestrictionApplier.class
+org/activiti/core/common/spring/security/policies/ProcessSecurityPoliciesManager.class
+org/activiti/core/common/spring/security/policies/config/ActivitiSpringSecurityPoliciesAutoConfiguration.class
+org/activiti/core/common/spring/security/policies/SecurityPolicyAccess.class
+org/activiti/core/common/spring/security/policies/BaseSecurityPoliciesManagerImpl.class
+org/activiti/core/common/spring/security/policies/conf/SecurityPoliciesProperties.class
+org/activiti/core/common/spring/security/policies/ActivitiForbiddenException.class
+org/activiti/core/common/spring/security/policies/SecurityPoliciesRestrictionApplier.class
+org/activiti/core/common/spring/security/policies/SecurityPoliciesManager.class
+org/activiti/core/common/spring/security/policies/SecurityPolicy.class
+org/activiti/core/common/spring/security/policies/SecurityPoliciesProcessDefinitionRestrictionApplier.class

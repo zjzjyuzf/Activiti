@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultActivityBehaviorFactoryMappingConfigurer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti :: Spring Boot Starter</a> &gt; <a href="index.source.html" class="el_package">org.activiti.spring.boot</a> &gt; <span class="el_source">DefaultActivityBehaviorFactoryMappingConfigurer.java</span></div><h1>DefaultActivityBehaviorFactoryMappingConfigurer.java</h1><pre class="source lang-java linenums">package org.activiti.spring.boot;
+
+import org.activiti.engine.impl.event.EventSubscriptionPayloadMappingProvider;
+import org.activiti.runtime.api.impl.MappingAwareActivityBehaviorFactory;
+import org.activiti.runtime.api.impl.VariablesMappingProvider;
+import org.activiti.spring.SpringProcessEngineConfiguration;
+import org.activiti.spring.process.ProcessVariablesInitiator;
+
+public class DefaultActivityBehaviorFactoryMappingConfigurer implements ProcessEngineConfigurationConfigurer {
+
+    private VariablesMappingProvider variablesMappingProvider;
+
+    private ProcessVariablesInitiator processVariablesInitiator;
+    
+    private final EventSubscriptionPayloadMappingProvider eventSubscriptionPayloadMappingProvider;
+
+    public DefaultActivityBehaviorFactoryMappingConfigurer(VariablesMappingProvider variablesMappingProvider,
+                                                           ProcessVariablesInitiator processVariablesInitiator,
+<span class="fc" id="L19">                                                           EventSubscriptionPayloadMappingProvider eventSubscriptionPayloadMappingProvider){</span>
+<span class="fc" id="L20">        this.variablesMappingProvider = variablesMappingProvider;</span>
+<span class="fc" id="L21">        this.processVariablesInitiator = processVariablesInitiator;</span>
+<span class="fc" id="L22">        this.eventSubscriptionPayloadMappingProvider = eventSubscriptionPayloadMappingProvider;</span>
+<span class="fc" id="L23">    }</span>
+    @Override
+    public void configure(SpringProcessEngineConfiguration processEngineConfiguration){
+<span class="fc" id="L26">        processEngineConfiguration.setEventSubscriptionPayloadMappingProvider(eventSubscriptionPayloadMappingProvider);</span>
+
+<span class="fc" id="L28">        processEngineConfiguration.setActivityBehaviorFactory(new MappingAwareActivityBehaviorFactory(variablesMappingProvider,</span>
+                                                                                                      processVariablesInitiator));
+<span class="fc" id="L30">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

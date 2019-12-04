@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VariablesMappingProvider.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti API :: Process Runtime Implementation</a> &gt; <a href="index.source.html" class="el_package">org.activiti.runtime.api.impl</a> &gt; <span class="el_source">VariablesMappingProvider.java</span></div><h1>VariablesMappingProvider.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2019 Alfresco, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.activiti.runtime.api.impl;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import org.activiti.engine.ActivitiIllegalArgumentException;
+import org.activiti.engine.delegate.DelegateExecution;
+import org.activiti.spring.process.ProcessExtensionService;
+import org.activiti.spring.process.model.ConstantDefinition;
+import org.activiti.spring.process.model.Mapping;
+import org.activiti.spring.process.model.ProcessConstantsMapping;
+import org.activiti.spring.process.model.ProcessExtensionModel;
+import org.activiti.spring.process.model.ProcessVariablesMapping;
+import org.activiti.spring.process.model.VariableDefinition;
+
+public class VariablesMappingProvider {
+
+    private ProcessExtensionService processExtensionService;
+    
+    private ExpressionResolver expressionResolver;
+
+<span class="fc" id="L40">    public VariablesMappingProvider(ProcessExtensionService processExtensionService, ExpressionResolver expressionResolver) {</span>
+<span class="fc" id="L41">        this.processExtensionService = processExtensionService;</span>
+<span class="fc" id="L42">        this.expressionResolver = expressionResolver;</span>
+<span class="fc" id="L43">    }</span>
+
+    protected Optional&lt;Object&gt; calculateMappedValue(Mapping inputMapping,
+                                                    DelegateExecution execution,
+                                                    ProcessExtensionModel extensions) {
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">        if (inputMapping != null) {</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">            if (Mapping.SourceMappingType.VALUE.equals(inputMapping.getType())) {</span>
+<span class="fc" id="L50">                return Optional.of(inputMapping.getValue());</span>
+            }
+
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">            if (Mapping.SourceMappingType.VARIABLE.equals(inputMapping.getType())) {</span>
+<span class="fc" id="L54">                String name = inputMapping.getValue().toString();</span>
+
+<span class="fc" id="L56">                VariableDefinition processVariableDefinition = extensions.getExtensions().getPropertyByName(name);</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">                if (processVariableDefinition != null) {</span>
+<span class="fc" id="L58">                    return Optional.ofNullable(execution.getVariable(processVariableDefinition.getName()));</span>
+                }
+            }
+        }
+<span class="fc" id="L62">        return Optional.empty();</span>
+    }
+
+    public Map&lt;String, Object&gt; calculateInputVariables(DelegateExecution execution) {
+
+<span class="fc" id="L67">        ProcessExtensionModel extensions = processExtensionService.getExtensionsForId(execution.getProcessDefinitionId());</span>
+
+<span class="fc" id="L69">        Map&lt;String, Object&gt; constants = calculateConstants(execution, extensions);</span>
+
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (extensions.getExtensions().hasEmptyInputsMapping(execution.getCurrentActivityId())) {</span>
+<span class="fc" id="L72">            return constants;</span>
+        }
+
+        Map&lt;String, Object&gt; inboudVariables;
+
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (!extensions.getExtensions().hasMapping(execution.getCurrentActivityId())) {</span>
+<span class="fc" id="L78">            inboudVariables = execution.getVariables();</span>
+        } else {
+<span class="fc" id="L80">            inboudVariables = calculateInputVariables(execution, extensions);</span>
+        }
+<span class="fc" id="L82">        inboudVariables = expressionResolver.resolveExpressionsMap(execution, inboudVariables);</span>
+<span class="fc" id="L83">        inboudVariables.putAll(constants);</span>
+<span class="fc" id="L84">        return inboudVariables;</span>
+    }
+
+    private Map&lt;String, Object&gt; calculateConstants(DelegateExecution execution,
+                                                   ProcessExtensionModel extensions) {
+<span class="fc" id="L89">        Map&lt;String, Object&gt; constants = new HashMap&lt;&gt;();</span>
+
+<span class="fc" id="L91">        ProcessConstantsMapping processConstantsMapping = extensions.getExtensions().getConstantForFlowElement(execution.getCurrentActivityId());</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        for (Map.Entry&lt;String, ConstantDefinition&gt; mapping : processConstantsMapping.entrySet()) {</span>
+<span class="fc" id="L93">            constants.put(mapping.getKey(), mapping.getValue().getValue());</span>
+<span class="fc" id="L94">        }</span>
+<span class="fc" id="L95">        return constants;</span>
+    }
+
+    private Map&lt;String, Object&gt; calculateInputVariables(DelegateExecution execution,
+                                                        ProcessExtensionModel extensions) {
+<span class="fc" id="L100">        Map&lt;String, Object&gt; inboundVariables = new HashMap&lt;&gt;();</span>
+
+<span class="fc" id="L102">        ProcessVariablesMapping processVariablesMapping = extensions.getExtensions().getMappingForFlowElement(execution.getCurrentActivityId());</span>
+
+<span class="fc" id="L104">        Map&lt;String, Mapping&gt; inputMappings = processVariablesMapping.getInputs();</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        for (Map.Entry&lt;String, Mapping&gt; mapping : inputMappings.entrySet()) {</span>
+<span class="fc" id="L106">            Optional&lt;Object&gt; mappedValue = calculateMappedValue(mapping.getValue(),</span>
+                    execution,
+                    extensions);
+<span class="fc" id="L109">            mappedValue.ifPresent(value -&gt; inboundVariables.put(mapping.getKey(),</span>
+                    value));
+<span class="fc" id="L111">        }</span>
+<span class="fc" id="L112">        return inboundVariables;</span>
+    }
+
+    private Optional&lt;Object&gt; calculateOutPutMappedValue(Mapping mapping,
+                                                        Map&lt;String, Object&gt; currentContextVariables) {
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">        if (mapping != null) {</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">            if (Mapping.SourceMappingType.VALUE.equals(mapping.getType())) {</span>
+<span class="fc" id="L119">                return Optional.of(mapping.getValue());</span>
+            } else {
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">                if (Mapping.SourceMappingType.VARIABLE.equals(mapping.getType())) {</span>
+<span class="fc" id="L122">                    String name = mapping.getValue().toString();</span>
+
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">                    return currentContextVariables != null ?</span>
+<span class="fc" id="L125">                            Optional.ofNullable(currentContextVariables.get(name)) :</span>
+<span class="nc" id="L126">                            Optional.empty();</span>
+                }
+            }
+        }
+<span class="nc" id="L130">        return Optional.empty();</span>
+    }
+
+    public Map&lt;String, Object&gt; calculateOutPutVariables(MappingExecutionContext execution,
+                                                        Map&lt;String, Object&gt; availableVariables) {
+
+<span class="fc" id="L136">        ProcessExtensionModel extensions = processExtensionService.getExtensionsForId(execution.getProcessDefinitionId());</span>
+
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (extensions.getExtensions().hasEmptyOutputsMapping(execution.getActivityId())) {</span>
+<span class="fc" id="L139">            return Collections.emptyMap();</span>
+        }
+
+<span class="fc bfc" id="L142" title="All 2 branches covered.">        if (!extensions.getExtensions().hasMapping(execution.getActivityId())) {</span>
+<span class="fc" id="L143">            return new HashMap&lt;&gt;(availableVariables);</span>
+        }
+
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">        if (!availableVariables.isEmpty()) {</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">            if (expressionResolver.containsExpression(availableVariables)) {</span>
+<span class="fc" id="L148">                throw new ActivitiIllegalArgumentException(&quot;Expressions are not allowed as variable values in the output mapping&quot;);</span>
+            }
+<span class="fc" id="L150">            return calculateOutPutVariables(execution, extensions, availableVariables);</span>
+        } else {
+<span class="nc" id="L152">            return Collections.emptyMap();</span>
+        }
+    }
+
+    private Map&lt;String, Object&gt; calculateOutPutVariables(MappingExecutionContext execution,
+                                                         ProcessExtensionModel extensions,
+                                                         Map&lt;String, Object&gt; availableVariables) {
+<span class="fc" id="L159">        Map&lt;String, Object&gt; outboundVariables = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L160">        ProcessVariablesMapping processVariablesMapping = extensions.getExtensions().getMappingForFlowElement(execution.getActivityId());</span>
+<span class="fc" id="L161">        Map&lt;String, Mapping&gt; outputMappings = processVariablesMapping.getOutputs();</span>
+
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        for (Map.Entry&lt;String, Mapping&gt; mapping : outputMappings.entrySet()) {</span>
+
+<span class="fc" id="L165">            String name = mapping.getKey();</span>
+
+<span class="fc" id="L167">            VariableDefinition processVariableDefinition = extensions.getExtensions().getPropertyByName(name);</span>
+
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">            if (processVariableDefinition != null) {</span>
+<span class="fc" id="L170">                calculateOutPutMappedValue(mapping.getValue(),</span>
+                                           availableVariables)
+<span class="fc" id="L172">                        .ifPresent( value -&gt; outboundVariables.put(name, value));</span>
+            }
+<span class="fc" id="L174">        }</span>
+
+<span class="fc" id="L176">        return outboundVariables;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -1,0 +1,11 @@
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared-impl/src/main/java/org/activiti/api/runtime/event/impl/VariableUpdatedEventImpl.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared-impl/src/main/java/org/activiti/api/runtime/model/impl/VariableInstanceImpl.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared-impl/src/main/java/org/activiti/api/runtime/conf/impl/ResultMixIn.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared-impl/src/main/java/org/activiti/api/runtime/model/impl/ActivitiErrorMessageImpl.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared-impl/src/main/java/org/activiti/api/runtime/conf/impl/CommonModelAutoConfiguration.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared-impl/src/main/java/org/activiti/api/runtime/event/impl/RuntimeEventImpl.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared-impl/src/main/java/org/activiti/api/runtime/event/impl/VariableDeletedEventImpl.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared-impl/src/main/java/org/activiti/api/runtime/event/impl/VariableCreatedEventImpl.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared-impl/src/main/java/org/activiti/api/runtime/event/impl/VariableEventImpl.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared-impl/src/main/java/org/activiti/api/runtime/conf/impl/PayloadMixIn.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared-impl/src/main/java/org/activiti/api/runtime/model/impl/ApplicationElementImpl.java

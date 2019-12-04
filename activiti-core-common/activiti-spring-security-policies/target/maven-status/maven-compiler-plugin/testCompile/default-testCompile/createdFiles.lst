@@ -1,0 +1,5 @@
+org/activiti/core/common/spring/security/policies/SecurityPoliciesProcessDefinitionRestrictionApplierTest.class
+org/activiti/core/common/spring/security/policies/SecurityPoliciesServiceIT.class
+org/activiti/core/common/spring/security/policies/Application.class
+org/activiti/core/common/spring/security/policies/SecurityPoliciesProcessInstanceRestrictionApplierTest.class
+org/activiti/core/common/spring/security/policies/RuntimeTestConfiguraiton.class

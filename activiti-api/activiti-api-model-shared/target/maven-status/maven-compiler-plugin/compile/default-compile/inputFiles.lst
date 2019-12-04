@@ -1,0 +1,11 @@
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared/src/main/java/org/activiti/api/model/shared/model/VariableInstance.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared/src/main/java/org/activiti/api/model/shared/event/VariableEvent.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared/src/main/java/org/activiti/api/model/shared/event/VariableDeletedEvent.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared/src/main/java/org/activiti/api/model/shared/event/RuntimeEvent.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared/src/main/java/org/activiti/api/model/shared/model/ActivitiErrorMessage.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared/src/main/java/org/activiti/api/model/shared/event/VariableCreatedEvent.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared/src/main/java/org/activiti/api/model/shared/model/ApplicationElement.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared/src/main/java/org/activiti/api/model/shared/EmptyResult.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared/src/main/java/org/activiti/api/model/shared/event/VariableUpdatedEvent.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared/src/main/java/org/activiti/api/model/shared/Payload.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-model-shared/src/main/java/org/activiti/api/model/shared/Result.java

@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProcessRuntimeAutoConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti API :: Process Runtime Implementation</a> &gt; <a href="index.source.html" class="el_package">org.activiti.runtime.api.conf</a> &gt; <span class="el_source">ProcessRuntimeAutoConfiguration.java</span></div><h1>ProcessRuntimeAutoConfiguration.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2018 Alfresco, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.activiti.runtime.api.conf;
+
+import java.util.Collections;
+import java.util.List;
+
+import org.activiti.api.process.model.events.BPMNActivityCancelledEvent;
+import org.activiti.api.process.model.events.BPMNActivityCompletedEvent;
+import org.activiti.api.process.model.events.BPMNActivityStartedEvent;
+import org.activiti.api.process.model.events.BPMNErrorReceivedEvent;
+import org.activiti.api.process.model.events.BPMNMessageReceivedEvent;
+import org.activiti.api.process.model.events.BPMNMessageSentEvent;
+import org.activiti.api.process.model.events.BPMNMessageWaitingEvent;
+import org.activiti.api.process.model.events.BPMNSequenceFlowTakenEvent;
+import org.activiti.api.process.model.events.BPMNSignalReceivedEvent;
+import org.activiti.api.process.model.events.BPMNTimerCancelledEvent;
+import org.activiti.api.process.model.events.BPMNTimerExecutedEvent;
+import org.activiti.api.process.model.events.BPMNTimerFailedEvent;
+import org.activiti.api.process.model.events.BPMNTimerFiredEvent;
+import org.activiti.api.process.model.events.BPMNTimerRetriesDecrementedEvent;
+import org.activiti.api.process.model.events.BPMNTimerScheduledEvent;
+import org.activiti.api.process.model.events.MessageSubscriptionCancelledEvent;
+import org.activiti.api.process.runtime.ProcessAdminRuntime;
+import org.activiti.api.process.runtime.ProcessRuntime;
+import org.activiti.api.process.runtime.conf.ProcessRuntimeConfiguration;
+import org.activiti.api.process.runtime.events.ProcessCancelledEvent;
+import org.activiti.api.process.runtime.events.ProcessCompletedEvent;
+import org.activiti.api.process.runtime.events.ProcessCreatedEvent;
+import org.activiti.api.process.runtime.events.ProcessResumedEvent;
+import org.activiti.api.process.runtime.events.ProcessStartedEvent;
+import org.activiti.api.process.runtime.events.ProcessSuspendedEvent;
+import org.activiti.api.process.runtime.events.ProcessUpdatedEvent;
+import org.activiti.api.process.runtime.events.listener.BPMNElementEventListener;
+import org.activiti.api.process.runtime.events.listener.ProcessRuntimeEventListener;
+import org.activiti.api.runtime.shared.events.VariableEventListener;
+import org.activiti.common.util.DateFormatterProvider;
+import org.activiti.core.common.spring.security.policies.ProcessSecurityPoliciesManager;
+import org.activiti.engine.ManagementService;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.delegate.event.ActivitiEventType;
+import org.activiti.engine.impl.event.EventSubscriptionPayloadMappingProvider;
+import org.activiti.runtime.api.conf.impl.ProcessRuntimeConfigurationImpl;
+import org.activiti.runtime.api.event.impl.BPMNErrorConverter;
+import org.activiti.runtime.api.event.impl.BPMNMessageConverter;
+import org.activiti.runtime.api.event.impl.BPMNTimerConverter;
+import org.activiti.runtime.api.event.impl.MessageSubscriptionConverter;
+import org.activiti.runtime.api.event.impl.StartMessageSubscriptionConverter;
+import org.activiti.runtime.api.event.impl.ToAPIProcessCreatedEventConverter;
+import org.activiti.runtime.api.event.impl.ToAPIProcessStartedEventConverter;
+import org.activiti.runtime.api.event.impl.ToActivityCancelledConverter;
+import org.activiti.runtime.api.event.impl.ToActivityCompletedConverter;
+import org.activiti.runtime.api.event.impl.ToActivityStartedConverter;
+import org.activiti.runtime.api.event.impl.ToErrorReceivedConverter;
+import org.activiti.runtime.api.event.impl.ToMessageReceivedConverter;
+import org.activiti.runtime.api.event.impl.ToMessageSentConverter;
+import org.activiti.runtime.api.event.impl.ToMessageSubscriptionCancelledConverter;
+import org.activiti.runtime.api.event.impl.ToMessageWaitingConverter;
+import org.activiti.runtime.api.event.impl.ToProcessCancelledConverter;
+import org.activiti.runtime.api.event.impl.ToProcessCompletedConverter;
+import org.activiti.runtime.api.event.impl.ToProcessResumedConverter;
+import org.activiti.runtime.api.event.impl.ToProcessSuspendedConverter;
+import org.activiti.runtime.api.event.impl.ToProcessUpdatedConverter;
+import org.activiti.runtime.api.event.impl.ToSequenceFlowTakenConverter;
+import org.activiti.runtime.api.event.impl.ToSignalReceivedConverter;
+import org.activiti.runtime.api.event.impl.ToTimerCancelledConverter;
+import org.activiti.runtime.api.event.impl.ToTimerExecutedConverter;
+import org.activiti.runtime.api.event.impl.ToTimerFailedConverter;
+import org.activiti.runtime.api.event.impl.ToTimerFiredConverter;
+import org.activiti.runtime.api.event.impl.ToTimerRetriesDecrementedConverter;
+import org.activiti.runtime.api.event.impl.ToTimerScheduledConverter;
+import org.activiti.runtime.api.event.internal.ActivityCancelledListenerDelegate;
+import org.activiti.runtime.api.event.internal.ActivityCompletedListenerDelegate;
+import org.activiti.runtime.api.event.internal.ActivityStartedListenerDelegate;
+import org.activiti.runtime.api.event.internal.ErrorReceivedListenerDelegate;
+import org.activiti.runtime.api.event.internal.MessageReceivedListenerDelegate;
+import org.activiti.runtime.api.event.internal.MessageSentListenerDelegate;
+import org.activiti.runtime.api.event.internal.MessageSubscriptionCancelledListenerDelegate;
+import org.activiti.runtime.api.event.internal.MessageWaitingListenerDelegate;
+import org.activiti.runtime.api.event.internal.ProcessCancelledListenerDelegate;
+import org.activiti.runtime.api.event.internal.ProcessCompletedListenerDelegate;
+import org.activiti.runtime.api.event.internal.ProcessCreatedListenerDelegate;
+import org.activiti.runtime.api.event.internal.ProcessResumedEventListenerDelegate;
+import org.activiti.runtime.api.event.internal.ProcessStartedListenerDelegate;
+import org.activiti.runtime.api.event.internal.ProcessSuspendedListenerDelegate;
+import org.activiti.runtime.api.event.internal.ProcessUpdatedListenerDelegate;
+import org.activiti.runtime.api.event.internal.SequenceFlowTakenListenerDelegate;
+import org.activiti.runtime.api.event.internal.SignalReceivedListenerDelegate;
+import org.activiti.runtime.api.event.internal.TimerCancelledListenerDelegate;
+import org.activiti.runtime.api.event.internal.TimerExecutedListenerDelegate;
+import org.activiti.runtime.api.event.internal.TimerFailedListenerDelegate;
+import org.activiti.runtime.api.event.internal.TimerFiredListenerDelegate;
+import org.activiti.runtime.api.event.internal.TimerRetriesDecrementedListenerDelegate;
+import org.activiti.runtime.api.event.internal.TimerScheduledListenerDelegate;
+import org.activiti.runtime.api.impl.EventSubscriptionVariablesMappingProvider;
+import org.activiti.runtime.api.impl.ExpressionResolver;
+import org.activiti.runtime.api.impl.ProcessAdminRuntimeImpl;
+import org.activiti.runtime.api.impl.ProcessRuntimeImpl;
+import org.activiti.runtime.api.impl.ProcessVariablesPayloadValidator;
+import org.activiti.runtime.api.impl.RuntimeReceiveMessagePayloadEventListener;
+import org.activiti.runtime.api.impl.RuntimeSignalPayloadEventListener;
+import org.activiti.runtime.api.impl.VariableNameValidator;
+import org.activiti.runtime.api.impl.VariablesMappingProvider;
+import org.activiti.runtime.api.message.ReceiveMessagePayloadEventListener;
+import org.activiti.runtime.api.model.impl.APIProcessDefinitionConverter;
+import org.activiti.runtime.api.model.impl.APIProcessInstanceConverter;
+import org.activiti.runtime.api.model.impl.APIVariableInstanceConverter;
+import org.activiti.runtime.api.model.impl.ToActivityConverter;
+import org.activiti.runtime.api.model.impl.ToSignalConverter;
+import org.activiti.runtime.api.signal.SignalPayloadEventListener;
+import org.activiti.spring.process.ProcessExtensionService;
+import org.activiti.spring.process.variable.VariableValidationService;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@AutoConfigureAfter(CommonRuntimeAutoConfiguration.class)
+<span class="nc" id="L138">public class ProcessRuntimeAutoConfiguration {</span>
+
+    /**
+     * Creates default SignalPayloadEventListener bean if no existing bean found in ApplicationContext.
+     */
+    @Bean
+    @ConditionalOnMissingBean(SignalPayloadEventListener.class)
+    public SignalPayloadEventListener signalPayloadEventListener(RuntimeService runtimeService) {
+<span class="nc" id="L146">        return new RuntimeSignalPayloadEventListener(runtimeService);</span>
+    }
+
+    /**
+     * Creates default MessagePayloadEventListener bean if no existing bean found in ApplicationContext.
+     */
+    @Bean
+    @ConditionalOnMissingBean(ReceiveMessagePayloadEventListener.class)
+    public ReceiveMessagePayloadEventListener receiveMessagePayloadEventListener(RuntimeService runtimeService,
+                                                                                 ManagementService managementService) {
+<span class="nc" id="L156">        return new RuntimeReceiveMessagePayloadEventListener(runtimeService,</span>
+                managementService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(EventSubscriptionPayloadMappingProvider.class)
+    public EventSubscriptionPayloadMappingProvider eventSubscriptionPayloadMappingProvider(VariablesMappingProvider variablesMappingProvider) {
+<span class="nc" id="L163">        return new EventSubscriptionVariablesMappingProvider(variablesMappingProvider);</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ProcessRuntime processRuntime(RepositoryService repositoryService,
+                                         APIProcessDefinitionConverter processDefinitionConverter,
+                                         RuntimeService runtimeService,
+                                         ProcessSecurityPoliciesManager securityPoliciesManager,
+                                         APIProcessInstanceConverter processInstanceConverter,
+                                         APIVariableInstanceConverter variableInstanceConverter,
+                                         ProcessRuntimeConfiguration processRuntimeConfiguration,
+                                         ApplicationEventPublisher eventPublisher,
+                                         ProcessVariablesPayloadValidator processVariablesValidator) {
+<span class="nc" id="L177">        return new ProcessRuntimeImpl(repositoryService,</span>
+                processDefinitionConverter,
+                runtimeService,
+                securityPoliciesManager,
+                processInstanceConverter,
+                variableInstanceConverter,
+                processRuntimeConfiguration,
+                eventPublisher,
+                processVariablesValidator);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ProcessAdminRuntime processAdminRuntime(RepositoryService repositoryService,
+                                                   APIProcessDefinitionConverter processDefinitionConverter,
+                                                   RuntimeService runtimeService,
+                                                   APIProcessInstanceConverter processInstanceConverter,
+                                                   ApplicationEventPublisher eventPublisher,
+                                                   ProcessVariablesPayloadValidator processVariablesValidator) {
+<span class="nc" id="L196">        return new ProcessAdminRuntimeImpl(repositoryService,</span>
+                processDefinitionConverter,
+                runtimeService,
+                processInstanceConverter,
+                eventPublisher,
+                processVariablesValidator
+        );
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public MessageSubscriptionConverter messageEventSubscriptionConverter() {
+<span class="nc" id="L208">        return new MessageSubscriptionConverter(); </span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public StartMessageSubscriptionConverter startMessageEventSubscriptionConverter() {
+<span class="nc" id="L214">        return new StartMessageSubscriptionConverter(); </span>
+    }
+    
+    @Bean
+    @ConditionalOnMissingBean
+    public APIProcessDefinitionConverter apiProcessDefinitionConverter(RepositoryService repositoryService) {
+<span class="nc" id="L220">        return new APIProcessDefinitionConverter(repositoryService);</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ProcessVariablesPayloadValidator processVariablesValidator(DateFormatterProvider dateFormatterProvider,
+                                                                      ProcessExtensionService processExtensionService,
+                                                                      VariableValidationService variableValidationService,
+                                                                      VariableNameValidator variableNameValidator,
+                                                                      ExpressionResolver expressionResolver) {
+<span class="nc" id="L230">        return new ProcessVariablesPayloadValidator(dateFormatterProvider,</span>
+                processExtensionService,
+                variableValidationService,
+                variableNameValidator,
+                expressionResolver);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public APIProcessInstanceConverter apiProcessInstanceConverter() {
+<span class="nc" id="L240">        return new APIProcessInstanceConverter();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ProcessRuntimeConfiguration processRuntimeConfiguration(@Autowired(required = false) List&lt;ProcessRuntimeEventListener&lt;?&gt;&gt; processRuntimeEventListeners,
+                                                                   @Autowired(required = false) List&lt;VariableEventListener&lt;?&gt;&gt; variableEventListeners) {
+<span class="nc" id="L247">        return new ProcessRuntimeConfigurationImpl(getInitializedListeners(processRuntimeEventListeners),</span>
+<span class="nc" id="L248">                getInitializedListeners(variableEventListeners));</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ToAPIProcessStartedEventConverter apiProcessStartedEventConverter(APIProcessInstanceConverter processInstanceConverter) {
+<span class="nc" id="L254">        return new ToAPIProcessStartedEventConverter(processInstanceConverter);</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ToAPIProcessCreatedEventConverter apiProcessCreatedEventConverter(APIProcessInstanceConverter processInstanceConverter) {
+<span class="nc" id="L260">        return new ToAPIProcessCreatedEventConverter(processInstanceConverter);</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ToProcessUpdatedConverter processUpdatedConverter(APIProcessInstanceConverter processInstanceConverter) {
+<span class="nc" id="L266">        return new ToProcessUpdatedConverter(processInstanceConverter);</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ToProcessResumedConverter processResumedConverter(APIProcessInstanceConverter processInstanceConverter) {
+<span class="nc" id="L272">        return new ToProcessResumedConverter(processInstanceConverter);</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ToProcessSuspendedConverter processSuspendedConverter(APIProcessInstanceConverter processInstanceConverter) {
+<span class="nc" id="L278">        return new ToProcessSuspendedConverter(processInstanceConverter);</span>
+    }
+
+    private &lt;T&gt; List&lt;T&gt; getInitializedListeners(List&lt;T&gt; eventListeners) {
+<span class="nc bnc" id="L282" title="All 2 branches missed.">        return eventListeners != null ? eventListeners : Collections.emptyList();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerProcessStartedEventListenerDelegate&quot;)
+    public InitializingBean registerProcessStartedEventListenerDelegate(RuntimeService runtimeService,
+                                                                        @Autowired(required = false) List&lt;ProcessRuntimeEventListener&lt;ProcessStartedEvent&gt;&gt; listeners,
+                                                                        ToAPIProcessStartedEventConverter processStartedEventConverter) {
+<span class="nc" id="L290">        return () -&gt; runtimeService.addEventListener(new ProcessStartedListenerDelegate(getInitializedListeners(listeners),</span>
+                        processStartedEventConverter),
+                ActivitiEventType.PROCESS_STARTED);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerProcessCreatedEventListenerDelegate&quot;)
+    public InitializingBean registerProcessCreatedEventListenerDelegate(RuntimeService runtimeService,
+                                                                        @Autowired(required = false) List&lt;ProcessRuntimeEventListener&lt;ProcessCreatedEvent&gt;&gt; eventListeners,
+                                                                        ToAPIProcessCreatedEventConverter converter) {
+<span class="nc" id="L300">        return () -&gt; runtimeService.addEventListener(new ProcessCreatedListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        converter),
+                ActivitiEventType.ENTITY_CREATED);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerProcessUpdatedEventListenerDelegate&quot;)
+    public InitializingBean registerProcessUpdatedEventListenerDelegate(RuntimeService runtimeService,
+                                                                        @Autowired(required = false) List&lt;ProcessRuntimeEventListener&lt;ProcessUpdatedEvent&gt;&gt; eventListeners,
+                                                                        ToProcessUpdatedConverter converter) {
+<span class="nc" id="L310">        return () -&gt; runtimeService.addEventListener(new ProcessUpdatedListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        converter),
+                ActivitiEventType.ENTITY_UPDATED);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerProcessSuspendedEventListenerDelegate&quot;)
+    public InitializingBean registerProcessSuspendedEventListenerDelegate(RuntimeService runtimeService,
+                                                                          @Autowired(required = false) List&lt;ProcessRuntimeEventListener&lt;ProcessSuspendedEvent&gt;&gt; eventListeners,
+                                                                          ToProcessSuspendedConverter converter) {
+<span class="nc" id="L320">        return () -&gt; runtimeService.addEventListener(new ProcessSuspendedListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        converter),
+                ActivitiEventType.ENTITY_SUSPENDED);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerProcessResumedEventListenerDelegate&quot;)
+    public InitializingBean registerProcessResumedEventListenerDelegate(RuntimeService runtimeService,
+                                                                        @Autowired(required = false) List&lt;ProcessRuntimeEventListener&lt;ProcessResumedEvent&gt;&gt; eventListeners,
+                                                                        ToProcessResumedConverter converter) {
+<span class="nc" id="L330">        return () -&gt; runtimeService.addEventListener(new ProcessResumedEventListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        converter),
+                ActivitiEventType.ENTITY_ACTIVATED);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ToProcessCompletedConverter processCompletedConverter(APIProcessInstanceConverter processInstanceConverter) {
+<span class="nc" id="L338">        return new ToProcessCompletedConverter(processInstanceConverter);</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerProcessCompletedListenerDelegate&quot;)
+    public InitializingBean registerProcessCompletedListenerDelegate(RuntimeService runtimeService,
+                                                                     @Autowired(required = false) List&lt;ProcessRuntimeEventListener&lt;ProcessCompletedEvent&gt;&gt; eventListeners,
+                                                                     ToProcessCompletedConverter converter) {
+<span class="nc" id="L346">        return () -&gt; runtimeService.addEventListener(new ProcessCompletedListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        converter),
+                ActivitiEventType.PROCESS_COMPLETED);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerProcessCancelledListenerDelegate&quot;)
+    public InitializingBean registerProcessCancelledListenerDelegate(RuntimeService runtimeService,
+                                                                     @Autowired(required = false) List&lt;ProcessRuntimeEventListener&lt;ProcessCancelledEvent&gt;&gt; eventListeners) {
+<span class="nc" id="L355">        return () -&gt; runtimeService.addEventListener(new ProcessCancelledListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        new ToProcessCancelledConverter()),
+                ActivitiEventType.PROCESS_CANCELLED);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ToActivityConverter activityConverter() {
+<span class="nc" id="L363">        return new ToActivityConverter();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ToSignalConverter signalConverter() {
+<span class="nc" id="L369">        return new ToSignalConverter();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public BPMNTimerConverter bpmnTimerConveter() {
+<span class="nc" id="L375">        return new BPMNTimerConverter();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public BPMNMessageConverter bpmnMessageConveter() {
+<span class="nc" id="L381">        return new BPMNMessageConverter();</span>
+    }
+
+    @Bean
+    public BPMNErrorConverter bpmnErrorConverter() {
+<span class="nc" id="L386">        return new BPMNErrorConverter();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerActivityStartedListenerDelegate&quot;)
+    public InitializingBean registerActivityStartedListenerDelegate(RuntimeService runtimeService,
+                                                                    @Autowired(required = false) List&lt;BPMNElementEventListener&lt;BPMNActivityStartedEvent&gt;&gt; eventListeners,
+                                                                    ToActivityConverter activityConverter) {
+<span class="nc" id="L394">        return () -&gt; runtimeService.addEventListener(new ActivityStartedListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        new ToActivityStartedConverter(activityConverter)),
+                ActivitiEventType.ACTIVITY_STARTED);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerActivityCompletedListenerDelegate&quot;)
+    public InitializingBean registerActivityCompletedListenerDelegate(RuntimeService runtimeService,
+                                                                      @Autowired(required = false) List&lt;BPMNElementEventListener&lt;BPMNActivityCompletedEvent&gt;&gt; eventListeners,
+                                                                      ToActivityConverter activityConverter) {
+<span class="nc" id="L404">        return () -&gt; runtimeService.addEventListener(new ActivityCompletedListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        new ToActivityCompletedConverter(activityConverter)),
+                ActivitiEventType.ACTIVITY_COMPLETED);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerActivityCancelledListenerDelegate&quot;)
+    public InitializingBean registerActivityCancelledListenerDelegate(RuntimeService runtimeService,
+                                                                      @Autowired(required = false) List&lt;BPMNElementEventListener&lt;BPMNActivityCancelledEvent&gt;&gt; eventListeners,
+                                                                      ToActivityConverter activityConverter) {
+<span class="nc" id="L414">        return () -&gt; runtimeService.addEventListener(new ActivityCancelledListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        new ToActivityCancelledConverter(activityConverter)),
+                ActivitiEventType.ACTIVITY_CANCELLED);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerActivitySignaledListenerDelegate&quot;)
+    public InitializingBean registerActivitySignaledListenerDelegate(RuntimeService runtimeService,
+                                                                     @Autowired(required = false) List&lt;BPMNElementEventListener&lt;BPMNSignalReceivedEvent&gt;&gt; eventListeners,
+                                                                     ToSignalConverter signalConverter) {
+<span class="nc" id="L424">        return () -&gt; runtimeService.addEventListener(new SignalReceivedListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        new ToSignalReceivedConverter(signalConverter)),
+                ActivitiEventType.ACTIVITY_SIGNALED);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerTimerFiredListenerDelegate&quot;)
+    public InitializingBean registerTimerFiredListenerDelegate(RuntimeService runtimeService,
+                                                               @Autowired(required = false) List&lt;BPMNElementEventListener&lt;BPMNTimerFiredEvent&gt;&gt; eventListeners,
+                                                               BPMNTimerConverter bpmnTimerConverter) {
+<span class="nc" id="L434">        return () -&gt; runtimeService.addEventListener(new TimerFiredListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        new ToTimerFiredConverter(bpmnTimerConverter)),
+                ActivitiEventType.TIMER_FIRED);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerTimerScheduledListenerDelegate&quot;)
+    public InitializingBean registerTimerScheduledListenerDelegate(RuntimeService runtimeService,
+                                                                   @Autowired(required = false) List&lt;BPMNElementEventListener&lt;BPMNTimerScheduledEvent&gt;&gt; eventListeners,
+                                                                   BPMNTimerConverter bpmnTimerConverter) {
+<span class="nc" id="L444">        return () -&gt; runtimeService.addEventListener(new TimerScheduledListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        new ToTimerScheduledConverter(bpmnTimerConverter)),
+                ActivitiEventType.TIMER_SCHEDULED);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerTimerCancelledListenerDelegate&quot;)
+    public InitializingBean registerTimerCancelledListenerDelegate(RuntimeService runtimeService,
+                                                                   @Autowired(required = false) List&lt;BPMNElementEventListener&lt;BPMNTimerCancelledEvent&gt;&gt; eventListeners,
+                                                                   BPMNTimerConverter bpmnTimerConverter) {
+<span class="nc" id="L454">        return () -&gt; runtimeService.addEventListener(new TimerCancelledListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        new ToTimerCancelledConverter(bpmnTimerConverter)),
+                ActivitiEventType.JOB_CANCELED);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerTimerFailedListenerDelegate&quot;)
+    public InitializingBean registerTimerFailedListenerDelegate(RuntimeService runtimeService,
+                                                                @Autowired(required = false) List&lt;BPMNElementEventListener&lt;BPMNTimerFailedEvent&gt;&gt; eventListeners,
+                                                                BPMNTimerConverter bpmnTimerConverter) {
+<span class="nc" id="L464">        return () -&gt; runtimeService.addEventListener(new TimerFailedListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        new ToTimerFailedConverter(bpmnTimerConverter)),
+                ActivitiEventType.JOB_EXECUTION_FAILURE);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerTimerExecutedListenerDelegate&quot;)
+    public InitializingBean registerTimerExecutedListenerDelegate(RuntimeService runtimeService,
+                                                                  @Autowired(required = false) List&lt;BPMNElementEventListener&lt;BPMNTimerExecutedEvent&gt;&gt; eventListeners,
+                                                                  BPMNTimerConverter bpmnTimerConverter) {
+<span class="nc" id="L474">        return () -&gt; runtimeService.addEventListener(new TimerExecutedListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        new ToTimerExecutedConverter(bpmnTimerConverter)),
+                ActivitiEventType.JOB_EXECUTION_SUCCESS);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerTimerRetriesDecrementedListenerDelegate&quot;)
+    public InitializingBean registerTimerRetriesDecrementedListenerDelegate(RuntimeService runtimeService,
+                                                                            @Autowired(required = false) List&lt;BPMNElementEventListener&lt;BPMNTimerRetriesDecrementedEvent&gt;&gt; eventListeners,
+                                                                            BPMNTimerConverter bpmnTimerConverter) {
+<span class="nc" id="L484">        return () -&gt; runtimeService.addEventListener(new TimerRetriesDecrementedListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        new ToTimerRetriesDecrementedConverter(bpmnTimerConverter)),
+                ActivitiEventType.JOB_RETRIES_DECREMENTED);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerMessageSentListenerDelegate&quot;)
+    public InitializingBean registerMessageSentListenerDelegate(RuntimeService runtimeService,
+                                                                @Autowired(required = false) List&lt;BPMNElementEventListener&lt;BPMNMessageSentEvent&gt;&gt; eventListeners,
+                                                                BPMNMessageConverter bpmnMessageConverter) {
+<span class="nc" id="L494">        return () -&gt; runtimeService.addEventListener(new MessageSentListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        new ToMessageSentConverter(bpmnMessageConverter)),
+                ActivitiEventType.ACTIVITY_MESSAGE_SENT);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerMessageReceivedListenerDelegate&quot;)
+    public InitializingBean registerMessageReceivedListenerDelegate(RuntimeService runtimeService,
+                                                                    @Autowired(required = false) List&lt;BPMNElementEventListener&lt;BPMNMessageReceivedEvent&gt;&gt; eventListeners,
+                                                                    BPMNMessageConverter bpmnMessageConverter) {
+<span class="nc" id="L504">        return () -&gt; runtimeService.addEventListener(new MessageReceivedListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        new ToMessageReceivedConverter(bpmnMessageConverter)),
+                ActivitiEventType.ACTIVITY_MESSAGE_RECEIVED);
+    }
+    
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerMessageWaitingListenerDelegate&quot;)
+    public InitializingBean registerMessageWaitingListenerDelegate(RuntimeService runtimeService,
+                                                                   @Autowired(required = false) List&lt;BPMNElementEventListener&lt;BPMNMessageWaitingEvent&gt;&gt; eventListeners,
+                                                                   BPMNMessageConverter bpmnMessageConverter) {
+<span class="nc" id="L514">        return () -&gt; runtimeService.addEventListener(new MessageWaitingListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        new ToMessageWaitingConverter(bpmnMessageConverter)),
+                ActivitiEventType.ACTIVITY_MESSAGE_WAITING);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerSequenceFlowTakenListenerDelegate&quot;)
+    public InitializingBean registerSequenceFlowTakenListenerDelegate(RuntimeService runtimeService,
+                                                                      @Autowired(required = false) List&lt;BPMNElementEventListener&lt;BPMNSequenceFlowTakenEvent&gt;&gt; eventListeners) {
+<span class="nc" id="L523">        return () -&gt; runtimeService.addEventListener(new SequenceFlowTakenListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        new ToSequenceFlowTakenConverter()),
+                ActivitiEventType.SEQUENCEFLOW_TAKEN);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerErrorReceviedListenerDelegate&quot;)
+    public InitializingBean registerErrorReceviedListenerDelegate(RuntimeService runtimeService,
+                                                                  @Autowired(required = false) List&lt;BPMNElementEventListener&lt;BPMNErrorReceivedEvent&gt;&gt; eventListeners,
+                                                                  BPMNErrorConverter bpmnErrorConverter) {
+<span class="nc" id="L533">        return () -&gt; runtimeService.addEventListener(new ErrorReceivedListenerDelegate(getInitializedListeners(eventListeners),</span>
+                        new ToErrorReceivedConverter(bpmnErrorConverter)),
+                ActivitiEventType.ACTIVITY_ERROR_RECEIVED);
+    }
+    
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;registerMessageSubscriptionCancelledListenerDelegate&quot;)
+    public InitializingBean registerMessageSubscriptionCancelledListenerDelegate(RuntimeService runtimeService,
+                                                                                 @Autowired(required = false) List&lt;ProcessRuntimeEventListener&lt;MessageSubscriptionCancelledEvent&gt;&gt; eventListeners,
+                                                                                 MessageSubscriptionConverter converter) {
+<span class="nc" id="L543">        return () -&gt; runtimeService.addEventListener(new MessageSubscriptionCancelledListenerDelegate(getInitializedListeners(eventListeners),</span>
+                                                                                                      new ToMessageSubscriptionCancelledConverter(converter)),
+                                                     ActivitiEventType.ENTITY_DELETED);
+    }    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

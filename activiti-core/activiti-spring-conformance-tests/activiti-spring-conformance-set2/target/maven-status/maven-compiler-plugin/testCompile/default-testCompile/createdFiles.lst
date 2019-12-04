@@ -1,0 +1,8 @@
+org/activiti/spring/conformance/set2/UserTaskCandidateUserRuntimeTest.class
+org/activiti/spring/conformance/set2/UserTaskAssigneeDeleteRuntimeTest.class
+org/activiti/spring/conformance/set2/UserTaskCandidateGroupRuntimeTest.class
+org/activiti/spring/conformance/set2/UserTaskNoCandidateRuntimeTest.class
+org/activiti/spring/conformance/set2/ConformanceBasicProcessRuntimeTest.class
+org/activiti/spring/conformance/set2/Application.class
+org/activiti/spring/conformance/set2/UserTaskCandidateDeleteRuntimeTest.class
+org/activiti/spring/conformance/set2/UserTaskAssigneeRuntimeTest.class

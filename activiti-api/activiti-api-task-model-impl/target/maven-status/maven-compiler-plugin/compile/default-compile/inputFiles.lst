@@ -1,0 +1,5 @@
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-task-model-impl/src/main/java/org/activiti/api/task/model/impl/TaskImpl.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-task-model-impl/src/main/java/org/activiti/api/task/model/impl/TaskCandidateImpl.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-task-model-impl/src/main/java/org/activiti/api/task/conf/impl/TaskModelAutoConfiguration.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-task-model-impl/src/main/java/org/activiti/api/task/model/impl/TaskCandidateUserImpl.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-api/activiti-api-task-model-impl/src/main/java/org/activiti/api/task/model/impl/TaskCandidateGroupImpl.java

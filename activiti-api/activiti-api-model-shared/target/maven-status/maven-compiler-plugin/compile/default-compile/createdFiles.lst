@@ -1,0 +1,12 @@
+org/activiti/api/model/shared/model/VariableInstance.class
+org/activiti/api/model/shared/Result.class
+org/activiti/api/model/shared/model/ActivitiErrorMessage.class
+org/activiti/api/model/shared/event/VariableCreatedEvent.class
+org/activiti/api/model/shared/event/VariableEvent$VariableEvents.class
+org/activiti/api/model/shared/event/RuntimeEvent.class
+org/activiti/api/model/shared/event/VariableUpdatedEvent.class
+org/activiti/api/model/shared/event/VariableDeletedEvent.class
+org/activiti/api/model/shared/event/VariableEvent.class
+org/activiti/api/model/shared/EmptyResult.class
+org/activiti/api/model/shared/model/ApplicationElement.class
+org/activiti/api/model/shared/Payload.class

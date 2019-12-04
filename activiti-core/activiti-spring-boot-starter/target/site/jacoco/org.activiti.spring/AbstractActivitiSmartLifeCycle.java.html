@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractActivitiSmartLifeCycle.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti :: Spring Boot Starter</a> &gt; <a href="index.source.html" class="el_package">org.activiti.spring</a> &gt; <span class="el_source">AbstractActivitiSmartLifeCycle.java</span></div><h1>AbstractActivitiSmartLifeCycle.java</h1><pre class="source lang-java linenums">package org.activiti.spring;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.context.SmartLifecycle;
+
+public abstract class AbstractActivitiSmartLifeCycle implements SmartLifecycle, DisposableBean {
+
+<span class="fc" id="L10">    private static Logger logger = LoggerFactory.getLogger(AbstractActivitiSmartLifeCycle.class);</span>
+    
+<span class="fc" id="L12">    private Object lifeCycleMonitor = new Object();</span>
+<span class="fc" id="L13">    private boolean autoStartup = true;</span>
+<span class="fc" id="L14">    private int phase = DEFAULT_PHASE;</span>
+<span class="fc" id="L15">    private volatile boolean running = false;</span>
+    
+<span class="fc" id="L17">    public AbstractActivitiSmartLifeCycle() {</span>
+<span class="fc" id="L18">    }</span>
+    
+    public abstract void doStart();
+
+    public abstract void doStop();
+    
+    /**
+     * Set whether to auto-start the activation after this component
+     * has been initialized and the context has been refreshed.
+     * &lt;p&gt;Default is &quot;true&quot;. Turn this flag off to defer the endpoint
+     * activation until an explicit {@link #start()} call.
+     */
+    public void setAutoStartup(boolean autoStartup) {
+<span class="nc" id="L31">        this.autoStartup = autoStartup;</span>
+<span class="nc" id="L32">    }</span>
+
+    /**
+     * Return the value for the 'autoStartup' property. If &quot;true&quot;, this
+     * component will start upon a ContextRefreshedEvent.
+     */
+    @Override
+    public boolean isAutoStartup() {
+<span class="fc" id="L40">        return this.autoStartup;</span>
+    }
+
+    /**
+     * Specify the phase in which this component should be started
+     * and stopped. The startup order proceeds from lowest to highest, and
+     * the shutdown order is the reverse of that. By default this value is
+     * Integer.MAX_VALUE meaning that this component starts as late
+     * as possible and stops as soon as possible.
+     */
+    public void setPhase(int phase) {
+<span class="nc" id="L51">        this.phase = phase;</span>
+<span class="nc" id="L52">    }</span>
+
+    /**
+     * Return the phase in which this component will be started and stopped.
+     */
+    @Override
+    public int getPhase() {
+<span class="fc" id="L59">        return this.phase;</span>
+    }
+    
+    @Override
+    public void start() {
+<span class="fc" id="L64">        synchronized (this.lifeCycleMonitor) {</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">            if (!this.running) {</span>
+<span class="fc" id="L66">                logger.info(&quot;Starting...&quot;);</span>
+                
+<span class="fc" id="L68">                doStart();</span>
+                
+<span class="fc" id="L70">                this.running = true;</span>
+<span class="fc" id="L71">                logger.info(&quot;Started.&quot;);</span>
+            }
+<span class="fc" id="L73">        }</span>
+<span class="fc" id="L74">    }</span>
+
+    @Override
+    public void stop() {
+<span class="fc" id="L78">        synchronized (this.lifeCycleMonitor) {</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">            if (this.running) {</span>
+<span class="fc" id="L80">                logger.info(&quot;Stopping...&quot;);</span>
+<span class="fc" id="L81">                doStop();</span>
+                
+<span class="fc" id="L83">                this.running = false;</span>
+<span class="fc" id="L84">                logger.info(&quot;Stopped.&quot;);</span>
+            }
+<span class="fc" id="L86">        }</span>
+<span class="fc" id="L87">    }</span>
+
+    @Override
+    public void stop(Runnable callback) {
+<span class="fc" id="L91">        synchronized (this.lifeCycleMonitor) {</span>
+<span class="fc" id="L92">            stop();</span>
+<span class="fc" id="L93">            callback.run();</span>
+<span class="fc" id="L94">        }</span>
+<span class="fc" id="L95">    }</span>
+
+    @Override
+    public boolean isRunning() {
+<span class="fc" id="L99">        return this.running;</span>
+    }
+
+    @Override
+    public void destroy() {
+<span class="fc" id="L104">        stop();</span>
+<span class="fc" id="L105">    }</span>
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

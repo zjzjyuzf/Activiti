@@ -1,0 +1,17 @@
+{
+  "groups": [
+    {
+      "name": "activiti.security",
+      "type": "org.activiti.core.common.spring.security.policies.conf.SecurityPoliciesProperties",
+      "sourceType": "org.activiti.core.common.spring.security.policies.conf.SecurityPoliciesProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "activiti.security.policies",
+      "type": "java.util.List<org.activiti.core.common.spring.security.policies.SecurityPolicy>",
+      "sourceType": "org.activiti.core.common.spring.security.policies.conf.SecurityPoliciesProperties"
+    }
+  ],
+  "hints": []
+}

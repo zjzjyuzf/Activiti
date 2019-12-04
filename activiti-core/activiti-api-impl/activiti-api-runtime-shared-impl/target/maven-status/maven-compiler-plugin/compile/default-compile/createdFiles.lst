@@ -1,0 +1,12 @@
+org/activiti/runtime/api/model/impl/APIVariableInstanceConverter.class
+org/activiti/runtime/api/query/impl/PageImpl.class
+org/activiti/runtime/api/event/impl/ToVariableCreatedConverter.class
+org/activiti/runtime/api/event/impl/ToVariableUpdatedConverter.class
+org/activiti/runtime/api/impl/VariableNameValidator.class
+org/activiti/runtime/api/event/internal/VariableCreatedListenerDelegate.class
+org/activiti/runtime/api/event/internal/VariableUpdatedListenerDelegate.class
+org/activiti/runtime/api/model/impl/ListConverter.class
+org/activiti/runtime/api/event/impl/ToVariableDeletedConverter.class
+org/activiti/runtime/api/model/impl/ModelConverter.class
+org/activiti/runtime/api/conf/CommonRuntimeAutoConfiguration.class
+org/activiti/runtime/api/event/impl/EventConverter.class

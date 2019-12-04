@@ -1,0 +1,175 @@
+2019-12-04 11:53:09.459  INFO 3234 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [org.activiti.spring.boot.tasks.TaskVariablesLocalCopiesTest], using SpringBootContextLoader
+2019-12-04 11:53:09.460  INFO 3234 --- [           main] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [org.activiti.spring.boot.tasks.TaskVariablesLocalCopiesTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+2019-12-04 11:53:09.460  INFO 3234 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [org.activiti.spring.boot.tasks.TaskVariablesLocalCopiesTest]: TaskVariablesLocalCopiesTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2019-12-04 11:53:09.462  INFO 3234 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration org.activiti.spring.boot.Application for test class org.activiti.spring.boot.tasks.TaskVariablesLocalCopiesTest
+2019-12-04 11:53:09.463  INFO 3234 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener, org.springframework.security.test.context.support.ReactorContextTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]
+2019-12-04 11:53:09.463  INFO 3234 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@21d7b79b, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@4fefb355, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@1ccf5029, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@660dd184, org.springframework.test.context.support.DirtiesContextTestExecutionListener@7afad9b1, org.springframework.test.context.transaction.TransactionalTestExecutionListener@483da8a0, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@2e15f796, org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener@269c8221, org.springframework.security.test.context.support.ReactorContextTestExecutionListener@a87e012, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@2f5a314a, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@2e72ca70, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@6c3dc815, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@598f22f0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@272188ea]
+2019-12-04 11:53:09.483  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: user
+2019-12-04 11:53:09.542  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: garth
+2019-12-04 11:53:09.568  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: user
+2019-12-04 11:53:09.626  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: garth
+2019-12-04 11:53:09.634  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: user
+2019-12-04 11:53:09.660  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: garth
+2019-12-04 11:53:09.683  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: admin
+2019-12-04 11:53:09.726  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: user
+2019-12-04 11:53:09.747  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: admin
+2019-12-04 11:53:09.758  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: user
+2019-12-04 11:53:09.818  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: admin
+2019-12-04 11:53:09.834  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: user
+2019-12-04 11:53:09.868  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: admin
+2019-12-04 11:53:09.913  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: user
+2019-12-04 11:53:09.914  INFO 3234 --- [           main] o.a.s.boot.security.util.SecurityUtil    : > Logged in as: admin
+2019-12-04 11:53:09.989  INFO 3234 --- [       Thread-9] o.a.s.AbstractActivitiSmartLifeCycle     : Stopping...
+2019-12-04 11:53:09.990  INFO 3234 --- [       Thread-9] o.a.s.AbstractActivitiSmartLifeCycle     : Stopped.
+2019-12-04 11:53:09.990  INFO 3234 --- [       Thread-9] o.a.s.AbstractActivitiSmartLifeCycle     : Stopping...
+2019-12-04 11:53:09.990  INFO 3234 --- [       Thread-9] o.a.s.AbstractActivitiSmartLifeCycle     : Stopped.
+2019-12-04 11:53:09.991  INFO 3234 --- [       Thread-9] o.s.i.endpoint.EventDrivenConsumer       : Removing {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
+2019-12-04 11:53:09.991  INFO 3234 --- [       Thread-4] o.a.s.AbstractActivitiSmartLifeCycle     : Stopping...
+2019-12-04 11:53:09.992  INFO 3234 --- [       Thread-4] o.a.s.AbstractActivitiSmartLifeCycle     : Stopped.
+2019-12-04 11:53:09.992  INFO 3234 --- [       Thread-4] o.a.s.AbstractActivitiSmartLifeCycle     : Stopping...
+2019-12-04 11:53:09.992  INFO 3234 --- [       Thread-4] o.a.s.AbstractActivitiSmartLifeCycle     : Stopped.
+2019-12-04 11:53:09.992  INFO 3234 --- [       Thread-4] o.s.i.endpoint.EventDrivenConsumer       : Removing {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
+2019-12-04 11:53:09.991  INFO 3234 --- [      Thread-14] o.a.s.AbstractActivitiSmartLifeCycle     : Stopping...
+2019-12-04 11:53:09.992  INFO 3234 --- [      Thread-14] o.a.s.AbstractActivitiSmartLifeCycle     : Stopped.
+2019-12-04 11:53:09.992  INFO 3234 --- [      Thread-14] o.a.s.AbstractActivitiSmartLifeCycle     : Stopping...
+2019-12-04 11:53:09.992  INFO 3234 --- [      Thread-14] o.a.s.AbstractActivitiSmartLifeCycle     : Stopped.
+2019-12-04 11:53:09.992  INFO 3234 --- [      Thread-14] o.s.i.endpoint.EventDrivenConsumer       : Removing {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
+2019-12-04 11:53:09.996  INFO 3234 --- [       Thread-9] o.s.i.channel.PublishSubscribeChannel    : Channel 'my-app.errorChannel' has 0 subscriber(s).
+2019-12-04 11:53:09.996  INFO 3234 --- [       Thread-9] o.s.i.endpoint.EventDrivenConsumer       : stopped _org.springframework.integration.errorLogger
+2019-12-04 11:53:09.996  INFO 3234 --- [       Thread-4] o.s.i.channel.PublishSubscribeChannel    : Channel 'my-app.errorChannel' has 0 subscriber(s).
+2019-12-04 11:53:09.997  INFO 3234 --- [       Thread-4] o.s.i.endpoint.EventDrivenConsumer       : stopped _org.springframework.integration.errorLogger
+2019-12-04 11:53:09.999  INFO 3234 --- [      Thread-14] o.s.i.channel.PublishSubscribeChannel    : Channel 'my-app.errorChannel' has 0 subscriber(s).
+2019-12-04 11:53:09.999  INFO 3234 --- [      Thread-14] o.s.i.endpoint.EventDrivenConsumer       : stopped _org.springframework.integration.errorLogger
+2019-12-04 11:53:10.000  INFO 3234 --- [      Thread-19] o.a.s.AbstractActivitiSmartLifeCycle     : Stopping...
+2019-12-04 11:53:10.000  INFO 3234 --- [      Thread-19] o.a.s.AbstractActivitiSmartLifeCycle     : Stopped.
+2019-12-04 11:53:10.000  INFO 3234 --- [      Thread-19] o.a.s.AbstractActivitiSmartLifeCycle     : Stopping...
+2019-12-04 11:53:10.000  INFO 3234 --- [      Thread-19] o.a.s.AbstractActivitiSmartLifeCycle     : Stopped.
+2019-12-04 11:53:10.000  INFO 3234 --- [      Thread-19] o.s.i.endpoint.EventDrivenConsumer       : Removing {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
+2019-12-04 11:53:10.002  INFO 3234 --- [      Thread-19] o.s.i.channel.PublishSubscribeChannel    : Channel 'my-app.errorChannel' has 0 subscriber(s).
+2019-12-04 11:53:10.003  INFO 3234 --- [      Thread-19] o.s.i.endpoint.EventDrivenConsumer       : stopped _org.springframework.integration.errorLogger
+2019-12-04 11:53:10.007  INFO 3234 --- [       Thread-4] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
+2019-12-04 11:53:10.011  INFO 3234 --- [       Thread-9] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
+2019-12-04 11:53:10.021  INFO 3234 --- [       Thread-4] o.a.e.i.a.DefaultAsyncJobExecutor        : Shutting down the default async job executor [org.activiti.spring.SpringAsyncExecutor].
+2019-12-04 11:53:10.029  INFO 3234 --- [      Thread-14] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
+2019-12-04 11:53:10.029  INFO 3234 --- [uire-timer-jobs] o.a.e.i.a.AcquireTimerJobsRunnable       : {} stopped async job due acquisition
+2019-12-04 11:53:10.030  INFO 3234 --- [et-expired-jobs] o.a.e.i.a.ResetExpiredJobsRunnable       : {} stopped resetting expired jobs
+2019-12-04 11:53:10.031  INFO 3234 --- [      Thread-19] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
+2019-12-04 11:53:10.044  INFO 3234 --- [      Thread-14] o.a.e.i.a.DefaultAsyncJobExecutor        : Shutting down the default async job executor [org.activiti.spring.SpringAsyncExecutor].
+2019-12-04 11:53:10.044  INFO 3234 --- [uire-timer-jobs] o.a.e.i.a.AcquireTimerJobsRunnable       : {} stopped async job due acquisition
+2019-12-04 11:53:10.045  INFO 3234 --- [uire-async-jobs] o.a.e.i.a.AcquireAsyncJobsDueRunnable    : {} stopped async job due acquisition
+2019-12-04 11:53:10.045  INFO 3234 --- [et-expired-jobs] o.a.e.i.a.ResetExpiredJobsRunnable       : {} stopped resetting expired jobs
+2019-12-04 11:53:10.047  INFO 3234 --- [       Thread-9] o.a.e.i.a.DefaultAsyncJobExecutor        : Shutting down the default async job executor [org.activiti.spring.SpringAsyncExecutor].
+2019-12-04 11:53:10.049  INFO 3234 --- [      Thread-19] o.a.e.i.a.DefaultAsyncJobExecutor        : Shutting down the default async job executor [org.activiti.spring.SpringAsyncExecutor].
+2019-12-04 11:53:10.049  INFO 3234 --- [et-expired-jobs] o.a.e.i.a.ResetExpiredJobsRunnable       : {} stopped resetting expired jobs
+2019-12-04 11:53:10.049  INFO 3234 --- [et-expired-jobs] o.a.e.i.a.ResetExpiredJobsRunnable       : {} stopped resetting expired jobs
+2019-12-04 11:53:10.049  INFO 3234 --- [uire-timer-jobs] o.a.e.i.a.AcquireTimerJobsRunnable       : {} stopped async job due acquisition
+2019-12-04 11:53:10.049  INFO 3234 --- [uire-async-jobs] o.a.e.i.a.AcquireAsyncJobsDueRunnable    : {} stopped async job due acquisition
+2019-12-04 11:53:10.056  INFO 3234 --- [uire-timer-jobs] o.a.e.i.a.AcquireTimerJobsRunnable       : {} stopped async job due acquisition
+2019-12-04 11:53:10.057  INFO 3234 --- [uire-async-jobs] o.a.e.i.a.AcquireAsyncJobsDueRunnable    : {} stopped async job due acquisition
+2019-12-04 11:53:10.193  INFO 3234 --- [       Thread-9] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2019-12-04 11:53:10.193  INFO 3234 --- [      Thread-19] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2019-12-04 11:53:10.193  INFO 3234 --- [      Thread-14] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2019-12-04 11:53:10.193  INFO 3234 --- [       Thread-9] o.s.j.d.e.EmbeddedDatabaseFactory        : Shutting down embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false'
+2019-12-04 11:53:10.193  INFO 3234 --- [       Thread-4] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2019-12-04 11:53:10.194  INFO 3234 --- [       Thread-4] o.s.j.d.e.EmbeddedDatabaseFactory        : Shutting down embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false'
+2019-12-04 11:53:10.194  INFO 3234 --- [      Thread-19] o.s.j.d.e.EmbeddedDatabaseFactory        : Shutting down embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false'
+2019-12-04 11:53:10.196  INFO 3234 --- [      Thread-14] o.s.j.d.e.EmbeddedDatabaseFactory        : Shutting down embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false'
+2019-12-04 11:53:10.199  INFO 3234 --- [      Thread-19] o.s.j.d.e.H2EmbeddedDatabaseConfigurer   : Could not shut down embedded database
+
+org.h2.jdbc.JdbcSQLNonTransientConnectionException: The database is open in exclusive mode; can not open additional connections [90135-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:622) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.message.DbException.get(DbException.java:205) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.message.DbException.get(DbException.java:181) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.message.DbException.get(DbException.java:170) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.engine.Session.checkSuspended(Session.java:1369) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.engine.Session.transitionToState(Session.java:1361) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.engine.Session.setCurrentCommand(Session.java:1343) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.engine.Session.endStatement(Session.java:1887) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.command.Command.executeUpdate(Command.java:285) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:228) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:201) ~[h2-1.4.200.jar:1.4.200]
+	at org.springframework.jdbc.datasource.embedded.AbstractEmbeddedDatabaseConfigurer.shutdown(AbstractEmbeddedDatabaseConfigurer.java:48) ~[spring-jdbc-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactory.shutdownDatabase(EmbeddedDatabaseFactory.java:229) ~[spring-jdbc-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactory$EmbeddedDataSourceProxy.shutdown(EmbeddedDatabaseFactory.java:304) ~[spring-jdbc-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566) ~[na:na]
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.invokeCustomDestroyMethod(DisposableBeanAdapter.java:339) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.destroy(DisposableBeanAdapter.java:273) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroyBean(DefaultSingletonBeanRegistry.java:571) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroySingleton(DefaultSingletonBeanRegistry.java:543) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.destroySingleton(DefaultListableBeanFactory.java:1040) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroySingletons(DefaultSingletonBeanRegistry.java:504) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.destroySingletons(DefaultListableBeanFactory.java:1033) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.destroyBeans(AbstractApplicationContext.java:1057) ~[spring-context-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1026) ~[spring-context-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext$1.run(AbstractApplicationContext.java:945) ~[spring-context-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+
+2019-12-04 11:53:10.204  INFO 3234 --- [       Thread-9] o.s.j.d.e.H2EmbeddedDatabaseConfigurer   : Could not shut down embedded database
+
+org.h2.jdbc.JdbcSQLNonTransientConnectionException: The database is open in exclusive mode; can not open additional connections [90135-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:622) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.message.DbException.get(DbException.java:205) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.message.DbException.get(DbException.java:181) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.message.DbException.get(DbException.java:170) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.engine.Session.checkSuspended(Session.java:1369) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.engine.Session.transitionToState(Session.java:1361) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.engine.Session.setCurrentCommand(Session.java:1343) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.engine.Session.endStatement(Session.java:1887) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.command.Command.executeUpdate(Command.java:285) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:228) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:201) ~[h2-1.4.200.jar:1.4.200]
+	at org.springframework.jdbc.datasource.embedded.AbstractEmbeddedDatabaseConfigurer.shutdown(AbstractEmbeddedDatabaseConfigurer.java:48) ~[spring-jdbc-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactory.shutdownDatabase(EmbeddedDatabaseFactory.java:229) ~[spring-jdbc-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactory$EmbeddedDataSourceProxy.shutdown(EmbeddedDatabaseFactory.java:304) ~[spring-jdbc-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566) ~[na:na]
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.invokeCustomDestroyMethod(DisposableBeanAdapter.java:339) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.destroy(DisposableBeanAdapter.java:273) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroyBean(DefaultSingletonBeanRegistry.java:571) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroySingleton(DefaultSingletonBeanRegistry.java:543) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.destroySingleton(DefaultListableBeanFactory.java:1040) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroySingletons(DefaultSingletonBeanRegistry.java:504) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.destroySingletons(DefaultListableBeanFactory.java:1033) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.destroyBeans(AbstractApplicationContext.java:1057) ~[spring-context-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1026) ~[spring-context-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext$1.run(AbstractApplicationContext.java:945) ~[spring-context-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+
+2019-12-04 11:53:10.203  INFO 3234 --- [      Thread-14] o.s.j.d.e.H2EmbeddedDatabaseConfigurer   : Could not shut down embedded database
+
+org.h2.jdbc.JdbcSQLNonTransientConnectionException: The database is open in exclusive mode; can not open additional connections [90135-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:622) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.message.DbException.get(DbException.java:205) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.message.DbException.get(DbException.java:181) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.message.DbException.get(DbException.java:170) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.engine.Session.checkSuspended(Session.java:1369) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.engine.Session.transitionToState(Session.java:1361) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.engine.Session.setCurrentCommand(Session.java:1343) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.engine.Session.endStatement(Session.java:1887) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.command.Command.executeUpdate(Command.java:285) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:228) ~[h2-1.4.200.jar:1.4.200]
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:201) ~[h2-1.4.200.jar:1.4.200]
+	at org.springframework.jdbc.datasource.embedded.AbstractEmbeddedDatabaseConfigurer.shutdown(AbstractEmbeddedDatabaseConfigurer.java:48) ~[spring-jdbc-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactory.shutdownDatabase(EmbeddedDatabaseFactory.java:229) ~[spring-jdbc-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactory$EmbeddedDataSourceProxy.shutdown(EmbeddedDatabaseFactory.java:304) ~[spring-jdbc-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566) ~[na:na]
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.invokeCustomDestroyMethod(DisposableBeanAdapter.java:339) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.destroy(DisposableBeanAdapter.java:273) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroyBean(DefaultSingletonBeanRegistry.java:571) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroySingleton(DefaultSingletonBeanRegistry.java:543) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.destroySingleton(DefaultListableBeanFactory.java:1040) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroySingletons(DefaultSingletonBeanRegistry.java:504) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.destroySingletons(DefaultListableBeanFactory.java:1033) ~[spring-beans-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.destroyBeans(AbstractApplicationContext.java:1057) ~[spring-context-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1026) ~[spring-context-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext$1.run(AbstractApplicationContext.java:945) ~[spring-context-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+

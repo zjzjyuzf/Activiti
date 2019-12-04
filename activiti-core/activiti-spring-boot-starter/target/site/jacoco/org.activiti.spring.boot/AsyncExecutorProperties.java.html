@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AsyncExecutorProperties.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti :: Spring Boot Starter</a> &gt; <a href="index.source.html" class="el_package">org.activiti.spring.boot</a> &gt; <span class="el_source">AsyncExecutorProperties.java</span></div><h1>AsyncExecutorProperties.java</h1><pre class="source lang-java linenums">package org.activiti.spring.boot;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+@ConfigurationProperties(prefix = &quot;spring.activiti.async-executor&quot;)
+<span class="fc" id="L6">public class AsyncExecutorProperties {</span>
+<span class="fc" id="L7">    private int retryWaitTimeInMillis = 500;</span>
+    
+    /**
+     * The number of retries for a job. Default value is 3.
+     */
+<span class="fc" id="L12">    private int numberOfRetries = 3;</span>
+
+    /**
+     * The minimal number of threads that are kept alive in the threadpool for job
+     * execution. Default value = 2. 
+     */
+<span class="fc" id="L18">    private int corePoolSize = 2;</span>
+
+    /**
+     * The maximum number of threads that are created in the threadpool for job
+     * execution. Default value = 10. 
+     */
+<span class="fc" id="L24">    private int maxPoolSize = 10;</span>
+
+    /**
+     * The time (in milliseconds) a thread used for job execution must be kept
+     * alive before it is destroyed. Default setting is 5 seconds. Having a
+     * setting &gt; 0 takes resources, but in the case of many job executions it
+     * avoids creating new threads all the time. If 0, threads will be destroyed
+     * after they've been used for job execution.
+     *
+     */
+<span class="fc" id="L34">    private long keepAliveTime = 5000L;</span>
+
+    /**
+     * The size of the queue on which jobs to be executed are placed, before they
+     * are actually executed. Default value = 100. 
+     */
+<span class="fc" id="L40">    private int queueSize = 100;</span>
+
+    /**
+     * The time (in seconds) that is waited to gracefully shut down the threadpool
+     * used for job execution when the a shutdown on the executor (or process
+     * engine) is requested. Default value = 60.
+     *
+     */
+<span class="fc" id="L48">    private long secondsToWaitOnShutdown = 60L;</span>
+
+    /**
+     * The number of timer jobs that are acquired during one query (before a job
+     * is executed, an acquirement thread fetches jobs from the database and puts
+     * them on the queue).
+     *
+     * Default value = 1, as this lowers the potential on optimistic locking
+     * exceptions. Change this value if you know what you are doing.
+     *
+     */
+<span class="fc" id="L59">    private int maxTimerJobsPerAcquisition = 1;</span>
+
+    /**
+     * The number of async jobs that are acquired during one query (before a job
+     * is executed, an acquirement thread fetches jobs from the database and puts
+     * them on the queue).
+     *
+     * Default value = 1, as this lowers the potential on optimistic locking
+     * exceptions. Change this value if you know what you are doing.
+     *
+     */
+<span class="fc" id="L70">    private int maxAsyncJobsDuePerAcquisition = 1;</span>
+
+    /**
+     * The time (in milliseconds) the timer acquisition thread will wait to
+     * execute the next acquirement query. This happens when no new timer jobs
+     * were found or when less timer jobs have been fetched than set. Default value = 10
+     * seconds.
+     *
+     */
+<span class="fc" id="L79">    private int defaultTimerJobAcquireWaitTimeInMillis = 10 * 1000;</span>
+
+    /**
+     * The time (in milliseconds) the async job acquisition thread will wait to
+     * execute the next acquirement query. This happens when no new async jobs
+     * were found or when less async jobs have been fetched than set. 
+     * 
+     * Default value = 10 seconds.
+     *
+     */
+<span class="fc" id="L89">    private int defaultAsyncJobAcquireWaitTimeInMillis = 10 * 1000;</span>
+
+    /**
+     * The time (in milliseconds) the async job (both timer and async continuations) acquisition thread will
+     * wait when the queueu is full to execute the next query. By default set to 0 (for backwards compatibility)
+     */
+<span class="fc" id="L95">    private int defaultQueueSizeFullWaitTime = 0;</span>
+
+    /**
+     * The amount of time (in milliseconds) a timer job is locked when acquired by
+     * the async executor. During this period of time, no other async executor
+     * will try to acquire and lock this job.
+     *
+     * Default value = 5 minutes;
+     *
+     */
+<span class="fc" id="L105">    private int timerLockTimeInMillis = 5 * 60 * 1000;</span>
+
+    /**
+     * The amount of time (in milliseconds) an async job is locked when acquired
+     * by the async executor. During this period of time, no other async executor
+     * will try to acquire and lock this job.
+     *
+     * Default value = 5 minutes;
+     *
+     */
+<span class="fc" id="L115">    private int asyncJobLockTimeInMillis = 5 * 60 * 1000;</span>
+
+    /**
+     * The amount of time (in milliseconds) that is between two consecutive checks
+     * of 'expired jobs'. Expired jobs are jobs that were locked (a lock owner + time
+     * was written by some executor, but the job was never completed).
+     *
+     * During such a check, jobs that are expired are again made available,
+     * meaning the lock owner and lock time will be removed. Other executors
+     * will now be able to pick it up.
+     *
+     * A job is deemed expired if the lock time is before the current date.
+     *
+     * By default one minute.
+     */
+<span class="fc" id="L130">    private int resetExpiredJobsInterval = 60 * 1000;</span>
+
+    /**
+     * The 'cleanup' thread resets expired jobs  so they can be re-acquired by other executors. 
+     * This setting defines the size of the page being used when fetching these expired jobs.
+     */
+<span class="fc" id="L136">    private int resetExpiredJobsPageSize = 3;</span>
+
+    /**
+     * Set this to true when using the message queue based job executor. Default is false.
+     */
+<span class="fc" id="L141">    private boolean messageQueueMode = false;</span>
+    
+    public int getCorePoolSize() {
+<span class="fc" id="L144">        return corePoolSize;</span>
+    }
+    
+    public void setCorePoolSize(int corePoolSize) {
+<span class="fc" id="L148">        this.corePoolSize = corePoolSize;</span>
+<span class="fc" id="L149">    }</span>
+    
+    public int getMaxPoolSize() {
+<span class="fc" id="L152">        return maxPoolSize;</span>
+    }
+    
+    public void setMaxPoolSize(int maxPoolSize) {
+<span class="fc" id="L156">        this.maxPoolSize = maxPoolSize;</span>
+<span class="fc" id="L157">    }</span>
+    
+    public long getKeepAliveTime() {
+<span class="fc" id="L160">        return keepAliveTime;</span>
+    }
+    
+    public void setKeepAliveTime(long keepAliveTime) {
+<span class="fc" id="L164">        this.keepAliveTime = keepAliveTime;</span>
+<span class="fc" id="L165">    }</span>
+    
+    public int getQueueSize() {
+<span class="fc" id="L168">        return queueSize;</span>
+    }
+    
+    public void setQueueSize(int queueSize) {
+<span class="fc" id="L172">        this.queueSize = queueSize;</span>
+<span class="fc" id="L173">    }</span>
+    
+    public long getSecondsToWaitOnShutdown() {
+<span class="fc" id="L176">        return secondsToWaitOnShutdown;</span>
+    }
+    
+    public void setSecondsToWaitOnShutdown(long secondsToWaitOnShutdown) {
+<span class="fc" id="L180">        this.secondsToWaitOnShutdown = secondsToWaitOnShutdown;</span>
+<span class="fc" id="L181">    }</span>
+    
+    public boolean isMessageQueueMode() {
+<span class="fc" id="L184">        return messageQueueMode;</span>
+    }
+    
+    public void setMessageQueueMode(boolean isMessageQueueMode) {
+<span class="fc" id="L188">        this.messageQueueMode = isMessageQueueMode;</span>
+<span class="fc" id="L189">    }</span>
+    
+    public int getMaxTimerJobsPerAcquisition() {
+<span class="fc" id="L192">        return maxTimerJobsPerAcquisition;</span>
+    }
+    
+    public void setMaxTimerJobsPerAcquisition(int maxTimerJobsPerAcquisition) {
+<span class="fc" id="L196">        this.maxTimerJobsPerAcquisition = maxTimerJobsPerAcquisition;</span>
+<span class="fc" id="L197">    }</span>
+    
+    public int getMaxAsyncJobsDuePerAcquisition() {
+<span class="fc" id="L200">        return maxAsyncJobsDuePerAcquisition;</span>
+    }
+    
+    public void setMaxAsyncJobsDuePerAcquisition(int maxAsyncJobsDuePerAcquisition) {
+<span class="fc" id="L204">        this.maxAsyncJobsDuePerAcquisition = maxAsyncJobsDuePerAcquisition;</span>
+<span class="fc" id="L205">    }</span>
+    
+    public int getDefaultTimerJobAcquireWaitTimeInMillis() {
+<span class="fc" id="L208">        return defaultTimerJobAcquireWaitTimeInMillis;</span>
+    }
+    
+    public void setDefaultTimerJobAcquireWaitTimeInMillis(int defaultTimerJobAcquireWaitTimeInMillis) {
+<span class="fc" id="L212">        this.defaultTimerJobAcquireWaitTimeInMillis = defaultTimerJobAcquireWaitTimeInMillis;</span>
+<span class="fc" id="L213">    }</span>
+    
+    public int getDefaultAsyncJobAcquireWaitTimeInMillis() {
+<span class="fc" id="L216">        return defaultAsyncJobAcquireWaitTimeInMillis;</span>
+    }
+    
+    public void setDefaultAsyncJobAcquireWaitTimeInMillis(int defaultAsyncJobAcquireWaitTimeInMillis) {
+<span class="fc" id="L220">        this.defaultAsyncJobAcquireWaitTimeInMillis = defaultAsyncJobAcquireWaitTimeInMillis;</span>
+<span class="fc" id="L221">    }</span>
+    
+    public int getDefaultQueueSizeFullWaitTime() {
+<span class="fc" id="L224">        return defaultQueueSizeFullWaitTime;</span>
+    }
+    
+    public void setDefaultQueueSizeFullWaitTime(int defaultQueueSizeFullWaitTime) {
+<span class="fc" id="L228">        this.defaultQueueSizeFullWaitTime = defaultQueueSizeFullWaitTime;</span>
+<span class="fc" id="L229">    }</span>
+    
+    public int getTimerLockTimeInMillis() {
+<span class="fc" id="L232">        return timerLockTimeInMillis;</span>
+    }
+    
+    public void setTimerLockTimeInMillis(int timerLockTimeInMillis) {
+<span class="fc" id="L236">        this.timerLockTimeInMillis = timerLockTimeInMillis;</span>
+<span class="fc" id="L237">    }</span>
+    
+    public int getAsyncJobLockTimeInMillis() {
+<span class="fc" id="L240">        return asyncJobLockTimeInMillis;</span>
+    }
+    
+    public void setAsyncJobLockTimeInMillis(int asyncJobLockTimeInMillis) {
+<span class="fc" id="L244">        this.asyncJobLockTimeInMillis = asyncJobLockTimeInMillis;</span>
+<span class="fc" id="L245">    }</span>
+    
+    public int getRetryWaitTimeInMillis() {
+<span class="fc" id="L248">        return retryWaitTimeInMillis;</span>
+    }
+    
+    public void setRetryWaitTimeInMillis(int retryWaitTimeInMillis) {
+<span class="fc" id="L252">        this.retryWaitTimeInMillis = retryWaitTimeInMillis;</span>
+<span class="fc" id="L253">    }</span>
+    
+    public int getResetExpiredJobsInterval() {
+<span class="fc" id="L256">        return resetExpiredJobsInterval;</span>
+    }
+    
+    public void setResetExpiredJobsInterval(int resetExpiredJobsInterval) {
+<span class="fc" id="L260">        this.resetExpiredJobsInterval = resetExpiredJobsInterval;</span>
+<span class="fc" id="L261">    }</span>
+    
+    public int getResetExpiredJobsPageSize() {
+<span class="fc" id="L264">        return resetExpiredJobsPageSize;</span>
+    }
+    
+    public void setResetExpiredJobsPageSize(int resetExpiredJobsPageSize) {
+<span class="fc" id="L268">        this.resetExpiredJobsPageSize = resetExpiredJobsPageSize;</span>
+<span class="fc" id="L269">    }</span>
+
+    public int getNumberOfRetries() {
+<span class="fc" id="L272">        return numberOfRetries;</span>
+    }
+
+    public void setNumberOfRetries(int numberOfRetries) {
+<span class="fc" id="L276">        this.numberOfRetries = numberOfRetries;</span>
+<span class="fc" id="L277">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

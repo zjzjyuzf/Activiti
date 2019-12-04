@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: org.activiti.spring.conformance.variables.ProcessVariablesTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 23.268 s - in org.activiti.spring.conformance.variables.ProcessVariablesTest

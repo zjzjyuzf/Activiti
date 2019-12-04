@@ -1,0 +1,7 @@
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-spring-conformance-tests/activiti-spring-conformance-set4/src/test/java/org/activiti/spring/conformance/set4/ConformanceBasicProcessRuntimeTest.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-spring-conformance-tests/activiti-spring-conformance-set4/src/test/java/org/activiti/spring/conformance/set4/BasicParallelGatewayTest.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-spring-conformance-tests/activiti-spring-conformance-set4/src/test/java/org/activiti/spring/conformance/set4/Application.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-spring-conformance-tests/activiti-spring-conformance-set4/src/test/java/org/activiti/spring/conformance/set4/BasicParallelGatewayGroupAssignmentsTest.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-spring-conformance-tests/activiti-spring-conformance-set4/src/test/java/org/activiti/spring/conformance/set4/BasicExclusiveGatewayTest.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-spring-conformance-tests/activiti-spring-conformance-set4/src/test/java/org/activiti/spring/conformance/set4/BasicExclusiveGatewayErrorTest.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-spring-conformance-tests/activiti-spring-conformance-set4/src/test/java/org/activiti/spring/conformance/set4/BasicInclusiveGatewayTest.java

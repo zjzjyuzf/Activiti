@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: org.activiti.spring.conformance.set2.ConformanceBasicProcessRuntimeTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 25.632 s - in org.activiti.spring.conformance.set2.ConformanceBasicProcessRuntimeTest

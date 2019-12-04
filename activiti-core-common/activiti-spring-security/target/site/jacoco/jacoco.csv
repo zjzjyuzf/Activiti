@@ -1,0 +1,11 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Activiti :: Spring Security,org.activiti.core.common.spring.security.config,ActivitiSpringSecurityAutoConfiguration,0,43,0,0,0,9,0,9,0,9
+Activiti :: Spring Security,org.activiti.core.common.spring.security,AbstractSimpleGrantedAuthoritiesMapper,0,28,0,0,0,6,0,4,0,4
+Activiti :: Spring Security,org.activiti.core.common.spring.security,AuthenticationPrincipalRolesProvider,5,30,0,0,1,8,1,2,1,2
+Activiti :: Spring Security,org.activiti.core.common.spring.security,AuthenticationPrincipalIdentityProvider,7,33,0,0,2,8,2,3,2,3
+Activiti :: Spring Security,org.activiti.core.common.spring.security,SimpleGrantedAuthoritiesResolver,7,39,0,0,2,10,2,5,2,5
+Activiti :: Spring Security,org.activiti.core.common.spring.security,LocalSpringSecurityContextPrincipalProvider,0,16,0,0,0,5,0,2,0,2
+Activiti :: Spring Security,org.activiti.core.common.spring.security,SimpleGrantedAuthoritiesRolesMapper,0,15,0,0,0,6,0,3,0,3
+Activiti :: Spring Security,org.activiti.core.common.spring.security,SimpleGrantedAuthoritiesGroupsMapper,0,15,0,0,0,6,0,3,0,3
+Activiti :: Spring Security,org.activiti.core.common.spring.security,LocalSpringSecurityManager,0,7,0,0,0,2,0,1,0,1
+Activiti :: Spring Security,org.activiti.core.common.spring.security,AuthenticationPrincipalGroupsProvider,5,30,0,0,1,8,1,2,1,2

@@ -1,0 +1,287 @@
+{
+  "groups": [
+    {
+      "name": "endpoints.activiti",
+      "type": "org.activiti.spring.boot.actuate.endpoint.ProcessEngineEndpoint",
+      "sourceType": "org.activiti.spring.boot.actuate.endpoint.ProcessEngineEndpoint"
+    },
+    {
+      "name": "management.endpoint.activiti",
+      "type": "org.activiti.spring.boot.actuate.endpoint.ProcessEngineEndpoint",
+      "sourceType": "org.activiti.spring.boot.actuate.endpoint.ProcessEngineEndpoint"
+    },
+    {
+      "name": "spring.activiti",
+      "type": "org.activiti.spring.boot.ActivitiProperties",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties"
+    },
+    {
+      "name": "spring.activiti.async-executor",
+      "type": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "management.endpoint.activiti.cache.time-to-live",
+      "type": "java.time.Duration",
+      "description": "Maximum time that a response can be cached.",
+      "sourceType": "org.activiti.spring.boot.actuate.endpoint.ProcessEngineEndpoint",
+      "defaultValue": "0ms"
+    },
+    {
+      "name": "management.endpoint.activiti.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Whether to enable the activiti endpoint.",
+      "sourceType": "org.activiti.spring.boot.actuate.endpoint.ProcessEngineEndpoint",
+      "defaultValue": true
+    },
+    {
+      "name": "spring.activiti.async-executor-activate",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "spring.activiti.async-executor.async-job-lock-time-in-millis",
+      "type": "java.lang.Integer",
+      "description": "The amount of time (in milliseconds) an async job is locked when acquired by the async executor. During this period of time, no other async executor will try to acquire and lock this job. Default value = 5 minutes;",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "spring.activiti.async-executor.core-pool-size",
+      "type": "java.lang.Integer",
+      "description": "The minimal number of threads that are kept alive in the threadpool for job execution. Default value = 2.",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "defaultValue": 2
+    },
+    {
+      "name": "spring.activiti.async-executor.default-async-job-acquire-wait-time-in-millis",
+      "type": "java.lang.Integer",
+      "description": "The time (in milliseconds) the async job acquisition thread will wait to execute the next acquirement query. This happens when no new async jobs were found or when less async jobs have been fetched than set.   Default value = 10 seconds.",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "spring.activiti.async-executor.default-queue-size-full-wait-time",
+      "type": "java.lang.Integer",
+      "description": "The time (in milliseconds) the async job (both timer and async continuations) acquisition thread will wait when the queueu is full to execute the next query. By default set to 0 (for backwards compatibility)",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "spring.activiti.async-executor.default-timer-job-acquire-wait-time-in-millis",
+      "type": "java.lang.Integer",
+      "description": "The time (in milliseconds) the timer acquisition thread will wait to execute the next acquirement query. This happens when no new timer jobs were found or when less timer jobs have been fetched than set. Default value = 10 seconds.",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "spring.activiti.async-executor.keep-alive-time",
+      "type": "java.lang.Long",
+      "description": "The time (in milliseconds) a thread used for job execution must be kept alive before it is destroyed. Default setting is 5 seconds. Having a setting > 0 takes resources, but in the case of many job executions it avoids creating new threads all the time. If 0, threads will be destroyed after they've been used for job execution.",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "defaultValue": 5000
+    },
+    {
+      "name": "spring.activiti.async-executor.max-async-jobs-due-per-acquisition",
+      "type": "java.lang.Integer",
+      "description": "The number of async jobs that are acquired during one query (before a job is executed, an acquirement thread fetches jobs from the database and puts them on the queue). Default value = 1, as this lowers the potential on optimistic locking exceptions. Change this value if you know what you are doing.",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "defaultValue": 1
+    },
+    {
+      "name": "spring.activiti.async-executor.max-pool-size",
+      "type": "java.lang.Integer",
+      "description": "The maximum number of threads that are created in the threadpool for job execution. Default value = 10.",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "defaultValue": 10
+    },
+    {
+      "name": "spring.activiti.async-executor.max-timer-jobs-per-acquisition",
+      "type": "java.lang.Integer",
+      "description": "The number of timer jobs that are acquired during one query (before a job is executed, an acquirement thread fetches jobs from the database and puts them on the queue). Default value = 1, as this lowers the potential on optimistic locking exceptions. Change this value if you know what you are doing.",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "defaultValue": 1
+    },
+    {
+      "name": "spring.activiti.async-executor.message-queue-mode",
+      "type": "java.lang.Boolean",
+      "description": "Set this to true when using the message queue based job executor. Default is false.",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "spring.activiti.async-executor.number-of-retries",
+      "type": "java.lang.Integer",
+      "description": "The number of retries for a job. Default value is 3.",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "defaultValue": 3
+    },
+    {
+      "name": "spring.activiti.async-executor.queue-size",
+      "type": "java.lang.Integer",
+      "description": "The size of the queue on which jobs to be executed are placed, before they are actually executed. Default value = 100.",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "defaultValue": 100
+    },
+    {
+      "name": "spring.activiti.async-executor.reset-expired-jobs-interval",
+      "type": "java.lang.Integer",
+      "description": "The amount of time (in milliseconds) that is between two consecutive checks of 'expired jobs'. Expired jobs are jobs that were locked (a lock owner + time was written by some executor, but the job was never completed). During such a check, jobs that are expired are again made available, meaning the lock owner and lock time will be removed. Other executors will now be able to pick it up. A job is deemed expired if the lock time is before the current date. By default one minute.",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "spring.activiti.async-executor.reset-expired-jobs-page-size",
+      "type": "java.lang.Integer",
+      "description": "The 'cleanup' thread resets expired jobs  so they can be re-acquired by other executors.  This setting defines the size of the page being used when fetching these expired jobs.",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "defaultValue": 3
+    },
+    {
+      "name": "spring.activiti.async-executor.retry-wait-time-in-millis",
+      "type": "java.lang.Integer",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "defaultValue": 500
+    },
+    {
+      "name": "spring.activiti.async-executor.seconds-to-wait-on-shutdown",
+      "type": "java.lang.Long",
+      "description": "The time (in seconds) that is waited to gracefully shut down the threadpool used for job execution when the a shutdown on the executor (or process engine) is requested. Default value = 60.",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "defaultValue": 60
+    },
+    {
+      "name": "spring.activiti.async-executor.timer-lock-time-in-millis",
+      "type": "java.lang.Integer",
+      "description": "The amount of time (in milliseconds) a timer job is locked when acquired by the async executor. During this period of time, no other async executor will try to acquire and lock this job. Default value = 5 minutes;",
+      "sourceType": "org.activiti.spring.boot.AsyncExecutorProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "spring.activiti.check-process-definitions",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "spring.activiti.copy-variables-to-local-for-tasks",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "spring.activiti.custom-mybatis-mappers",
+      "type": "java.util.List<java.lang.String>",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties"
+    },
+    {
+      "name": "spring.activiti.custom-mybatis-x-m-l-mappers",
+      "type": "java.util.List<java.lang.String>",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties"
+    },
+    {
+      "name": "spring.activiti.database-schema",
+      "type": "java.lang.String",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties"
+    },
+    {
+      "name": "spring.activiti.database-schema-update",
+      "type": "java.lang.String",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties",
+      "defaultValue": "true"
+    },
+    {
+      "name": "spring.activiti.db-history-used",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "spring.activiti.deployment-mode",
+      "type": "java.lang.String",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties",
+      "defaultValue": "default"
+    },
+    {
+      "name": "spring.activiti.deployment-name",
+      "type": "java.lang.String",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties",
+      "defaultValue": "SpringAutoDeployment"
+    },
+    {
+      "name": "spring.activiti.history-level",
+      "type": "org.activiti.engine.impl.history.HistoryLevel",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties"
+    },
+    {
+      "name": "spring.activiti.java-class-field-for-jackson",
+      "type": "java.lang.String",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties"
+    },
+    {
+      "name": "spring.activiti.mail-server-default-from",
+      "type": "java.lang.String",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties"
+    },
+    {
+      "name": "spring.activiti.mail-server-host",
+      "type": "java.lang.String",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties",
+      "defaultValue": "localhost"
+    },
+    {
+      "name": "spring.activiti.mail-server-password",
+      "type": "java.lang.String",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties"
+    },
+    {
+      "name": "spring.activiti.mail-server-port",
+      "type": "java.lang.Integer",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties",
+      "defaultValue": 1025
+    },
+    {
+      "name": "spring.activiti.mail-server-use-ssl",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "spring.activiti.mail-server-use-tls",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "spring.activiti.mail-server-user-name",
+      "type": "java.lang.String",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties"
+    },
+    {
+      "name": "spring.activiti.process-definition-location-prefix",
+      "type": "java.lang.String",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties"
+    },
+    {
+      "name": "spring.activiti.process-definition-location-suffixes",
+      "type": "java.util.List<java.lang.String>",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties"
+    },
+    {
+      "name": "spring.activiti.serialize-p-o-j-os-in-variables-to-json",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "spring.activiti.use-strong-uuids",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.activiti.spring.boot.ActivitiProperties",
+      "defaultValue": true
+    }
+  ],
+  "hints": []
+}

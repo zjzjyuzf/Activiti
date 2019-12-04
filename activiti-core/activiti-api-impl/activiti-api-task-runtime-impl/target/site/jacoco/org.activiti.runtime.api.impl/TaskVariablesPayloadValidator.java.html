@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TaskVariablesPayloadValidator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti API :: Task Runtime Implementation</a> &gt; <a href="index.source.html" class="el_package">org.activiti.runtime.api.impl</a> &gt; <span class="el_source">TaskVariablesPayloadValidator.java</span></div><h1>TaskVariablesPayloadValidator.java</h1><pre class="source lang-java linenums">/*
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.activiti.runtime.api.impl;
+
+import java.time.DateTimeException;
+import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+import org.activiti.api.task.model.payloads.CreateTaskVariablePayload;
+import org.activiti.api.task.model.payloads.UpdateTaskVariablePayload;
+import org.activiti.common.util.DateFormatterProvider;
+
+public class TaskVariablesPayloadValidator {
+   
+    private final DateFormatterProvider dateFormatterProvider;
+    private final VariableNameValidator variableNameValidator;
+ 
+    public TaskVariablesPayloadValidator(DateFormatterProvider dateFormatterProvider,
+<span class="fc" id="L34">                                         VariableNameValidator variableNameValidator) {</span>
+<span class="fc" id="L35">        this.dateFormatterProvider = dateFormatterProvider;</span>
+<span class="fc" id="L36">        this.variableNameValidator = variableNameValidator;</span>
+<span class="fc" id="L37">    }</span>
+    
+    private Optional&lt;Date&gt; handleAsDate(String value) {
+        try {
+<span class="fc" id="L41">            return Optional.ofNullable(dateFormatterProvider.parse(value));</span>
+<span class="fc" id="L42">        } catch (DateTimeException e) {</span>
+            // ignore exception and return empty: it's not a date so let's keep initial value
+<span class="fc" id="L44">            return Optional.empty();</span>
+        }
+    }
+    
+    private void checkNotValidCharactersInVariableName(String name,
+                                                        String errorMsg) {
+        
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (!variableNameValidator.validate(name)) {</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">            throw new IllegalStateException(errorMsg + (name != null ? name : &quot;null&quot; ));</span>
+        }
+<span class="fc" id="L54">    }</span>
+    
+    public CreateTaskVariablePayload handleCreateTaskVariablePayload(CreateTaskVariablePayload createTaskVariablePayload) {
+
+<span class="fc" id="L58">        checkNotValidCharactersInVariableName(createTaskVariablePayload.getName(),</span>
+                                               &quot;Variable has not a valid name: &quot;);
+                
+<span class="fc" id="L61">        Object value = createTaskVariablePayload.getValue();</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (value instanceof String) {</span>
+<span class="fc" id="L63">            handleAsDate((String)value).ifPresent(createTaskVariablePayload::setValue);</span>
+        }
+<span class="fc" id="L65">        return createTaskVariablePayload;</span>
+    }
+    
+    public UpdateTaskVariablePayload handleUpdateTaskVariablePayload(UpdateTaskVariablePayload updateTaskVariablePayload) {
+
+<span class="fc" id="L70">        checkNotValidCharactersInVariableName(updateTaskVariablePayload.getName(),</span>
+                                               &quot;You cannot update a variable with not a valid name: &quot;);
+        
+<span class="fc" id="L73">        Object value = updateTaskVariablePayload.getValue();</span>
+        
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (value instanceof String) {</span>
+<span class="fc" id="L76">            handleAsDate((String) value).ifPresent(updateTaskVariablePayload::setValue);</span>
+        }
+<span class="fc" id="L78">        return updateTaskVariablePayload;</span>
+    }
+    
+    public Map&lt;String, Object&gt; handlePayloadVariables(Map&lt;String, Object&gt; variables) {
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">        if (variables != null) {</span>
+<span class="fc" id="L83">            Set&lt;String&gt; mismatchedVars = variableNameValidator.validateVariables(variables); </span>
+            
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">            if (!mismatchedVars.isEmpty()) {</span>
+<span class="nc" id="L86">                throw new IllegalStateException(&quot;Variables have not valid names: &quot; + String.join(&quot;, &quot;,</span>
+                                                                                                 mismatchedVars));
+                      
+            }        
+<span class="fc" id="L90">            handleStringVariablesAsDates(variables);  </span>
+        }
+        
+<span class="fc" id="L93">        return variables;</span>
+    }
+    
+    private void handleStringVariablesAsDates(Map&lt;String, Object&gt; variables) {
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        if (variables != null) {</span>
+<span class="fc" id="L98">            variables.entrySet()</span>
+<span class="fc" id="L99">            .stream()</span>
+<span class="fc" id="L100">            .filter(stringObjectEntry -&gt; stringObjectEntry.getValue() instanceof String)</span>
+<span class="fc" id="L101">            .forEach(stringObjectEntry -&gt;</span>
+<span class="fc" id="L102">                        handleAsDate((String) stringObjectEntry.getValue()).ifPresent(stringObjectEntry::setValue));</span>
+        }
+<span class="fc" id="L104">    }</span>
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

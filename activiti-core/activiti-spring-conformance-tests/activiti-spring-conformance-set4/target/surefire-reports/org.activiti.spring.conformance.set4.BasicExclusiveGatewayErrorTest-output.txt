@@ -1,0 +1,136 @@
+11:55:16.871 [main] DEBUG org.springframework.test.context.junit4.SpringJUnit4ClassRunner - SpringJUnit4ClassRunner constructor called with [class org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest]
+11:55:16.929 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+11:55:16.976 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+11:55:17.090 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest] from class [org.springframework.boot.test.context.SpringBootTestContextBootstrapper]
+11:55:17.150 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest], using SpringBootContextLoader
+11:55:17.161 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest]: class path resource [org/activiti/spring/conformance/set4/BasicExclusiveGatewayErrorTest-context.xml] does not exist
+11:55:17.162 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest]: class path resource [org/activiti/spring/conformance/set4/BasicExclusiveGatewayErrorTestContext.groovy] does not exist
+11:55:17.162 [main] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+11:55:17.164 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest]: BasicExclusiveGatewayErrorTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+11:55:17.337 [main] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest]
+11:55:17.657 [main] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-spring-conformance-tests/activiti-spring-conformance-set4/target/test-classes/org/activiti/spring/conformance/set4/Application.class]
+11:55:17.696 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.activiti.spring.conformance.set4.Application for test class org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest
+11:55:18.201 [main] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - @TestExecutionListeners is not present for class [org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest]: using defaults.
+11:55:18.204 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]
+11:55:18.298 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@254e9709, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@350f18a6, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@147c00aa, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@1c90029b, org.springframework.test.context.support.DirtiesContextTestExecutionListener@4db728df, org.springframework.test.context.transaction.TransactionalTestExecutionListener@b0d3e7, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@74bdfa0b, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@68a5aadd, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@1c2096c6, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@1a89414e, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@17f8db6, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@44492c06]
+11:55:18.313 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest]
+11:55:18.315 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest]
+11:55:18.330 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest]
+11:55:18.330 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest]
+11:55:18.332 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest]
+11:55:18.332 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest]
+11:55:18.362 [main] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@44aeae34 testClass = BasicExclusiveGatewayErrorTest, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [MergedContextConfiguration@2ec5cc14 testClass = BasicExclusiveGatewayErrorTest, locations = '{}', classes = '{class org.activiti.spring.conformance.set4.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@252dc8c4, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@476fe690, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@7efb53af, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@2370ac7a], contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map[[empty]]], class annotated with @DirtiesContext [false] with mode [null].
+11:55:18.364 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest]
+11:55:18.364 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest]
+11:55:18.399 [main] DEBUG org.springframework.test.context.support.DependencyInjectionTestExecutionListener - Performing dependency injection for test context [[DefaultTestContext@44aeae34 testClass = BasicExclusiveGatewayErrorTest, testInstance = org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest@69499c6f, testMethod = [null], testException = [null], mergedContextConfiguration = [MergedContextConfiguration@2ec5cc14 testClass = BasicExclusiveGatewayErrorTest, locations = '{}', classes = '{class org.activiti.spring.conformance.set4.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@252dc8c4, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@476fe690, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@7efb53af, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@2370ac7a], contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map[[empty]]]].
+11:55:18.458 [main] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true, server.port=-1}
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::       (v2.1.10.RELEASE)
+
+2019-12-04 11:55:19.840  INFO 3725 --- [           main] o.a.s.c.s.BasicExclusiveGatewayErrorTest : Starting BasicExclusiveGatewayErrorTest on maven-scks5 with PID 3725 (started by root in /home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core/activiti-spring-conformance-tests/activiti-spring-conformance-set4)
+2019-12-04 11:55:19.882  INFO 3725 --- [           main] o.a.s.c.s.BasicExclusiveGatewayErrorTest : No active profile set, falling back to default profiles: default
+2019-12-04 11:55:26.670  INFO 3725 --- [           main] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2019-12-04 11:55:27.804  INFO 3725 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2019-12-04 11:55:30.390  INFO 3725 --- [           main] o.a.spring.resources.ResourceFinder      : The following process definition files will be deployed: [basic-Inclusive-gateway.bpmn20.xml, basic-exclusive-gateway-expr-error.bpmn20.xml, basic-exclusive-gateway.bpmn20.xml, basic-parallel-gateway-groups.bpmn20.xml, basic-parallel-gateway.bpmn20.xml]
+2019-12-04 11:55:30.837  INFO 3725 --- [           main] o.a.spring.resources.ResourceFinder      : No process extensions were found for auto-deployment in the location 'classpath*:**/processes/'
+2019-12-04 11:55:31.124  INFO 3725 --- [           main] o.a.e.i.c.ProcessEngineConfigurationImpl : Found 1 Process Engine Configurators in total:
+2019-12-04 11:55:31.129  INFO 3725 --- [           main] o.a.e.i.c.ProcessEngineConfigurationImpl : class org.activiti.spring.process.conf.ProcessExtensionsConfiguratorAutoConfiguration$$EnhancerBySpringCGLIB$$b6c68e6d (priority:10000)
+2019-12-04 11:55:31.129  INFO 3725 --- [           main] o.a.e.i.c.ProcessEngineConfigurationImpl : Executing beforeInit() of class org.activiti.spring.process.conf.ProcessExtensionsConfiguratorAutoConfiguration$$EnhancerBySpringCGLIB$$b6c68e6d (priority:10000)
+2019-12-04 11:55:33.722  INFO 3725 --- [           main] o.a.e.i.c.ProcessEngineConfigurationImpl : Executing configure() of class org.activiti.spring.process.conf.ProcessExtensionsConfiguratorAutoConfiguration$$EnhancerBySpringCGLIB$$b6c68e6d (priority:10000)
+2019-12-04 11:55:33.918  INFO 3725 --- [           main] o.activiti.engine.impl.db.DbSqlSession   : performing create on engine with resource org/activiti/db/create/activiti.h2.create.engine.sql
+2019-12-04 11:55:34.365  INFO 3725 --- [           main] o.a.engine.impl.ProcessEngineImpl        : ProcessEngine default created
+2019-12-04 11:55:34.387  INFO 3725 --- [           main] o.a.e.i.a.DefaultAsyncJobExecutor        : Starting up the default async job executor [org.activiti.spring.SpringAsyncExecutor].
+2019-12-04 11:55:34.395  INFO 3725 --- [       Thread-3] o.a.e.i.a.AcquireTimerJobsRunnable       : {} starting to acquire async jobs due
+2019-12-04 11:55:34.405  INFO 3725 --- [       Thread-4] o.a.e.i.a.ResetExpiredJobsRunnable       : {} starting to reset expired jobs
+2019-12-04 11:55:34.390  INFO 3725 --- [       Thread-2] o.a.e.i.a.AcquireAsyncJobsDueRunnable    : {} starting to acquire async jobs due
+2019-12-04 11:55:35.923  INFO 3725 --- [           main] o.a.e.impl.bpmn.deployer.BpmnDeployer    : Process deployed: {id: basicInclusiveGateway:1:fb808e3c-168c-11ea-a6d1-0a580a140054, key: basicInclusiveGateway, name: Basic Inclusive Gateway }
+2019-12-04 11:55:35.926  INFO 3725 --- [           main] o.a.e.impl.bpmn.deployer.BpmnDeployer    : Process deployed: {id: fb80dc5d-168c-11ea-a6d1-0a580a140054, key: basicexclu-15cdd4ac-ff4d-4925-9b4e-err, name: Basic Exclusive Gateway Expr Error }
+2019-12-04 11:55:35.926  INFO 3725 --- [           main] o.a.e.impl.bpmn.deployer.BpmnDeployer    : Process deployed: {id: fb80dc5e-168c-11ea-a6d1-0a580a140054, key: basicparal-41c130f7-0b06-4bbb-aee4-73667298e369, name: Basic Parallel Gateway Groups }
+2019-12-04 11:55:35.926  INFO 3725 --- [           main] o.a.e.impl.bpmn.deployer.BpmnDeployer    : Process deployed: {id: fb80dc5f-168c-11ea-a6d1-0a580a140054, key: basicexclu-15cdd4ac-ff4d-4925-9b4e-87ea77528613, name: Basic Exclusive Gateway }
+2019-12-04 11:55:35.926  INFO 3725 --- [           main] o.a.e.impl.bpmn.deployer.BpmnDeployer    : Process deployed: {id: fb80dc60-168c-11ea-a6d1-0a580a140054, key: basicparal-b1db86dd-4a15-4c0e-9168-25d9c42d53ee, name: Basic Parallel Gateway }
+2019-12-04 11:55:39.860  INFO 3725 --- [           main] o.a.s.AbstractActivitiSmartLifeCycle     : Starting...
+2019-12-04 11:55:39.991  INFO 3725 --- [           main] o.a.s.AbstractActivitiSmartLifeCycle     : Started.
+2019-12-04 11:55:39.991  INFO 3725 --- [           main] o.a.s.AbstractActivitiSmartLifeCycle     : Starting...
+2019-12-04 11:55:40.030  INFO 3725 --- [           main] o.a.s.AbstractActivitiSmartLifeCycle     : Started.
+2019-12-04 11:55:40.086  INFO 3725 --- [           main] o.a.s.c.s.BasicExclusiveGatewayErrorTest : Started BasicExclusiveGatewayErrorTest in 21.622 seconds (JVM running for 25.584)
+2019-12-04 11:55:40.914  INFO 3725 --- [           main] o.a.s.c.util.security.SecurityUtil       : > Logged in as: user1
+2019-12-04 11:55:41.714 ERROR 3725 --- [           main] o.a.e.impl.interceptor.CommandContext    : Error while closing command context
+
+org.activiti.engine.ActivitiException: condition expression returns non-Boolean (sequenceFlowId: SequenceFlow_1tut9mk execution: Execution[ id 'fea7e5f3-168c-11ea-a6d1-0a580a140054' ] - activity 'ExclusiveGateway_1ri35t5 - parent 'fea6fb91-168c-11ea-a6d1-0a580a140054'): err (java.lang.String)
+	at org.activiti.engine.impl.el.UelExpressionCondition.evaluate(UelExpressionCondition.java:42) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.util.condition.ConditionUtil.hasTrueCondition(ConditionUtil.java:34) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.bpmn.behavior.ExclusiveGatewayActivityBehavior.leave(ExclusiveGatewayActivityBehavior.java:75) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.bpmn.behavior.FlowNodeActivityBehavior.execute(FlowNodeActivityBehavior.java:38) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.agenda.ContinueProcessOperation.executeActivityBehavior(ContinueProcessOperation.java:210) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.agenda.ContinueProcessOperation.executeSynchronous(ContinueProcessOperation.java:146) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.agenda.ContinueProcessOperation.continueThroughFlowNode(ContinueProcessOperation.java:101) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.agenda.ContinueProcessOperation.run(ContinueProcessOperation.java:66) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.interceptor.CommandInvoker.executeOperation(CommandInvoker.java:73) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.interceptor.CommandInvoker.executeOperations(CommandInvoker.java:57) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.interceptor.CommandInvoker.execute(CommandInvoker.java:42) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.interceptor.TransactionContextInterceptor.execute(TransactionContextInterceptor.java:48) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.interceptor.CommandContextInterceptor.execute(CommandContextInterceptor.java:59) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.spring.SpringTransactionInterceptor$1.doInTransaction(SpringTransactionInterceptor.java:47) ~[activiti-spring-7.1.135.jar:na]
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:140) ~[spring-tx-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.activiti.spring.SpringTransactionInterceptor.execute(SpringTransactionInterceptor.java:45) ~[activiti-spring-7.1.135.jar:na]
+	at org.activiti.engine.impl.interceptor.LogInterceptor.execute(LogInterceptor.java:29) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.cfg.CommandExecutorImpl.execute(CommandExecutorImpl.java:44) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.cfg.CommandExecutorImpl.execute(CommandExecutorImpl.java:39) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.engine.impl.TaskServiceImpl.complete(TaskServiceImpl.java:202) ~[activiti-engine-7.1.135.jar:na]
+	at org.activiti.runtime.api.impl.TaskRuntimeImpl.complete(TaskRuntimeImpl.java:159) ~[activiti-api-task-runtime-impl-7.1.135.jar:na]
+	at org.activiti.runtime.api.impl.TaskRuntimeImpl$$FastClassBySpringCGLIB$$cb179e94.invoke(<generated>) ~[activiti-api-task-runtime-impl-7.1.135.jar:na]
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:750) ~[spring-aop-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor.invoke(MethodSecurityInterceptor.java:69) ~[spring-security-core-5.1.7.RELEASE.jar:5.1.7.RELEASE]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:689) ~[spring-aop-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.activiti.runtime.api.impl.TaskRuntimeImpl$$EnhancerBySpringCGLIB$$343ce8a2.complete(<generated>) ~[activiti-api-task-runtime-impl-7.1.135.jar:na]
+	at org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest.lambda$shouldFailOnExpressionError$0(BasicExclusiveGatewayErrorTest.java:112) ~[test-classes/:na]
+	at org.assertj.core.api.ThrowableAssert.catchThrowable(ThrowableAssert.java:62) ~[assertj-core-3.11.1.jar:na]
+	at org.assertj.core.api.AssertionsForClassTypes.catchThrowable(AssertionsForClassTypes.java:786) ~[assertj-core-3.11.1.jar:na]
+	at org.assertj.core.api.Assertions.catchThrowable(Assertions.java:1200) ~[assertj-core-3.11.1.jar:na]
+	at org.activiti.spring.conformance.set4.BasicExclusiveGatewayErrorTest.shouldFailOnExpressionError(BasicExclusiveGatewayErrorTest.java:112) ~[test-classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566) ~[na:na]
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50) ~[junit-4.12.jar:4.12]
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12) ~[junit-4.12.jar:4.12]
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47) ~[junit-4.12.jar:4.12]
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17) ~[junit-4.12.jar:4.12]
+	at org.springframework.test.context.junit4.statements.RunBeforeTestExecutionCallbacks.evaluate(RunBeforeTestExecutionCallbacks.java:74) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.test.context.junit4.statements.RunAfterTestExecutionCallbacks.evaluate(RunAfterTestExecutionCallbacks.java:84) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26) ~[junit-4.12.jar:4.12]
+	at org.springframework.test.context.junit4.statements.RunBeforeTestMethodCallbacks.evaluate(RunBeforeTestMethodCallbacks.java:75) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27) ~[junit-4.12.jar:4.12]
+	at org.springframework.test.context.junit4.statements.RunAfterTestMethodCallbacks.evaluate(RunAfterTestMethodCallbacks.java:86) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.test.context.junit4.statements.SpringRepeat.evaluate(SpringRepeat.java:84) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325) ~[junit-4.12.jar:4.12]
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:251) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:97) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290) ~[junit-4.12.jar:4.12]
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71) ~[junit-4.12.jar:4.12]
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288) ~[junit-4.12.jar:4.12]
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58) ~[junit-4.12.jar:4.12]
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268) ~[junit-4.12.jar:4.12]
+	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363) ~[junit-4.12.jar:4.12]
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:190) ~[spring-test-5.1.11.RELEASE.jar:5.1.11.RELEASE]
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:365) ~[surefire-junit4-3.0.0-M3.jar:3.0.0-M3]
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeWithRerun(JUnit4Provider.java:273) ~[surefire-junit4-3.0.0-M3.jar:3.0.0-M3]
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:238) ~[surefire-junit4-3.0.0-M3.jar:3.0.0-M3]
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:159) ~[surefire-junit4-3.0.0-M3.jar:3.0.0-M3]
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:384) ~[surefire-booter-3.0.0-M3.jar:3.0.0-M3]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:345) ~[surefire-booter-3.0.0-M3.jar:3.0.0-M3]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:126) ~[surefire-booter-3.0.0-M3.jar:3.0.0-M3]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:418) ~[surefire-booter-3.0.0-M3.jar:3.0.0-M3]
+
+2019-12-04 11:55:41.721  INFO 3725 --- [           main] o.a.s.c.util.security.SecurityUtil       : > Logged in as: admin

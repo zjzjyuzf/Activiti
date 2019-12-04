@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExpressionResolver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti API :: Process Runtime Implementation</a> &gt; <a href="index.source.html" class="el_package">org.activiti.runtime.api.impl</a> &gt; <span class="el_source">ExpressionResolver.java</span></div><h1>ExpressionResolver.java</h1><pre class="source lang-java linenums">package org.activiti.runtime.api.impl;
+
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.activiti.engine.delegate.DelegateExecution;
+import org.activiti.engine.delegate.Expression;
+import org.activiti.engine.impl.el.ExpressionManager;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+public class ExpressionResolver {
+
+<span class="fc" id="L25">    private static final TypeReference&lt;Map&lt;String, ?&gt;&gt; MAP_STRING_OBJECT_TYPE = new TypeReference&lt;Map&lt;String, ?&gt;&gt;() {</span>
+    };
+<span class="fc" id="L27">    private final Logger logger = LoggerFactory.getLogger(ExpressionResolver.class);</span>
+
+    private static final String EXPRESSION_PATTERN_STRING = &quot;([\\$]\\{([^\\}]*)\\})&quot;;
+<span class="fc" id="L30">    private static final Pattern EXPRESSION_PATTERN = Pattern.compile(EXPRESSION_PATTERN_STRING);</span>
+    private static final int EXPRESSION_KEY_INDEX = 1;
+
+    private ObjectMapper mapper;
+
+    private ExpressionManager expressionManager;
+
+    public ExpressionResolver(ExpressionManager expressionManager,
+<span class="fc" id="L38">                              ObjectMapper mapper) {</span>
+<span class="fc" id="L39">        this.expressionManager = expressionManager;</span>
+<span class="fc" id="L40">        this.mapper = mapper;</span>
+<span class="fc" id="L41">    }</span>
+
+    private Object resolveExpressions(final DelegateExecution execution,
+                                      final Object value) {
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (value instanceof String) {</span>
+<span class="fc" id="L46">            return resolveExpressionsString(execution,</span>
+                                            (String) value);
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        } else if (value instanceof ObjectNode) {</span>
+<span class="fc" id="L49">            return resolveExpressionsMap(execution,</span>
+<span class="fc" id="L50">                                         mapper.convertValue(value,</span>
+                                                             MAP_STRING_OBJECT_TYPE));
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        } else if (value instanceof Map&lt;?, ?&gt;) {</span>
+<span class="fc" id="L53">            return resolveExpressionsMap(execution,</span>
+                                         (Map&lt;String, ?&gt;) value);
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        } else if (value instanceof List&lt;?&gt;) {</span>
+<span class="fc" id="L56">            return resolveExpressionsList(execution,</span>
+                                          (List&lt;?&gt;) value);
+        } else {
+<span class="fc" id="L59">            return value;</span>
+        }
+    }
+
+    private List&lt;Object&gt; resolveExpressionsList(final DelegateExecution execution,
+                                                final List&lt;?&gt; sourceList) {
+<span class="fc" id="L65">        final List&lt;Object&gt; result = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L66">        sourceList.forEach(value -&gt; result.add(resolveExpressions(execution,</span>
+                                                                  value)));
+<span class="fc" id="L68">        return result;</span>
+    }
+
+    public Map&lt;String, Object&gt; resolveExpressionsMap(final DelegateExecution execution,
+                                                     final Map&lt;String, ?&gt; sourceMap) {
+<span class="fc" id="L73">        final Map&lt;String, Object&gt; result = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L74">        sourceMap.forEach((key,</span>
+<span class="fc" id="L75">                           value) -&gt; result.put(key,</span>
+<span class="fc" id="L76">                                                resolveExpressions(execution,</span>
+                                                                   value)));
+<span class="fc" id="L78">        return result;</span>
+    }
+
+    private Object resolveExpressionsString(final DelegateExecution execution,
+                                            final String sourceString) {
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        if (StringUtils.isBlank(sourceString)) {</span>
+<span class="fc" id="L84">            return sourceString;</span>
+        }
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (sourceString.matches(EXPRESSION_PATTERN_STRING)) {</span>
+<span class="fc" id="L87">            return resolveObjectPlaceHolder(execution,</span>
+                                            sourceString);
+        } else {
+<span class="fc" id="L90">            return resolveInStringPlaceHolder(execution,</span>
+                                              sourceString);
+        }
+    }
+
+    private Object resolveObjectPlaceHolder(DelegateExecution execution,
+                                            String sourceString) {
+        try {
+<span class="fc" id="L98">            return expressionManager.createExpression(sourceString).getValue(execution);</span>
+<span class="fc" id="L99">        } catch (final Exception e) {</span>
+<span class="fc" id="L100">            logger.warn(&quot;Unable to resolve expression in variables, keeping original value&quot;,</span>
+                        e);
+<span class="fc" id="L102">            return sourceString;</span>
+        }
+    }
+
+    private String resolveInStringPlaceHolder(final DelegateExecution execution,
+                                              final String sourceString) {
+<span class="fc" id="L108">        final Matcher matcher = EXPRESSION_PATTERN.matcher(sourceString);</span>
+<span class="fc" id="L109">        final StringBuffer sb = new StringBuffer();</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        while (matcher.find()) {</span>
+<span class="fc" id="L111">            final String expressionKey = matcher.group(EXPRESSION_KEY_INDEX);</span>
+<span class="fc" id="L112">            final Expression expression = expressionManager.createExpression(expressionKey);</span>
+            try {
+<span class="fc" id="L114">                final Object value = expression.getValue(execution);</span>
+<span class="fc" id="L115">                matcher.appendReplacement(sb,</span>
+<span class="fc" id="L116">                                          Objects.toString(value));</span>
+<span class="fc" id="L117">            } catch (final Exception e) {</span>
+<span class="fc" id="L118">                logger.warn(&quot;Unable to resolve expression in variables, keeping original value&quot;,</span>
+                            e);
+<span class="fc" id="L120">            }</span>
+<span class="fc" id="L121">        }</span>
+<span class="fc" id="L122">        matcher.appendTail(sb);</span>
+<span class="fc" id="L123">        return sb.toString();</span>
+    }
+
+    public boolean containsExpression(final Object source) {
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (source == null) {</span>
+<span class="fc" id="L128">            return false;</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        } else if (source instanceof String) {</span>
+<span class="fc" id="L130">            return containsExpressionString((String) source);</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">        } else if (source instanceof ObjectNode) {</span>
+<span class="fc" id="L132">            return containsExpressionMap(mapper.convertValue(source,</span>
+                                                             MAP_STRING_OBJECT_TYPE));
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        } else if (source instanceof Map&lt;?, ?&gt;) {</span>
+<span class="fc" id="L135">            return containsExpressionMap((Map&lt;String, ?&gt;) source);</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        } else if (source instanceof List&lt;?&gt;) {</span>
+<span class="fc" id="L137">            return containsExpressionList((List&lt;?&gt;) source);</span>
+        } else {
+<span class="fc" id="L139">            return false;</span>
+        }
+    }
+
+    private boolean containsExpressionString(final String sourceString) {
+<span class="fc" id="L144">        return EXPRESSION_PATTERN.matcher(sourceString).find();</span>
+    }
+
+    private boolean containsExpressionMap(final Map&lt;String, ?&gt; source) {
+<span class="fc bfc" id="L148" title="All 2 branches covered.">        for (Entry&lt;String, ?&gt; entry : source.entrySet()) {</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">            if (containsExpression(entry.getValue())) {</span>
+<span class="fc" id="L150">                return true;</span>
+            }
+<span class="fc" id="L152">        }</span>
+<span class="fc" id="L153">        return false;</span>
+    }
+
+    private boolean containsExpressionList(List&lt;?&gt; source) {
+<span class="fc bfc" id="L157" title="All 2 branches covered.">        for (Object item : source) {</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">            if (containsExpression(item)) {</span>
+<span class="fc" id="L159">                return true;</span>
+            }
+<span class="fc" id="L161">        }</span>
+<span class="fc" id="L162">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

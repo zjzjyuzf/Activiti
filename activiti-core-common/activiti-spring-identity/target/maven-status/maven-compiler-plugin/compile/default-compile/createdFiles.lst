@@ -1,0 +1,3 @@
+org/activiti/core/common/spring/identity/config/ActivitiSpringIdentityAutoConfiguration.class
+org/activiti/core/common/spring/identity/ActivitiUserGroupManagerImpl.class
+org/activiti/core/common/spring/identity/ExtendedInMemoryUserDetailsManager.class

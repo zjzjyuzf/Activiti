@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConnectorsAutoConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Activiti API :: Process Runtime Implementation</a> &gt; <a href="index.source.html" class="el_package">org.activiti.runtime.api.conf</a> &gt; <span class="el_source">ConnectorsAutoConfiguration.java</span></div><h1>ConnectorsAutoConfiguration.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2018 Alfresco, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.activiti.runtime.api.conf;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.activiti.engine.impl.bpmn.parser.factory.DefaultActivityBehaviorFactory;
+import org.activiti.engine.impl.el.ExpressionManager;
+import org.activiti.runtime.api.connector.DefaultServiceTaskBehavior;
+import org.activiti.runtime.api.connector.IntegrationContextBuilder;
+import org.activiti.runtime.api.impl.ExpressionResolver;
+import org.activiti.runtime.api.impl.VariablesMappingProvider;
+import org.activiti.spring.process.ProcessExtensionService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+<span class="nc" id="L33">public class ConnectorsAutoConfiguration {</span>
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ExpressionManager expressionManager() {
+<span class="nc" id="L38">        return new ExpressionManager();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ExpressionResolver expressionResolver(ExpressionManager expressionManager, ObjectMapper objectMapper) {
+<span class="nc" id="L44">        return new ExpressionResolver(expressionManager, objectMapper);</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public IntegrationContextBuilder integrationContextBuilder(VariablesMappingProvider variablesMappingProvider) {
+<span class="nc" id="L50">        return new IntegrationContextBuilder(variablesMappingProvider);</span>
+    }
+
+    @Bean(name = DefaultActivityBehaviorFactory.DEFAULT_SERVICE_TASK_BEAN_NAME)
+    @ConditionalOnMissingBean(name = DefaultActivityBehaviorFactory.DEFAULT_SERVICE_TASK_BEAN_NAME)
+    public DefaultServiceTaskBehavior defaultServiceTaskBehavior(ApplicationContext applicationContext,
+                                                                 IntegrationContextBuilder integrationContextBuilder,
+                                                                 VariablesMappingProvider outboundVariablesProvider) {
+<span class="nc" id="L58">        return new DefaultServiceTaskBehavior(applicationContext,</span>
+                                              integrationContextBuilder,
+                                              outboundVariablesProvider);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public VariablesMappingProvider variablesMappingProvider(ProcessExtensionService processExtensionService,
+                                                             ExpressionResolver expressionResolver) {
+<span class="nc" id="L67">        return new VariablesMappingProvider(processExtensionService,</span>
+                                            expressionResolver);
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

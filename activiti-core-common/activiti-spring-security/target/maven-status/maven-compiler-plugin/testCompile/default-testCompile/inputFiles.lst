@@ -1,0 +1,8 @@
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/test/java/org/activiti/core/common/spring/security/test/AuthenticationPrincipalGroupsProviderTest.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/test/java/org/activiti/core/common/spring/security/test/SimpleGrantedAuthoritiesResolverTest.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/test/java/org/activiti/core/common/spring/security/test/AuthenticationPrincipalIdentityProviderTest.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/test/java/org/activiti/core/common/spring/security/test/SimpleGrantedAuthoritiesRolesMapperTest.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/test/java/org/activiti/core/common/spring/security/test/SimpleGrantedAuthoritiesGroupsMapperTest.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/test/java/org/activiti/core/common/spring/security/LocalSpringSecurityManagerTest.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/test/java/org/activiti/core/common/spring/security/test/AuthenticationPrincipalRolesProviderTest.java
+/home/jenkins/agent/workspace/Activiti_Activiti_develop/activiti-core-common/activiti-spring-security/src/test/java/org/activiti/core/common/spring/security/test/LocalSpringSecurityContextPrincipalProviderTest.java

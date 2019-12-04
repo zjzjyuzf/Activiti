@@ -1,0 +1,6 @@
+org/activiti/spring/process/ProcessExtensionTestApplication.class
+org/activiti/spring/process/model/ExtensionTest.class
+org/activiti/spring/process/ProcessExtensionResourceReaderTest.class
+org/activiti/spring/process/ProcessExtensionResourceReaderIT.class
+org/activiti/spring/process/ProcessVariablesInitiatorIT.class
+org/activiti/spring/process/conf/ProcessExtensionResourceFinderDescriptorAutoConfiguration.class
