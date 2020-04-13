@@ -11,7 +11,7 @@
     </parent>
 
 
-    <version>6.0.0-boot2</version>
+    <version>6.0.0</version>
     <artifactId>activiti-spring-boot</artifactId>
 
     <packaging>pom</packaging>
