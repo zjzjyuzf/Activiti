@@ -137,7 +137,7 @@ public class SecurityConfiguration {
 	                .and()
 	            .rememberMe()
 	                .rememberMeServices(rememberMeServices())
-	                .key(env.getProperty("security.rememberme.key"))
+	                .key(env.getProperty("appconf.security.rememberme.key"))
 	                .and()
 	            .logout()
 	                .logoutUrl("/app/logout")
@@ -160,7 +160,11 @@ public class SecurityConfiguration {
 	                .antMatchers("/app/rest/idm/email-actions/*").permitAll()
 	                .antMatchers("/app/rest/idm/signups").permitAll()
 	                .antMatchers("/app/rest/idm/passwords").permitAll()
-	                .antMatchers("/app/**").authenticated();
+	                .antMatchers("/druid/**").authenticated()
+	                .antMatchers("/actuator/**").authenticated()
+	                .antMatchers("/manage/**").authenticated()
+	                .antMatchers("/app/**").authenticated()
+			;
 
 	        // Custom login form configurer to allow for non-standard HTTP-methods (eg. LOCK)
 	        CustomFormLoginConfig<HttpSecurity> loginConfig = new CustomFormLoginConfig<HttpSecurity>();
@@ -181,7 +185,7 @@ public class SecurityConfiguration {
 	    
 	    @Bean
 	    public RememberMeAuthenticationProvider rememberMeAuthenticationProvider() {
-	        return new RememberMeAuthenticationProvider(env.getProperty("security.rememberme.key"));
+	        return new RememberMeAuthenticationProvider(env.getProperty("appconf.security.rememberme.key"));
 	    }
 	}
 
